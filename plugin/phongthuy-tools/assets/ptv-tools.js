@@ -2465,3 +2465,220 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
 
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-huong-ban-tho': banThoV2, 'xem-huong-bep-nau': bepV2 });
 })();
+
+  /* --- Xem huong nha tot xau v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var GOOD_W = { 'Sinh Khí': 4, 'Thiên Y': 3, 'Diên Niên': 2, 'Phục Vị': 1 };
+  var BAD_W = { 'Tuyệt Mệnh': 4, 'Ngũ Quỷ': 3, 'Lục Sát': 2, 'Họa Hại': 1 };
+  function yg(p, defY) {
+    return '<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select(p + 'y', L.yearOptions(1940, 2010, defY || 1990))) + L.field('Giới tính', L.genderSelect(p + 'g')) + '</div>';
+  }
+  function goodsSorted(cung, order) {
+    var g = L.goodDirs(cung, order || ['Sinh Khí', 'Thiên Y', 'Diên Niên', 'Phục Vị']);
+    return g.sort(function (a, b) { return GOOD_W[b.star] - GOOD_W[a.star]; });
+  }
+  function badsSorted(cung) {
+    var b = L.starsFor(cung).filter(function (s) { return s.info.t === 'xấu'; });
+    return b.sort(function (a, b) { return BAD_W[b.star] - BAD_W[a.star]; });
+  }
+  function dirSelect(id, label) {
+    return L.field(label, L.select(id, L.DIRS.map(function (d) { return '<option>' + d + '</option>'; }).join('')));
+  }
+
+  var HOA_GIAI = {
+    'Tuyệt Mệnh': 'Đây là sao xấu nặng nhất. Nếu đã ở ổn định và mọi việc vẫn bình thường thì không cần hoảng sợ dọn nhà; nên hóa giải bằng cách đặt nhà vệ sinh hoặc kho tại phương này để trấn, giữ cửa chính sạch sáng, và nếu có cửa phụ ở hướng tốt thì ưu tiên đi cửa phụ.',
+    'Ngũ Quỷ': 'Sao chủ về thị phi và hao tán. Hóa giải theo lệ là đặt bếp nấu tại phương này để lửa trấn áp, đồng thời giữ khu vực cửa chính gọn gàng, tránh để đồ sắc nhọn và gương soi chiếu thẳng ra cửa.',
+    'Lục Sát': 'Sao chủ về trục trặc quan hệ và kiện tụng nhỏ. Đặt nhà vệ sinh hoặc khu giặt phơi tại phương này để trấn là cách dân gian hay dùng; trong nhà nên giữ hòa khí, tránh đặt phòng làm việc chính tại đây.',
+    'Họa Hại': 'Đây là sao xấu nhẹ nhất trong bốn sao xấu, chủ về hao tài nhỏ và điều tiếng. Phần lớn gia đình chỉ cần giữ cửa chính thông thoáng, sáng sủa và tránh để thùng rác, đồ hỏng ngay trước cửa là đủ yên tâm.'
+  };
+  var STAR_SCORE = { 'Sinh Khí': 95, 'Thiên Y': 90, 'Diên Niên': 85, 'Phục Vị': 80, 'Họa Hại': 45, 'Lục Sát': 40, 'Ngũ Quỷ': 30, 'Tuyệt Mệnh': 20 };
+  function starVerdictHTML(cp, dir) {
+    var s = L.starsFor(cp.cung)[L.DIRS.indexOf(dir)], good = s.info.t === 'tốt';
+    return '<h3>Hướng ' + dir + ' với mệnh ' + cp.cung + ': sao ' + s.star + ', điểm hài hòa ' + STAR_SCORE[s.star] + '/100</h3>' +
+      '<p class="' + (good ? 'ptv-good' : 'ptv-bad') + '">' + (good ? 'Đây là hướng tốt với gia chủ.' : 'Đây là hướng xấu với gia chủ.') + '</p><p>' + esc(s.info.d || '') + '</p>' +
+      (good ? '' : '<p><strong>Cách hóa giải tham khảo:</strong> ' + HOA_GIAI[s.star] + '</p>');
+  }
+  function huongNhaV2(c) {
+    c.innerHTML = V.tabsHTML([['hn-check', 'Kiểm tra hướng nhà'], ['hn-list', 'Hướng nhà tốt theo tuổi'], ['hn-cmp', 'So sánh hai hướng nhà']]) +
+      '<div id="hn-check">' + V.formWrap2(yg('a') + '<div class="ptv-row">' + dirSelect('dir', 'Hướng nhà (từ trong nhà nhìn ra cửa chính)') + '</div>', 'Kiểm tra hướng nhà') + '</div>' +
+      '<div id="hn-list" hidden>' + V.formWrap2(yg('a'), 'Xem hướng nhà tốt') + '</div>' +
+      '<div id="hn-cmp" hidden>' + V.formWrap2(yg('a') + '<div class="ptv-row">' + dirSelect('d1', 'Hướng nhà thứ nhất') + dirSelect('d2', 'Hướng nhà thứ hai') + '</div>', 'So sánh hai hướng') + '</div>';
+    V.wireTabs(c, ['hn-check', 'hn-list', 'hn-cmp']);
+    c.querySelector('#hn-check form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hn-check'), cp = L.cungPhi(parseInt(box.querySelector('#ay').value, 10), box.querySelector('#ag').value);
+      L.resultBox(box, starVerdictHTML(cp, box.querySelector('#dir').value) + L.dirTable(cp.cung));
+    });
+    c.querySelector('#hn-list form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hn-list'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value;
+      var cp = L.cungPhi(y, g), goods = goodsSorted(cp.cung), bads = badsSorted(cp.cung);
+      var html = '<h3>Hướng nhà nên chọn cho gia chủ sinh năm ' + y + ', mệnh ' + cp.cung + ' (' + cp.group + ')</h3>' +
+        '<p>Khi mua nhà hoặc chọn đất làm nhà, hãy ưu tiên các hướng sau theo thứ tự: ' + goods.map(function (s) { return '<strong>' + s.dir + '</strong> (' + s.star + ', ' + STAR_SCORE[s.star] + ' điểm)'; }).join(', ') + '.</p>' +
+        '<p><strong>Các hướng nên tránh:</strong> ' + bads.map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '. Nếu căn nhà ưng ý về giá và vị trí nhưng hướng rơi vào nhóm xấu nhẹ (Họa Hại, Lục Sát), nhiều gia đình vẫn chọn ở và hóa giải bằng bố trí nội thất thay vì bỏ qua cơ hội tốt.</p>' +
+        '<p class="ptv-note">Người thuộc ' + cp.group + ' chỉ hợp bốn hướng thuộc cùng nhóm trạch. Đây là lý do cùng một căn nhà, người này ở thấy hợp, người khác ở lại không hợp: hướng nhà tính theo mệnh của gia chủ, không có hướng nào tốt cho tất cả mọi người.</p>' + L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+    c.querySelector('#hn-cmp form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hn-cmp'), cp = L.cungPhi(parseInt(box.querySelector('#ay').value, 10), box.querySelector('#ag').value);
+      var d1 = box.querySelector('#d1').value, d2 = box.querySelector('#d2').value;
+      var s1 = L.starsFor(cp.cung)[L.DIRS.indexOf(d1)], s2 = L.starsFor(cp.cung)[L.DIRS.indexOf(d2)];
+      var win = STAR_SCORE[s1.star] === STAR_SCORE[s2.star] ? 'Hai hướng ngang nhau về sao, hãy quyết định bằng các yếu tố khác như giá, ánh sáng và tiếng ồn.' : (STAR_SCORE[s1.star] > STAR_SCORE[s2.star] ? 'Hướng ' + d1 + ' hơn hẳn, nên ưu tiên căn nhà hướng ' + d1 + ' nếu các điều kiện khác tương đương.' : 'Hướng ' + d2 + ' hơn hẳn, nên ưu tiên căn nhà hướng ' + d2 + ' nếu các điều kiện khác tương đương.');
+      var html = '<h3>So sánh cho gia chủ mệnh ' + cp.cung + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Hướng nhà</th><th>Sao</th><th>Điểm hài hòa</th><th>Nhận định</th></tr>' +
+        '<tr><td><strong>' + d1 + '</strong></td><td>' + s1.star + '</td><td>' + STAR_SCORE[s1.star] + '/100</td><td>' + (s1.info.t === 'tốt' ? 'Hướng tốt' : 'Hướng xấu') + '</td></tr>' +
+        '<tr><td><strong>' + d2 + '</strong></td><td>' + s2.star + '</td><td>' + STAR_SCORE[s2.star] + '/100</td><td>' + (s2.info.t === 'tốt' ? 'Hướng tốt' : 'Hướng xấu') + '</td></tr></table></div>' +
+        '<p><strong>Kết luận:</strong> ' + win + '</p>' +
+        (!STAR_SCORE[s1.star] || s1.info.t === 'xấu' ? '<p><strong>Về hướng ' + d1 + ':</strong> ' + HOA_GIAI[s1.star] + '</p>' : '') +
+        (s2.info.t === 'xấu' ? '<p><strong>Về hướng ' + d2 + ':</strong> ' + HOA_GIAI[s2.star] + '</p>' : '');
+      L.resultBox(box, html);
+    });
+  }
+
+  /* --- Xem phong thuy nha v2 --- */
+  var ROOM_TXT = {
+    'phong-khach': { name: 'Phòng khách, cửa chính', good: 'Đặt tại hướng tốt là lý tưởng: đây là nơi đón khí vào nhà, khí tốt vào từ hướng tốt thì cả nhà được hưởng.', bad: 'Phòng khách rơi vào hướng xấu của gia chủ: nên giữ khu vực này thật sáng và thoáng, treo đèn sáng ấm, tránh để đồ cũ hỏng chắn lối, và nếu có thể hãy mở thêm cửa phụ ở hướng tốt để cân bằng dòng khí ra vào.' },
+    'ban-tho': { name: 'Bàn thờ', good: 'Bàn thờ tại phương này là tốt so với mệnh gia chủ, giữ lưng bàn thờ tựa tường và phía trước thoáng là đạt.', bad: 'Bàn thờ không nên đặt tại phương xấu của gia chủ. Nếu kết cấu nhà không đổi được, hãy chuyển bàn thờ sang phương tốt gần nhất, ưu tiên Sinh Khí hoặc Thiên Y.' },
+    'bep': { name: 'Bếp nấu (vị trí đặt bếp)', good: 'Đặt bếp tại hướng tốt là chưa đúng nguyên tắc tọa hung: bếp thuộc hỏa, đặt ở hướng tốt được cho là đốt khí lành. Nếu bếp đã cố định ở đây, hãy bảo đảm cửa bếp quay về hướng tốt để cân bằng.', bad: 'Đặt bếp tại phương xấu là ĐÚNG nguyên tắc tọa hung hướng cát: lửa trấn áp khí xấu tại phương này. Chỉ cần cửa bếp quay về hướng tốt nữa là đạt trọn vẹn.' },
+    'giuong': { name: 'Giường ngủ chính (hướng đầu giường)', good: 'Đầu giường quay về hướng tốt của gia chủ là đạt, ưu tiên Thiên Y cho sức khỏe và giấc ngủ.', bad: 'Đầu giường quay về hướng xấu của gia chủ thì nên xoay lại nếu phòng cho phép; nếu không xoay được, ít nhất giữ đầu giường tựa tường và tránh hai sao nặng Tuyệt Mệnh, Ngũ Quỷ.' },
+    'wc': { name: 'Nhà vệ sinh, kho', good: 'Nhà vệ sinh đặt tại hướng tốt là uổng khí tốt và không đúng lệ trấn áp; nếu đã xây cố định thì giữ vệ sinh thật sạch, cửa luôn đóng và thông gió tốt để giảm ảnh hưởng.', bad: 'Nhà vệ sinh, kho đặt tại phương xấu là ĐÚNG cách dân gian dùng để trấn áp khí xấu, đây là vị trí nên ưu tiên khi thiết kế nhà mới.' },
+    'ban-lam-viec': { name: 'Bàn làm việc, bàn học', good: 'Bàn làm việc tại hướng tốt, nhất là Phục Vị hoặc Sinh Khí, được cho là giúp tập trung và ổn định, rất nên tận dụng.', bad: 'Bàn làm việc tại hướng xấu thì nên dịch sang phương tốt nếu phòng còn chỗ; nếu không, hãy quay mặt bàn về hướng tốt của bạn thay vì nhìn vào tường phía xấu.' }
+  };
+  function phongThuyNhaV2(c) {
+    c.innerHTML = V.tabsHTML([['ptn-plan', 'Bản đồ phong thủy cả nhà'], ['ptn-room', 'Kiểm tra từng phòng']]) +
+      '<div id="ptn-plan">' + V.formWrap2(yg('a') + '<div class="ptv-row">' + dirSelect('dir', 'Hướng nhà (từ trong nhà nhìn ra cửa chính)') + '</div>', 'Lập bản đồ phong thủy nhà') + '</div>' +
+      '<div id="ptn-room" hidden>' + V.formWrap2(yg('a') + '<div class="ptv-row">' + L.field('Khu vực muốn kiểm tra', L.select('room', Object.keys(ROOM_TXT).map(function (k) { return '<option value="' + k + '">' + ROOM_TXT[k].name + '</option>'; }).join(''))) + dirSelect('pdir', 'Phương của khu vực này so với tâm nhà') + '</div>', 'Kiểm tra khu vực này') + '</div>';
+    V.wireTabs(c, ['ptn-plan', 'ptn-room']);
+    c.querySelector('#ptn-plan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ptn-plan'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value, dir = box.querySelector('#dir').value;
+      var cp = L.cungPhi(y, g), hs = L.starsFor(cp.cung)[L.DIRS.indexOf(dir)];
+      var goods = goodsSorted(cp.cung), bads = badsSorted(cp.cung);
+      var sleep = L.goodDirs(cp.cung, ['Thiên Y', 'Sinh Khí', 'Diên Niên', 'Phục Vị']).sort(function (a, b) { return ({ 'Thiên Y': 4, 'Sinh Khí': 3, 'Diên Niên': 2, 'Phục Vị': 1 })[b.star] - ({ 'Thiên Y': 4, 'Sinh Khí': 3, 'Diên Niên': 2, 'Phục Vị': 1 })[a.star]; })[0];
+      var html = '<h3>Bản đồ phong thủy cho gia chủ sinh năm ' + y + ', mệnh ' + cp.cung + ' (' + cp.group + '), nhà hướng ' + dir + '</h3>' +
+        '<p>Hướng nhà ' + dir + ' ứng với sao <strong>' + hs.star + '</strong>, điểm hài hòa <strong>' + STAR_SCORE[hs.star] + '/100</strong> ' + (hs.info.t === 'tốt' ? '(hướng tốt, nền nhà hợp mệnh gia chủ).' : '(hướng xấu, nên bố trí các phòng theo bảng dưới để trấn và hóa giải).') + '</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Khu vực</th><th>Gợi ý bố trí cho mệnh ' + cp.cung + '</th></tr>' +
+        '<tr><td>Phòng khách, cửa chính</td><td>Đón khí tốt nhất từ hướng ' + goods.map(function (s) { return s.dir; }).join(', ') + '.</td></tr>' +
+        '<tr><td>Bàn thờ</td><td>Quay mặt về ' + goods[0].dir + ' (' + goods[0].star + '), lưng tựa tường vững chắc.</td></tr>' +
+        '<tr><td>Bếp nấu</td><td>Đặt bếp tại ' + bads[0].dir + ' (' + bads[0].star + '), cửa bếp quay về ' + goods[0].dir + ' (' + goods[0].star + '), theo nguyên tắc tọa hung hướng cát.</td></tr>' +
+        '<tr><td>Giường ngủ chính</td><td>Đầu giường quay về ' + sleep.dir + ' (' + sleep.star + ') để ưu tiên sức khỏe và giấc ngủ.</td></tr>' +
+        '<tr><td>Bàn làm việc, bàn học</td><td>Đặt tại phương ' + (goods.filter(function (s) { return s.star === 'Phục Vị'; })[0] || goods[3]).dir + ' (Phục Vị) để ổn định và tập trung.</td></tr>' +
+        '<tr><td>Nhà vệ sinh, kho</td><td>Đặt tại các phương xấu ' + bads.map(function (s) { return s.dir; }).join(', ') + ' để trấn áp khí xấu.</td></tr></table></div>' +
+        '<p class="ptv-note">Bản đồ này theo Bát Trạch dựa trên cung mệnh gia chủ và 8 phương vị quanh tâm nhà. Khi thiết kế nhà mới, hãy dùng tab kiểm tra từng phòng bên cạnh để đối chiếu từng vị trí cụ thể trên bản vẽ trước khi chốt.</p>' + L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+    c.querySelector('#ptn-room form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ptn-room'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value;
+      var room = ROOM_TXT[box.querySelector('#room').value], pdir = box.querySelector('#pdir').value;
+      var cp = L.cungPhi(y, g), s = L.starsFor(cp.cung)[L.DIRS.indexOf(pdir)], good = s.info.t === 'tốt';
+      var isBadGood = (box.querySelector('#room').value === 'bep' || box.querySelector('#room').value === 'wc');
+      var html = '<h3>' + room.name + ' tại phương ' + pdir + ' với gia chủ mệnh ' + cp.cung + ': sao ' + s.star + '</h3>' +
+        '<p>' + (good ? room.good : room.bad) + '</p>' +
+        '<p class="ptv-note">' + (isBadGood ? 'Lưu ý: riêng bếp và nhà vệ sinh, đặt tại phương xấu lại là đúng lệ trấn áp, ngược với các phòng sinh hoạt khác.' : 'Với các phòng sinh hoạt chính, phương tốt của gia chủ là nơi nên đặt.') + '</p>' + L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+  }
+
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-huong-nha-tot-xau': huongNhaV2, 'xem-phong-thuy-nha': phongThuyNhaV2 });
+})();
+
+/* --- Thuoc Lo Ban v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var LOBAN = [
+    { id: 'r522', name: 'Thước 52,2 cm (đo cửa, cổng, thông thủy)', cycle: 52.2, segs: [['Quý Nhân', 1, 'Gặp quý nhân giúp đỡ, công việc hanh thông'], ['Hiểm Họa', 0, 'Dễ gặp trở ngại, hao tốn'], ['Thiên Tai', 0, 'Tránh dùng, chủ về bất trắc'], ['Thiên Tài', 1, 'Tài lộc tìm đến, làm ăn phát đạt'], ['Phúc Lộc', 1, 'Phúc lộc dồi dào, con cháu hưởng phúc'], ['Cô Độc', 0, 'Chủ về đơn lẻ, thiếu hòa khí'], ['Thiên Tặc', 0, 'Dễ mất mát, trộm cắp để ý'], ['Tể Tướng', 1, 'Quyền uy, địa vị vững vàng']] },
+    { id: 'r429', name: 'Thước 42,9 cm (đo bàn, ghế, bếp, giường)', cycle: 42.9, segs: [['Tài', 1, 'Tài lộc, tiền bạc thuận lợi'], ['Bệnh', 0, 'Ảnh hưởng sức khỏe, nên tránh'], ['Ly', 0, 'Chia ly, xa cách'], ['Nghĩa', 1, 'Nghĩa tình, quan hệ tốt đẹp'], ['Quan', 1, 'Công danh, thi cử thuận lợi'], ['Nạn', 0, 'Tai nạn, biến cố bất ngờ'], ['Hại', 0, 'Tổn hại, hao tài'], ['Bản', 1, 'Gốc rễ vững, vốn liếng bền']] },
+    { id: 'r388', name: 'Thước 38,8 cm (đo bàn thờ, mộ, đồ thờ)', cycle: 38.8, segs: [['Đinh', 1, 'Con trai, thêm người thêm của'], ['Hại', 0, 'Tổn hại, nên tránh'], ['Vượng', 1, 'Thịnh vượng, phát triển'], ['Khổ', 0, 'Vất vả, khó khăn'], ['Nghĩa', 1, 'Nghĩa tình trọn vẹn'], ['Quan', 1, 'Quan lộc, địa vị'], ['Tử', 0, 'Hung, tuyệt đối tránh'], ['Hưng', 1, 'Hưng thịnh, đi lên'], ['Thất', 0, 'Thất thoát, mất mát'], ['Tài', 1, 'Tài lộc dồi dào']] }
+  ];
+  function measure(r, cm) {
+    var segLen = r.cycle / r.segs.length;
+    var pos = cm % r.cycle; if (pos === 0) pos = r.cycle;
+    var idx = Math.min(r.segs.length - 1, Math.floor((pos - 0.0001) / segLen));
+    var start = Math.floor(cm / r.cycle) * r.cycle + idx * segLen;
+    if (cm % r.cycle === 0) start = cm - segLen * (r.segs.length - idx) + 0; // truong hop bien cuoi chu ky
+    return { seg: r.segs[idx], start: start, end: start + segLen, segLen: segLen };
+  }
+  function fmt(n) { return String(Math.round(n * 10) / 10).replace('.', ','); }
+  function nearestGood(r, cm) {
+    var segLen = r.cycle / r.segs.length, base = Math.floor(cm / r.cycle) * r.cycle, out = [];
+    for (var k = -1; k <= 1; k++) {
+      for (var i = 0; i < r.segs.length; i++) {
+        if (!r.segs[i][1]) continue;
+        var s = base + k * r.cycle + i * segLen, e = s + segLen;
+        if (e > cm - segLen * 2 && s < cm + segLen * 2) out.push({ s: s, e: e, name: r.segs[i][0] });
+      }
+    }
+    out.sort(function (a, b) { return Math.abs((a.s + a.e) / 2 - cm) - Math.abs((b.s + b.e) / 2 - cm); });
+    return out.slice(0, 2);
+  }
+  var CATS = [
+    { id: 'cua-di', name: 'Cửa đi (chiều cao hoặc rộng thông thủy)', r: 'r522', min: 190, max: 240 },
+    { id: 'cua-so', name: 'Cửa sổ (chiều cao hoặc rộng thông thủy)', r: 'r522', min: 100, max: 200 },
+    { id: 'ban-tho', name: 'Bàn thờ (chiều ngang hoặc sâu)', r: 'r388', min: 80, max: 220 },
+    { id: 'bep-ban', name: 'Bàn bếp, bàn ăn, bàn làm việc', r: 'r429', min: 60, max: 220 },
+    { id: 'giuong', name: 'Giường ngủ (chiều dài hoặc rộng)', r: 'r429', min: 150, max: 230 },
+    { id: 'tu', name: 'Tủ, kệ (chiều cao hoặc ngang)', r: 'r429', min: 80, max: 260 }
+  ];
+  function loBanV2(c) {
+    c.innerHTML = V.tabsHTML([['lb-one', 'Đo một kích thước'], ['lb-cat', 'Tra kích thước đẹp theo hạng mục'], ['lb-multi', 'Đo nhiều kích thước']]) +
+      '<div id="lb-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Kích thước cần đo (cm)', '<input type="text" id="cm" inputmode="decimal" value="81">', 'ptv-field-name') + '</div>', 'Đo thước Lỗ Ban') + '</div>' +
+      '<div id="lb-cat" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Hạng mục', L.select('cat', CATS.map(function (x) { return '<option value="' + x.id + '">' + x.name + '</option>'; }).join(''))) + '</div><div class="ptv-row">' + L.field('Khoảng tối thiểu (cm)', '<input type="text" id="mn" inputmode="decimal" value="190">') + L.field('Khoảng tối đa (cm)', '<input type="text" id="mx" inputmode="decimal" value="240">') + '</div>', 'Tra các khoảng đẹp') + '</div>' +
+      '<div id="lb-multi" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Loại thước áp dụng', L.select('r', LOBAN.map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join(''))) + '</div><div class="ptv-row">' + L.field('Danh sách kích thước, mỗi dòng một số (cm)', '<textarea id="list" rows="6">81\n107\n127\n153\n197\n217</textarea>', 'ptv-field-name') + '</div>', 'Đo cả danh sách') + '</div>';
+    V.wireTabs(c, ['lb-one', 'lb-cat', 'lb-multi']);
+    var catSel = c.querySelector('#lb-cat #cat');
+    catSel.addEventListener('change', function () {
+      var cat = CATS.filter(function (x) { return x.id === catSel.value; })[0];
+      c.querySelector('#lb-cat #mn').value = cat.min; c.querySelector('#lb-cat #mx').value = cat.max;
+    });
+    c.querySelector('#lb-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb-one'), cm = parseFloat(String(box.querySelector('#cm').value).replace(',', '.'));
+      if (!cm || cm <= 0) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập một kích thước lớn hơn 0, tính bằng cm nhé.</p>'); return; }
+      var html = '<h3>Kết quả đo ' + fmt(cm) + ' cm trên 3 loại thước Lỗ Ban</h3>';
+      LOBAN.forEach(function (r) {
+        var m = measure(r, cm);
+        html += '<div class="ptv-block"><div class="ptv-block-head"><span>' + r.name + '</span><span class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">Cung ' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</span></div><p>Kích thước ' + fmt(cm) + ' cm rơi vào cung ' + m.seg[0] + ' (từ ' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm). ' + m.seg[2] + '.</p>' +
+          (m.seg[1] ? '' : '<p><strong>Gợi ý chỉnh về cung tốt gần nhất:</strong> ' + nearestGood(r, cm).map(function (g) { return 'khoảng ' + fmt(g.s) + ' đến ' + fmt(g.e) + ' cm (cung ' + g.name + ')'; }).join(' hoặc ') + '.</p>') + '</div>';
+      });
+      html += '<p class="ptv-note">Mỗi hạng mục chỉ nên chốt theo MỘT loại thước đúng công dụng của nó: cửa và thông thủy dùng thước 52,2; bàn ghế, bếp, giường dùng thước 42,9; bàn thờ và đồ thờ dùng thước 38,8. Đừng cố ép một kích thước phải đẹp trên cả ba thước, vì chu kỳ khác nhau nên rất hiếm khi đẹp đồng thời.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#lb-cat form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb-cat'), cat = CATS.filter(function (x) { return x.id === box.querySelector('#cat').value; })[0];
+      var r = LOBAN.filter(function (x) { return x.id === cat.r; })[0];
+      var mn = parseFloat(String(box.querySelector('#mn').value).replace(',', '.')), mx = parseFloat(String(box.querySelector('#mx').value).replace(',', '.'));
+      if (!mn || !mx || mx <= mn) { L.resultBox(box, '<p class="ptv-bad">Khoảng tra chưa hợp lệ, bạn kiểm tra lại nhé.</p>'); return; }
+      var segLen = r.cycle / r.segs.length, rows = '', from = Math.floor(mn / r.cycle) * r.cycle;
+      for (var base = from; base < mx; base += r.cycle) {
+        for (var i = 0; i < r.segs.length; i++) {
+          if (!r.segs[i][1]) continue;
+          var s = base + i * segLen, e = s + segLen;
+          if (e <= mn || s >= mx) continue;
+          rows += '<tr><td><strong>' + fmt(Math.max(s, mn)) + ' đến ' + fmt(Math.min(e, mx)) + ' cm</strong></td><td>' + r.segs[i][0] + '</td><td>' + r.segs[i][2] + '</td></tr>';
+        }
+      }
+      var html = '<h3>Các khoảng kích thước đẹp cho ' + cat.name.toLowerCase() + ' trong ' + fmt(mn) + ' đến ' + fmt(mx) + ' cm</h3>' +
+        '<p>Áp dụng ' + r.name.toLowerCase() + '. Bạn chọn bất kỳ số đo nào nằm trọn trong một khoảng dưới đây là rơi vào cung tốt:</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Khoảng đẹp (cm)</th><th>Cung</th><th>Ý nghĩa</th></tr>' + rows + '</table></div>' +
+        '<p class="ptv-note">Khi thi công, hãy chốt số đo ở giữa khoảng đẹp thay vì sát mép, để sai số vài mm ngoài công trường không đẩy kích thước sang cung xấu.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#lb-multi form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb-multi'), r = LOBAN.filter(function (x) { return x.id === box.querySelector('#r').value; })[0];
+      var nums = box.querySelector('#list').value.split(/\s+/).map(function (s) { return parseFloat(String(s).replace(',', '.')); }).filter(function (n) { return n > 0; });
+      if (!nums.length) { L.resultBox(box, '<p class="ptv-bad">Danh sách chưa có kích thước hợp lệ nào.</p>'); return; }
+      var rows = nums.map(function (cm) {
+        var m = measure(r, cm);
+        return '<tr><td><strong>' + fmt(cm) + ' cm</strong></td><td class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</td><td>' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm</td><td>' + (m.seg[1] ? 'Giữ nguyên' : 'Chỉnh về ' + nearestGood(r, cm).map(function (g) { return fmt(g.s) + '–' + fmt(g.e); }).join(' hoặc ')) + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Đo ' + nums.length + ' kích thước theo ' + r.name.toLowerCase() + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Kích thước</th><th>Cung</th><th>Khoảng của cung</th><th>Gợi ý</th></tr>' + rows + '</table></div>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'thuoc-lo-ban': loBanV2 });
+})();
