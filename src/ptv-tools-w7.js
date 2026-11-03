@@ -217,3 +217,219 @@
 
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-huong-nha-tot-xau': huongNhaV2, 'xem-phong-thuy-nha': phongThuyNhaV2 });
 })();
+
+/* --- Thuoc Lo Ban v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var LOBAN = [
+    { id: 'r522', name: 'Thước 52,2 cm (đo cửa, cổng, thông thủy)', cycle: 52.2, segs: [['Quý Nhân', 1, 'Gặp quý nhân giúp đỡ, công việc hanh thông'], ['Hiểm Họa', 0, 'Dễ gặp trở ngại, hao tốn'], ['Thiên Tai', 0, 'Tránh dùng, chủ về bất trắc'], ['Thiên Tài', 1, 'Tài lộc tìm đến, làm ăn phát đạt'], ['Phúc Lộc', 1, 'Phúc lộc dồi dào, con cháu hưởng phúc'], ['Cô Độc', 0, 'Chủ về đơn lẻ, thiếu hòa khí'], ['Thiên Tặc', 0, 'Dễ mất mát, trộm cắp để ý'], ['Tể Tướng', 1, 'Quyền uy, địa vị vững vàng']] },
+    { id: 'r429', name: 'Thước 42,9 cm (đo bàn, ghế, bếp, giường)', cycle: 42.9, segs: [['Tài', 1, 'Tài lộc, tiền bạc thuận lợi'], ['Bệnh', 0, 'Ảnh hưởng sức khỏe, nên tránh'], ['Ly', 0, 'Chia ly, xa cách'], ['Nghĩa', 1, 'Nghĩa tình, quan hệ tốt đẹp'], ['Quan', 1, 'Công danh, thi cử thuận lợi'], ['Nạn', 0, 'Tai nạn, biến cố bất ngờ'], ['Hại', 0, 'Tổn hại, hao tài'], ['Bản', 1, 'Gốc rễ vững, vốn liếng bền']] },
+    { id: 'r388', name: 'Thước 38,8 cm (đo bàn thờ, mộ, đồ thờ)', cycle: 38.8, segs: [['Đinh', 1, 'Con trai, thêm người thêm của'], ['Hại', 0, 'Tổn hại, nên tránh'], ['Vượng', 1, 'Thịnh vượng, phát triển'], ['Khổ', 0, 'Vất vả, khó khăn'], ['Nghĩa', 1, 'Nghĩa tình trọn vẹn'], ['Quan', 1, 'Quan lộc, địa vị'], ['Tử', 0, 'Hung, tuyệt đối tránh'], ['Hưng', 1, 'Hưng thịnh, đi lên'], ['Thất', 0, 'Thất thoát, mất mát'], ['Tài', 1, 'Tài lộc dồi dào']] }
+  ];
+  function measure(r, cm) {
+    var segLen = r.cycle / r.segs.length;
+    var pos = cm % r.cycle; if (pos === 0) pos = r.cycle;
+    var idx = Math.min(r.segs.length - 1, Math.floor((pos - 0.0001) / segLen));
+    var start = Math.floor(cm / r.cycle) * r.cycle + idx * segLen;
+    if (cm % r.cycle === 0) start = cm - segLen * (r.segs.length - idx) + 0; // truong hop bien cuoi chu ky
+    return { seg: r.segs[idx], start: start, end: start + segLen, segLen: segLen };
+  }
+  function fmt(n) { return String(Math.round(n * 10) / 10).replace('.', ','); }
+  function nearestGood(r, cm) {
+    var segLen = r.cycle / r.segs.length, base = Math.floor(cm / r.cycle) * r.cycle, out = [];
+    for (var k = -1; k <= 1; k++) {
+      for (var i = 0; i < r.segs.length; i++) {
+        if (!r.segs[i][1]) continue;
+        var s = base + k * r.cycle + i * segLen, e = s + segLen;
+        if (e > cm - segLen * 2 && s < cm + segLen * 2) out.push({ s: s, e: e, name: r.segs[i][0] });
+      }
+    }
+    out.sort(function (a, b) { return Math.abs((a.s + a.e) / 2 - cm) - Math.abs((b.s + b.e) / 2 - cm); });
+    return out.slice(0, 2);
+  }
+  var CATS = [
+    { id: 'cua-di', name: 'Cửa đi (chiều cao hoặc rộng thông thủy)', r: 'r522', min: 190, max: 240 },
+    { id: 'cua-so', name: 'Cửa sổ (chiều cao hoặc rộng thông thủy)', r: 'r522', min: 100, max: 200 },
+    { id: 'ban-tho', name: 'Bàn thờ (chiều ngang hoặc sâu)', r: 'r388', min: 80, max: 220 },
+    { id: 'bep-ban', name: 'Bàn bếp, bàn ăn, bàn làm việc', r: 'r429', min: 60, max: 220 },
+    { id: 'giuong', name: 'Giường ngủ (chiều dài hoặc rộng)', r: 'r429', min: 150, max: 230 },
+    { id: 'tu', name: 'Tủ, kệ (chiều cao hoặc ngang)', r: 'r429', min: 80, max: 260 }
+  ];
+  function loBanV2(c) {
+    c.innerHTML = V.tabsHTML([['lb-one', 'Đo một kích thước'], ['lb-cat', 'Tra kích thước đẹp theo hạng mục'], ['lb-multi', 'Đo nhiều kích thước']]) +
+      '<div id="lb-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Kích thước cần đo (cm)', '<input type="text" id="cm" inputmode="decimal" value="81">', 'ptv-field-name') + '</div>', 'Đo thước Lỗ Ban') + '</div>' +
+      '<div id="lb-cat" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Hạng mục', L.select('cat', CATS.map(function (x) { return '<option value="' + x.id + '">' + x.name + '</option>'; }).join(''))) + '</div><div class="ptv-row">' + L.field('Khoảng tối thiểu (cm)', '<input type="text" id="mn" inputmode="decimal" value="190">') + L.field('Khoảng tối đa (cm)', '<input type="text" id="mx" inputmode="decimal" value="240">') + '</div>', 'Tra các khoảng đẹp') + '</div>' +
+      '<div id="lb-multi" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Loại thước áp dụng', L.select('r', LOBAN.map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join(''))) + '</div><div class="ptv-row">' + L.field('Danh sách kích thước, mỗi dòng một số (cm)', '<textarea id="list" rows="6">81\n107\n127\n153\n197\n217</textarea>', 'ptv-field-name') + '</div>', 'Đo cả danh sách') + '</div>';
+    V.wireTabs(c, ['lb-one', 'lb-cat', 'lb-multi']);
+    var catSel = c.querySelector('#lb-cat #cat');
+    catSel.addEventListener('change', function () {
+      var cat = CATS.filter(function (x) { return x.id === catSel.value; })[0];
+      c.querySelector('#lb-cat #mn').value = cat.min; c.querySelector('#lb-cat #mx').value = cat.max;
+    });
+    c.querySelector('#lb-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb-one'), cm = parseFloat(String(box.querySelector('#cm').value).replace(',', '.'));
+      if (!cm || cm <= 0) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập một kích thước lớn hơn 0, tính bằng cm nhé.</p>'); return; }
+      var html = '<h3>Kết quả đo ' + fmt(cm) + ' cm trên 3 loại thước Lỗ Ban</h3>';
+      LOBAN.forEach(function (r) {
+        var m = measure(r, cm);
+        html += '<div class="ptv-block"><div class="ptv-block-head"><span>' + r.name + '</span><span class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">Cung ' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</span></div><p>Kích thước ' + fmt(cm) + ' cm rơi vào cung ' + m.seg[0] + ' (từ ' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm). ' + m.seg[2] + '.</p>' +
+          (m.seg[1] ? '' : '<p><strong>Gợi ý chỉnh về cung tốt gần nhất:</strong> ' + nearestGood(r, cm).map(function (g) { return 'khoảng ' + fmt(g.s) + ' đến ' + fmt(g.e) + ' cm (cung ' + g.name + ')'; }).join(' hoặc ') + '.</p>') + '</div>';
+      });
+      html += '<p class="ptv-note">Mỗi hạng mục chỉ nên chốt theo MỘT loại thước đúng công dụng của nó: cửa và thông thủy dùng thước 52,2; bàn ghế, bếp, giường dùng thước 42,9; bàn thờ và đồ thờ dùng thước 38,8. Đừng cố ép một kích thước phải đẹp trên cả ba thước, vì chu kỳ khác nhau nên rất hiếm khi đẹp đồng thời.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#lb-cat form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb-cat'), cat = CATS.filter(function (x) { return x.id === box.querySelector('#cat').value; })[0];
+      var r = LOBAN.filter(function (x) { return x.id === cat.r; })[0];
+      var mn = parseFloat(String(box.querySelector('#mn').value).replace(',', '.')), mx = parseFloat(String(box.querySelector('#mx').value).replace(',', '.'));
+      if (!mn || !mx || mx <= mn) { L.resultBox(box, '<p class="ptv-bad">Khoảng tra chưa hợp lệ, bạn kiểm tra lại nhé.</p>'); return; }
+      var segLen = r.cycle / r.segs.length, rows = '', from = Math.floor(mn / r.cycle) * r.cycle;
+      for (var base = from; base < mx; base += r.cycle) {
+        for (var i = 0; i < r.segs.length; i++) {
+          if (!r.segs[i][1]) continue;
+          var s = base + i * segLen, e = s + segLen;
+          if (e <= mn || s >= mx) continue;
+          rows += '<tr><td><strong>' + fmt(Math.max(s, mn)) + ' đến ' + fmt(Math.min(e, mx)) + ' cm</strong></td><td>' + r.segs[i][0] + '</td><td>' + r.segs[i][2] + '</td></tr>';
+        }
+      }
+      var html = '<h3>Các khoảng kích thước đẹp cho ' + cat.name.toLowerCase() + ' trong ' + fmt(mn) + ' đến ' + fmt(mx) + ' cm</h3>' +
+        '<p>Áp dụng ' + r.name.toLowerCase() + '. Bạn chọn bất kỳ số đo nào nằm trọn trong một khoảng dưới đây là rơi vào cung tốt:</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Khoảng đẹp (cm)</th><th>Cung</th><th>Ý nghĩa</th></tr>' + rows + '</table></div>' +
+        '<p class="ptv-note">Khi thi công, hãy chốt số đo ở giữa khoảng đẹp thay vì sát mép, để sai số vài mm ngoài công trường không đẩy kích thước sang cung xấu.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#lb-multi form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb-multi'), r = LOBAN.filter(function (x) { return x.id === box.querySelector('#r').value; })[0];
+      var nums = box.querySelector('#list').value.split(/\s+/).map(function (s) { return parseFloat(String(s).replace(',', '.')); }).filter(function (n) { return n > 0; });
+      if (!nums.length) { L.resultBox(box, '<p class="ptv-bad">Danh sách chưa có kích thước hợp lệ nào.</p>'); return; }
+      var rows = nums.map(function (cm) {
+        var m = measure(r, cm);
+        return '<tr><td><strong>' + fmt(cm) + ' cm</strong></td><td class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</td><td>' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm</td><td>' + (m.seg[1] ? 'Giữ nguyên' : 'Chỉnh về ' + nearestGood(r, cm).map(function (g) { return fmt(g.s) + '–' + fmt(g.e); }).join(' hoặc ')) + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Đo ' + nums.length + ' kích thước theo ' + r.name.toLowerCase() + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Kích thước</th><th>Cung</th><th>Khoảng của cung</th><th>Gợi ý</th></tr>' + rows + '</table></div>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'thuoc-lo-ban': loBanV2 });
+})();
+
+/* --- Than so hoc + Cung hoang dao v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function reduceNum(n) { while (n > 9 && n !== 11 && n !== 22) { n = String(n).split('').reduce(function (a, c) { return a + parseInt(c, 10); }, 0); } return n; }
+  function sumD(n) { return String(n).split('').reduce(function (a, c) { return a + parseInt(c, 10); }, 0); }
+  function stripVN(s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); }
+  var LETTER_NUM = {}; 'abcdefghi'.split('').forEach(function (ch, i) { LETTER_NUM[ch] = i + 1; }); 'jklmnopqr'.split('').forEach(function (ch, i) { LETTER_NUM[ch] = i + 1; }); 'stuvwxyz'.split('').forEach(function (ch, i) { LETTER_NUM[ch] = i + 1; });
+  function nameNums(name) {
+    var clean = stripVN(name || '').replace(/[^a-z ]/g, ''), vowels = 'aeiou', soul = 0, expr = 0, cons = 0;
+    clean.replace(/ /g, '').split('').forEach(function (ch) { var n = LETTER_NUM[ch] || 0; expr += n; if (vowels.indexOf(ch) >= 0) soul += n; else cons += n; });
+    return { soul: reduceNum(soul), expr: reduceNum(expr), pers: reduceNum(cons) };
+  }
+  function dateFields2(p) {
+    return '<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="' + p + 'd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="' + p + 'm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="' + p + 'y" inputmode="numeric" value="1995">') + '</div>';
+  }
+  function readD(box, p) { return { d: parseInt(box.querySelector('#' + p + 'd').value, 10), m: parseInt(box.querySelector('#' + p + 'm').value, 10), y: parseInt(box.querySelector('#' + p + 'y').value, 10) }; }
+  function numBlock(data, title, n, intro) {
+    var e = data.numbers[String(n)] || {};
+    if (!e.traits) return '';
+    return '<div class="ptv-block"><div class="ptv-block-head"><span>' + title + '</span><span class="ptv-block-score">Số ' + n + '</span></div><p><strong>' + esc(e.name || '') + '</strong>. ' + (intro || '') + esc(e.traits) + '</p><p><em>Sự nghiệp:</em> ' + esc(e.career || '') + '</p><p><em>Tình cảm:</em> ' + esc(e.love || '') + '</p></div>';
+  }
+
+  function thanSoV2(c) {
+    var data = (window.PTV_TOOLS_DATA || {}).thanSoHoc || { numbers: {} };
+    c.innerHTML = V.tabsHTML([['ts-full', 'Hồ sơ thần số học đầy đủ'], ['ts-lookup', 'Tra cứu ý nghĩa từng con số']]) +
+      '<div id="ts-full">' + V.formWrap2('<div class="ptv-row">' + L.field('Họ tên đầy đủ (tên thường dùng)', '<input type="text" id="nm" value="">', 'ptv-field-name') + '</div>' + dateFields2('b'), 'Xem hồ sơ thần số học') + '</div>' +
+      '<div id="ts-lookup" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Con số muốn tra', L.select('n', ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', '22'].map(function (n) { return '<option value="' + n + '">Số ' + n + '</option>'; }).join(''))) + '</div>', 'Tra ý nghĩa số này') + '</div>';
+    V.wireTabs(c, ['ts-full', 'ts-lookup']);
+    c.querySelector('#ts-full form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ts-full'), dt = readD(box, 'b'), nm = box.querySelector('#nm').value || '';
+      if (!dt.d || !dt.m || !dt.y) { L.resultBox(box, '<p>Bạn nhập đủ ngày tháng năm sinh nhé.</p>'); return; }
+      var lp = reduceNum(sumD(dt.d) + sumD(dt.m) + sumD(dt.y)), nn = nameNums(nm);
+      var dayN = reduceNum(dt.d), maturity = reduceNum(lp + nn.expr);
+      var digits = (String(dt.d) + String(dt.m) + String(dt.y)).split('').map(Number);
+      var present = [], missing = [];
+      for (var k = 1; k <= 9; k++) { var cnt = digits.filter(function (x) { return x === k; }).length; if (cnt) present.push(k + (cnt > 1 ? ' (×' + cnt + ')' : '')); else missing.push(k); }
+      var html = '<h3>Hồ sơ thần số học của ' + (nm ? esc(nm) : 'bạn') + ', sinh ' + dt.d + '/' + dt.m + '/' + dt.y + '</h3>' +
+        numBlock(data, 'Số chủ đạo (đường đời)', lp, 'Đây là con số quan trọng nhất, tính từ ngày tháng năm sinh. ') +
+        (nm ? numBlock(data, 'Số linh hồn (khát vọng bên trong)', nn.soul, 'Tính từ các nguyên âm trong tên. ') + numBlock(data, 'Số biểu đạt (năng lực thể hiện ra ngoài)', nn.expr, 'Tính từ toàn bộ họ tên. ') + numBlock(data, 'Số nhân cách (ấn tượng ban đầu)', nn.pers, 'Tính từ các phụ âm trong tên. ') : '<p class="ptv-note">Bạn chưa nhập họ tên nên ba con số của tên (linh hồn, biểu đạt, nhân cách) chưa được tính. Hãy nhập tên thường dùng nhất của bạn để có hồ sơ đầy đủ.</p>') +
+        numBlock(data, 'Số ngày sinh (tài năng bẩm sinh)', dayN, '') +
+        (nm ? numBlock(data, 'Số trưởng thành (nửa sau cuộc đời)', maturity, 'Bằng số chủ đạo cộng số biểu đạt, thường phát huy rõ từ sau tuổi 35 đến 40. ') : '') +
+        '<h3>Biểu đồ ngày sinh của bạn</h3><p>Các con số xuất hiện trong ngày sinh: <strong>' + present.join(', ') + '</strong>. Các con số vắng mặt: <strong>' + missing.join(', ') + '</strong>. Trong thần số học, số có mặt là năng lượng bạn sẵn có và dùng tự nhiên; số vắng mặt là bài học bạn thường phải rèn luyện thêm trong đời. Số xuất hiện nhiều lần (×2, ×3) thì năng lượng đó càng đậm, cần để ý cả mặt quá và mặt thiếu của nó.</p>' +
+        '<p class="ptv-note">Hồ sơ do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> tính theo hệ Pythagoras phổ biến: rút gọn giữ hai số bậc thầy 11 và 22, tên chuyển về không dấu trước khi quy đổi chữ cái.</p>' +
+        '<p><button type="button" class="ptv-copy-btn">Sao chép tóm tắt hồ sơ</button></p>';
+      L.resultBox(box, html);
+      var btn = box.querySelector('.ptv-copy-btn');
+      if (btn) btn.addEventListener('click', function () {
+        var text = 'Thần số học ' + (nm || '') + ' sinh ' + dt.d + '/' + dt.m + '/' + dt.y + ': số chủ đạo ' + lp + ', số ngày sinh ' + dayN + (nm ? ', linh hồn ' + nn.soul + ', biểu đạt ' + nn.expr + ', nhân cách ' + nn.pers + ', trưởng thành ' + maturity : '') + '. (Phong Thủy VietAA, phongthuy.vietaa.com)';
+        function done() { btn.textContent = 'Đã sao chép'; setTimeout(function () { btn.textContent = 'Sao chép tóm tắt hồ sơ'; }, 2000); }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, done); else done();
+      });
+    });
+    c.querySelector('#ts-lookup form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ts-lookup'), n = box.querySelector('#n').value;
+      L.resultBox(box, '<h3>Ý nghĩa số ' + n + ' trong thần số học</h3>' + numBlock(data, 'Số ' + n, parseInt(n, 10)) + '<p class="ptv-note">Cùng một con số nhưng ở vị trí khác nhau (chủ đạo, linh hồn, biểu đạt...) thì cách thể hiện sẽ khác nhau theo vị trí đó. Xem hồ sơ đầy đủ ở tab bên cạnh để biết số này nằm ở đâu trong bộ số của bạn.</p>');
+    });
+  }
+
+  var ZOD_BOUNDS = [[3, 21, 4, 19, 0], [4, 20, 5, 20, 1], [5, 21, 6, 21, 2], [6, 22, 7, 22, 3], [7, 23, 8, 22, 4], [8, 23, 9, 22, 5], [9, 23, 10, 23, 6], [10, 24, 11, 22, 7], [11, 23, 12, 21, 8], [12, 22, 1, 19, 9], [1, 20, 2, 18, 10], [2, 19, 3, 20, 11]];
+  function signOf(d, m) { for (var i = 0; i < ZOD_BOUNDS.length; i++) { var b = ZOD_BOUNDS[i]; if ((m === b[0] && d >= b[1]) || (m === b[2] && d <= b[3])) return i; } return 9; }
+  var EL_PAIR = {
+    'Lửa|Lửa': [90, 'Hai cung cùng hành Lửa: bùng nổ, thẳng thắn và rất hút nhau lúc đầu; cần học cách nhường nhau khi cùng nổi nóng.'],
+    'Đất|Đất': [90, 'Hai cung cùng hành Đất: cùng coi trọng ổn định và thực tế, xây dựng được nền tảng bền; nên chủ động tạo thêm sự mới mẻ để tránh nhàm chán.'],
+    'Khí|Khí': [90, 'Hai cung cùng hành Khí: nói chuyện không hết đề tài, rất hiểu nhau về mặt trí tuệ; cần thêm cam kết cụ thể để quan hệ không dừng ở mức bạn bè thân.'],
+    'Nước|Nước': [90, 'Hai cung cùng hành Nước: thấu cảm sâu sắc, gắn bó tình cảm mạnh; cần tỉnh táo để không cùng nhau chìm trong cảm xúc tiêu cực.'],
+    'Lửa|Khí': [82, 'Lửa và Khí là cặp tương sinh kinh điển: Khí thổi bùng Lửa, Lửa cho Khí điểm tựa hành động. Cặp này hợp cả làm bạn, làm ăn lẫn yêu đương.'],
+    'Đất|Nước': [82, 'Đất và Nước là cặp tương sinh kinh điển: Đất cho Nước bờ bãi ổn định, Nước nuôi Đất màu mỡ. Cặp này bền và thực tế, hợp xây dựng lâu dài.'],
+    'Lửa|Nước': [45, 'Lửa và Nước vốn khắc nhau: một bên cảm xúc mãnh liệt, một bên cần được vỗ về nhẹ nhàng. Không phải không hợp, nhưng cần rất nhiều thấu hiểu và thỏa hiệp mới bền.'],
+    'Đất|Khí': [48, 'Đất thực tế gặp Khí bay bổng: dễ thấy nhau khó hiểu lúc đầu, một bên cần chắc chắn, một bên cần tự do. Nếu tôn trọng được nhịp khác biệt này, đây lại là cặp bổ sung cho nhau rất tốt.'],
+    'Lửa|Đất': [62, 'Lửa và Đất ở mức trung tính khá: Đất ngưỡng mộ sự quyết liệt của Lửa, Lửa cần sự vững chãi của Đất; chỉ cần thống nhất tốc độ ra quyết định là đi được đường dài.'],
+    'Khí|Nước': [62, 'Khí và Nước ở mức trung tính khá: Nước cảm xúc gặp Khí lý trí, nếu Khí học cách lắng nghe bằng trái tim và Nước học cách nói thẳng nhu cầu, cặp này rất ăn ý.']
+  };
+  function pairKey(e1, e2) { var k = e1 + '|' + e2; if (EL_PAIR[k]) return EL_PAIR[k]; return EL_PAIR[e2 + '|' + e1] || [60, '']; }
+  function hoangDaoV2(c) {
+    var zlist = (window.PTV_TOOLS_DATA || {}).zodiac || [];
+    function zHTML(z) {
+      return '<h3>' + esc(z.sign) + ' (' + esc(z.dates) + ') · Hành ' + esc(z.element) + '</h3><p>' + esc(z.traits) + '</p><p><strong>Sự nghiệp:</strong> ' + esc(z.career) + '</p><p><strong>Tình duyên:</strong> ' + esc(z.love) + '</p><p><strong>May mắn:</strong> ' + esc(z.lucky) + '</p>';
+    }
+    function signSelect(id) { return L.select(id, zlist.map(function (z, i) { return '<option value="' + i + '">' + z.sign + ' (' + z.dates + ')</option>'; }).join('')); }
+    c.innerHTML = V.tabsHTML([['hd-one', 'Cung hoàng đạo của bạn'], ['hd-pair', 'Độ hợp giữa hai cung'], ['hd-all', 'Bảng 12 cung hoàng đạo']]) +
+      '<div id="hd-one">' + V.formWrap2(dateFields2('b'), 'Xem cung hoàng đạo') + '</div>' +
+      '<div id="hd-pair" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Cung của người thứ nhất', signSelect('s1')) + L.field('Cung của người thứ hai', signSelect('s2')) + '</div>', 'Xem độ hợp hai cung') + '</div>' +
+      '<div id="hd-all" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['hd-one', 'hd-pair', 'hd-all']);
+    c.querySelector('#hd-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hd-one'), dt = readD(box, 'b');
+      if (!dt.d || !dt.m) { L.resultBox(box, '<p>Bạn nhập ngày và tháng sinh nhé.</p>'); return; }
+      var idx = signOf(dt.d, dt.m), z = zlist[idx];
+      var cuspNote = '';
+      var prev = zlist[(idx + 11) % 12], next = zlist[(idx + 1) % 12];
+      var b = ZOD_BOUNDS[idx];
+      if ((dt.m === b[0] && dt.d - b[1] <= 1) || (dt.m === b[2] && b[3] - dt.d <= 1)) cuspNote = '<p class="ptv-note">Bạn sinh rất sát ngày chuyển cung (gần ranh giới với ' + (dt.m === b[0] ? prev.sign : next.sign) + '). Người sinh sát ranh giới thường mang thêm ít nhiều nét của cung kề bên, bạn có thể đọc thêm phần luận của cung đó để đối chiếu.</p>';
+      L.resultBox(box, zHTML(z) + cuspNote);
+    });
+    c.querySelector('#hd-pair form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hd-pair'), z1 = zlist[parseInt(box.querySelector('#s1').value, 10)], z2 = zlist[parseInt(box.querySelector('#s2').value, 10)];
+      var pk = pairKey(z1.element, z2.element);
+      var html = '<h3>' + z1.sign + ' và ' + z2.sign + ': độ hợp ' + pk[0] + '%</h3><p>' + pk[1] + '</p>' +
+        '<p><strong>' + z1.sign + ' (hành ' + z1.element + '):</strong> ' + esc(z1.love) + '</p>' +
+        '<p><strong>' + z2.sign + ' (hành ' + z2.element + '):</strong> ' + esc(z2.love) + '</p>' +
+        '<p class="ptv-note">Độ hợp tính theo quan hệ bốn nhóm hành của chiêm tinh phương Tây (Lửa, Đất, Khí, Nước) và chỉ là một lớp tham khảo vui. Hai cung điểm thấp vẫn có thể rất bền nếu hai người thật sự hiểu nhau, và ngược lại.</p>';
+      L.resultBox(box, html);
+    });
+    var rendered = false;
+    c.querySelector('[data-t="hd-all"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var rows = zlist.map(function (z) { return '<tr><td><strong>' + z.sign + '</strong></td><td>' + z.dates + '</td><td>' + z.element + '</td><td>' + esc(z.lucky) + '</td></tr>'; }).join('');
+      c.querySelector('#hd-all .ptv-out').innerHTML = '<h3>Bảng tra nhanh 12 cung hoàng đạo theo ngày sinh</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cung</th><th>Ngày sinh</th><th>Hành</th><th>May mắn</th></tr>' + rows + '</table></div>';
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-than-so-hoc': thanSoV2, 'xem-cung-hoang-dao': hoangDaoV2 });
+})();
