@@ -239,6 +239,7 @@
     'chon-nghe-hop-tuoi': function (c) { chonTheoMenh(c, 'nghe', 'Nghề nghiệp hợp tuổi'); }, 'chon-mau-sac-hop-tuoi': function (c) { chonTheoMenh(c, 'mau', 'Màu sắc hợp tuổi'); },
     'chon-trang-suc-hop-tuoi': function (c) { chonTheoMenh(c, 'trangSuc', 'Trang sức hợp tuổi'); }, 'chon-cay-trong-hop-tuoi': function (c) { chonTheoMenh(c, 'cay', 'Cây trồng hợp tuổi'); },
     'chon-quan-ao-hop-tuoi': function (c) { chonTheoMenh(c, 'quanAo', 'Quần áo hợp tuổi'); } };
+  window.PTV_MENH_GUIDE = MENH_GUIDE;
   window.PTVTools = Object.assign({}, window.PTVToolsW1a || {}, W1b, window.PTVTools || {});
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-ptv-tool]').forEach(function (c) {
