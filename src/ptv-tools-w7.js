@@ -740,3 +740,103 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'la-bai-ban-menh': laBaiV2, 'xem-tu-vi-tay-phuong': tuViTayV2 });
 })();
+
+/* --- Gieo que Quan Thanh + Giai ma giac mo v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var QT_TONES = {
+    'Thượng thượng': { verse: ['Mây tan trời sáng tỏ', 'Đường rộng thênh thang mở lối về', 'Việc cầu như ý nguyện', 'Quý nhân đưa bước chẳng hề sai'], text: 'Đây là quẻ thượng thượng, cát tường bậc nhất. Việc bạn cầu đang ở thế thuận buồm xuôi gió, nên mạnh dạn tiến hành, đồng thời nhớ chia sẻ phúc lộc cho người xung quanh để giữ bền.', nen: 'Mạnh dạn bắt đầu việc đã dự định, ký kết và mở rộng trong lúc vận đang sáng.', khong: 'Đừng vì quá thuận mà chủ quan bỏ qua khâu kiểm tra giấy tờ và lời hứa miệng.' },
+    'Thượng': { verse: ['Suối nguồn vừa mở lối', 'Cây khô gặp tiết xuân sang', 'Công danh tài lộc rõ ràng', 'Chậm mà chắc chắn, chớ mang vội vàng'], text: 'Quẻ thượng, điềm lành rõ rệt. Việc cầu có quý nhân đỡ, kết quả tốt nếu bạn làm đúng trình tự và giữ chữ tín.', nen: 'Làm đúng trình tự, giữ chữ tín và nhờ người có kinh nghiệm đỡ đầu.', khong: 'Đừng nóng vội đốt cháy giai đoạn, quẻ tốt nhưng kỵ sự hấp tấp.' },
+    'Trung': { verse: ['Nửa mừng nửa lại lo', 'Đường đi khúc khuỷu chưa thông', 'Giữ lòng cho vững chớ nông', 'Qua cơn bĩ cực tới vòng thái lai'], text: 'Quẻ trung bình, tốt xấu đan xen. Việc cầu chưa thành ngay, cần kiên nhẫn và điều chỉnh từng bước, tránh quyết định bốc đồng.', nen: 'Chia việc lớn thành bước nhỏ, làm tới đâu chắc tới đó và giữ phương án dự phòng.', khong: 'Đừng đặt cược toàn bộ vào một quyết định trong lúc đường đi chưa thông.' },
+    'Hạ': { verse: ['Gió mưa đương buổi tối trời', 'Thuyền con chớ vội ra khơi lúc này', 'Giữ mình chờ đợi đổi thay', 'Cẩn thận lời nói, việc hay hóa dở'], text: 'Quẻ hạ, điềm chưa thuận. Nên thu mình chờ thời, tránh đầu tư mạo hiểm và các việc cần quyết nhanh trong lúc này.', nen: 'Thu mình, hoàn thiện phần chuẩn bị và giữ gìn sức khỏe, gia đạo yên ổn là thắng lợi lúc này.', khong: 'Đừng ra quyết định lớn, đầu tư mạo hiểm hay tranh cãi đúng sai khi vận đang tối.' },
+    'Hạ hạ': { verse: ['Đêm dài chưa thấy ánh dương', 'Việc cầu trắc trở trăm đường khó khăn', 'An lòng giữ phận ân cần', 'Qua được vận hạn, phúc phần lại sinh'], text: 'Quẻ hạ hạ, giai đoạn khó khăn nhất thời. Đừng cưỡng cầu việc lớn, hãy chăm lo sức khỏe và gia đạo, vận sẽ đổi khi thời điểm chín muồi.', nen: 'Chăm lo sức khỏe và gia đạo, làm việc thiện lặng lẽ và chờ qua giai đoạn khó.', khong: 'Đừng cưỡng cầu việc lớn, vay mượn lớn hay thay đổi chỗ ở, công việc trong lúc này.' }
+  };
+  var QT_ORDER = ['Thượng thượng', 'Thượng', 'Thượng', 'Trung', 'Trung', 'Trung', 'Trung', 'Hạ', 'Hạ', 'Hạ hạ'];
+  var QT_TOPICS = {
+    'Tổng quát': 'Xét tổng thể, quẻ này nói về xu hướng chung của việc bạn cầu trong giai đoạn này. Hãy đối chiếu thêm hoàn cảnh thực tế của mình trước khi quyết.',
+    'Tài lộc': 'Về tài lộc: quẻ sáng thì hợp mở rộng và ký kết làm ăn, quẻ tối thì kỵ đầu tư theo lời rủ rê và cho vay số tiền lớn.',
+    'Công danh': 'Về công danh và thi cử: quẻ sáng báo hiệu sự ghi nhận xứng đáng nếu hồ sơ và chuẩn bị đã chu toàn, quẻ tối khuyên bạn bổ sung phần còn thiếu thay vì nôn nóng.',
+    'Tình duyên': 'Về tình duyên: quẻ sáng hợp bày tỏ và tiến thêm một bước rõ ràng, quẻ tối nhắc bạn chậm lại để nhìn đúng lòng mình và lòng người.',
+    'Sức khỏe': 'Về sức khỏe: quẻ này chỉ là lời nhắc về tâm thế, người đang có bệnh vẫn phải theo điều trị của bác sĩ. Quẻ tối là lời nhắc đi khám sớm thay vì tự chịu đựng.',
+    'Gia đạo': 'Về gia đạo: quẻ sáng là lúc hợp bàn việc lớn trong nhà, quẻ tối thì nhường nhịn và tránh tranh cãi chuyện cũ là cách giữ yên cửa nhà.'
+  };
+  function qtResult(n, topic) {
+    var tone = QT_ORDER[L.hashStr('qt|' + n) % 10], t = QT_TONES[tone];
+    return '<div class="ptv-kieu-verse">' + t.verse.map(function (v) { return '<p>' + v + '</p>'; }).join('') + '</div>' +
+      '<h3>Quẻ Quan Thánh số ' + n + ' · ' + tone + '</h3><p>' + t.text + '</p>' +
+      '<p><strong>Cầu về ' + topic.toLowerCase() + ':</strong> ' + QT_TOPICS[topic] + '</p>' +
+      '<p><strong>Việc nên làm:</strong> ' + t.nen + '</p><p><strong>Việc nên tránh:</strong> ' + t.khong + '</p>';
+  }
+  function quanThanhV2(c) {
+    c.innerHTML = V.tabsHTML([['qt-draw', 'Rút quẻ Quan Thánh'], ['qt-lookup', 'Tra quẻ theo số']]) +
+      '<div id="qt-draw"><div class="ptv-form"><p style="margin-top:0">Thành tâm khấn nguyện, chọn việc muốn cầu và nghĩ về điều đó, rồi bấm rút quẻ. Mỗi quẻ gồm thơ quẻ, luận giải tổng quát và phần luận riêng theo việc bạn cầu.</p>' +
+      '<div class="ptv-row">' + L.field('Bạn cầu việc gì', L.select('topic', Object.keys(QT_TOPICS).map(function (t) { return '<option value="' + t + '">' + t + '</option>'; }).join(''))) + '</div>' +
+      '<div class="ptv-kieu-verse" id="ptv-qt2"><p>🏮</p></div>' +
+      '<button type="button" class="ptv-btn" id="ptv-qt2-btn">Rút quẻ Quan Thánh</button></div><div class="ptv-out"></div></div>' +
+      '<div id="qt-lookup" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Số quẻ (1 đến 100)', '<input type="text" id="n" inputmode="numeric" value="1">') + '</div>', 'Tra quẻ số này') + '</div>';
+    V.wireTabs(c, ['qt-draw', 'qt-lookup']);
+    var shaking = false;
+    c.querySelector('#ptv-qt2-btn').addEventListener('click', function () {
+      if (shaking) return; shaking = true;
+      var box = c.querySelector('#qt-draw'), verseBox = box.querySelector('#ptv-qt2');
+      verseBox.innerHTML = '<p>🏮 Ống quẻ đang lắc... hãy giữ điều muốn cầu trong lòng.</p>';
+      setTimeout(function () {
+        shaking = false;
+        var n = 1 + Math.floor(Math.random() * 100), topic = box.querySelector('#topic').value;
+        var html = qtResult(n, topic) + '<p class="ptv-note">Thơ quẻ tại <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> được biên soạn theo đẳng quẻ (thượng thượng tới hạ hạ) để giữ đúng tinh thần quẻ Quan Thánh, chưa phải nguyên văn 100 bài thơ tại đền. Trang công bố rõ điều này để bạn đọc với tâm thế đúng mực.</p>';
+        var t = QT_TONES[QT_ORDER[L.hashStr('qt|' + n) % 10]];
+        verseBox.innerHTML = t.verse.map(function (v) { return '<p>' + v + '</p>'; }).join('');
+        L.resultBox(box, html);
+        try {
+          var hist = JSON.parse(localStorage.getItem('ptvQuanThanhHistory') || '[]');
+          hist.unshift({ n: n, topic: topic });
+          localStorage.setItem('ptvQuanThanhHistory', JSON.stringify(hist.slice(0, 5)));
+        } catch (e) {}
+      }, 900);
+    });
+    c.querySelector('#qt-lookup form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#qt-lookup'), n = parseInt(box.querySelector('#n').value, 10);
+      if (!n || n < 1 || n > 100) { L.resultBox(box, '<p>Số quẻ hợp lệ từ 1 đến 100, bạn kiểm tra lại nhé.</p>'); return; }
+      L.resultBox(box, qtResult(n, 'Tổng quát') + '<p class="ptv-note">Đẳng quẻ của từng số được giữ cố định theo truyền thống chia quẻ, thơ quẻ theo đẳng như phần giới thiệu ở tab rút quẻ.</p>');
+    });
+  }
+
+  function giacMoV2(c) {
+    var dict = (window.PTV_TOOLS_DATA || {}).dreamDict || [];
+    c.innerHTML = V.tabsHTML([['gm-search', 'Kể giấc mơ của bạn'], ['gm-dict', 'Từ điển giấc mơ phổ biến']]) +
+      '<div id="gm-search">' + V.formWrap2('<div class="ptv-row">' + L.field('Bạn mơ thấy điều gì?', '<input type="text" id="q" value="" placeholder="Ví dụ: mơ thấy rắn bò vào nhà">', 'ptv-field-name') + '</div>', 'Giải mã giấc mơ') + '</div>' +
+      '<div id="gm-dict" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['gm-search', 'gm-dict']);
+    c.querySelector('#gm-search form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gm-search'), q = (box.querySelector('#q').value || '').toLowerCase();
+      var matched = [];
+      dict.forEach(function (e) {
+        var bestK = 0;
+        (e.keywords || []).forEach(function (k) { if (q.indexOf(k.toLowerCase()) >= 0 && k.length > bestK) bestK = k.length; });
+        if (bestK) matched.push({ e: e, score: bestK });
+      });
+      matched.sort(function (a, b) { return b.score - a.score; });
+      if (!matched.length) {
+        L.resultBox(box, '<p>Chưa tìm thấy hình ảnh khớp với mô tả của bạn trong từ điển ' + dict.length + ' giấc mơ phổ biến. Bạn thử kể ngắn gọn bằng hình ảnh chính, ví dụ "rắn", "nước", "tiền", "răng rụng", hoặc mở tab từ điển bên cạnh để tra theo danh sách nhé.</p>');
+        return;
+      }
+      var top = matched[0].e;
+      var html = '<h3>' + esc(top.subject) + '</h3><p>' + esc(top.meaning) + '</p><p><strong>Con số gợi ý từ giấc mơ:</strong> ' + (top.numbers || []).join(', ') + '.</p>';
+      if (matched.length > 1) {
+        html += '<h3>Các hình ảnh khác cũng xuất hiện trong giấc mơ của bạn</h3>' + matched.slice(1, 4).map(function (m) { return '<p><strong>' + esc(m.e.subject) + ':</strong> ' + esc(m.e.meaning.split('.')[0]) + '. Con số gợi ý: ' + (m.e.numbers || []).join(', ') + '.</p>'; }).join('');
+      }
+      html += '<p class="ptv-note">Giải mã giấc mơ là lớp luận giải dân gian kết hợp tâm lý học phổ thông, dùng để suy ngẫm về những điều đang diễn ra trong đời bạn. Con số đi kèm mang tính giải trí, <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> không khuyến khích dùng vào mục đích cờ bạc.</p>';
+      L.resultBox(box, html);
+    });
+    var rendered = false;
+    c.querySelector('[data-t="gm-dict"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var rows = dict.map(function (e) { return '<tr><td><strong>' + esc(e.subject) + '</strong></td><td>' + (e.numbers || []).join(', ') + '</td></tr>'; }).join('');
+      c.querySelector('#gm-dict .ptv-out').innerHTML = '<h3>Từ điển ' + dict.length + ' giấc mơ phổ biến và con số gợi ý</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Giấc mơ</th><th>Con số gợi ý</th></tr>' + rows + '</table></div><p class="ptv-note">Muốn đọc phần luận giải đầy đủ của một giấc mơ, bạn quay lại tab kể giấc mơ và gõ hình ảnh đó vào ô tìm.</p>';
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'gieo-que-quan-thanh': quanThanhV2, 'giai-ma-giac-mo': giacMoV2 });
+})();

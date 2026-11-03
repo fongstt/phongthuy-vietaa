@@ -2994,3 +2994,116 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'giai-ma-hau-kiep': hauKiepV2, 'xem-duong-hoc-van': hocVanV2 });
 })();
+
+/* --- La bai ban menh + Tu vi tay phuong v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function df4(p) {
+    return '<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="' + p + 'd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="' + p + 'm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="' + p + 'y" inputmode="numeric" value="1995">') + '</div>';
+  }
+  var TAROTX = [
+    ['Kẻ Khờ', 'Khởi đầu mới, sự hồn nhiên và một bước nhảy niềm tin.', 'Dám bắt đầu, không sợ sai, năng lượng tươi mới.', 'Dễ liều lĩnh và thiếu chuẩn bị, nhảy việc theo cảm hứng.', 'Khi lá này ngược, bạn đang chần chừ trước một khởi đầu cần thiết, hoặc ngược lại đang liều mà chưa nhìn xuống chân mình.'],
+    ['Pháp Sư', 'Năng lực và sự chủ động đang ở trong tay bạn.', 'Biến ý tưởng thành việc thật, giỏi xoay xở nguồn lực.', 'Dễ ôm đồm và tin rằng một mình làm được tất cả.', 'Lá ngược nhắc bạn đang có đủ công cụ nhưng chưa chịu bắt tay, hoặc đang dùng khéo léo vào việc chưa xứng đáng.'],
+    ['Nữ Tư Tế', 'Trực giác và những điều chưa nói thành lời.', 'Trực giác nhạy, giữ được bí mật, nhìn thấu ý người.', 'Dễ khép mình, để cảm xúc ngầm chi phối quyết định.', 'Lá ngược cho thấy bạn đang bỏ qua tiếng nói bên trong, hoặc một thông tin quan trọng vẫn còn bị giấu.'],
+    ['Nữ Hoàng', 'Sự đủ đầy, chăm sóc và sáng tạo.', 'Nuôi dưỡng người khác và cả dự án của mình tới nơi tới chốn.', 'Dễ ôm hết việc chăm sóc mà quên bản thân.', 'Lá ngược nhắc bạn đang kiệt sức vì cho đi quá nhiều, hoặc một việc sáng tạo đang bị bỏ bê.'],
+    ['Hoàng Đế', 'Kỷ luật, cấu trúc và trách nhiệm.', 'Dựng nền chắc, giữ chữ tín, quản việc có hệ thống.', 'Dễ cứng nhắc và khó nhận sai trước người thân.', 'Lá ngược cảnh báo sự kiểm soát quá mức, hoặc ngược lại là thiếu kỷ luật ở đúng chỗ cần nhất.'],
+    ['Giáo Hoàng', 'Truyền thống, thầy dạy và niềm tin.', 'Học từ người đi trước, tôn trọng nền nếp tốt.', 'Dễ lệ thuộc vào khuôn mẫu, ngại làm khác số đông.', 'Lá ngược gợi ý bạn nên tự kiểm chứng thay vì tin theo lời khuyên quen thuộc trong việc này.'],
+    ['Người Tình', 'Lựa chọn của trái tim.', 'Chân thành trong tình cảm, dám chọn và chịu với lựa chọn.', 'Dễ đứng giữa hai lựa chọn quá lâu.', 'Lá ngược cho thấy một lựa chọn đang bị ép buộc hoặc trái lòng, cần rõ ràng trước khi đi tiếp.'],
+    ['Cỗ Xe', 'Chiến thắng nhờ ý chí và sự tập trung.', 'Quyết tâm cao, giữ hướng tốt dưới áp lực cạnh tranh.', 'Dễ thắng việc mà thua người, nóng vội ở chặng cuối.', 'Lá ngược nhắc bạn đang mất lái vì ôm hai hướng cùng lúc, cần chọn một mục tiêu chính.'],
+    ['Sức Mạnh', 'Sức mạnh mềm, kiên nhẫn và can đảm điềm tĩnh.', 'Thu phục bằng bình tĩnh, bền bỉ đáng nể.', 'Dễ nén cảm xúc quá lâu rồi bùng phát.', 'Lá ngược cho thấy bạn đang tự nghi ngờ mình, hoặc đang dùng sức cứng với việc cần sự mềm mỏng.'],
+    ['Ẩn Sĩ', 'Cần thời gian một mình để nhìn lại.', 'Sâu sắc, tự soi chiếu tốt, không chạy theo ồn ào.', 'Dễ thu mình quá lâu và bỏ lỡ người sẵn lòng giúp.', 'Lá ngược nhắc bạn đã ở trong hang đủ lâu, đến lúc mang điều đã ngộ ra trở lại với đời sống.'],
+    ['Bánh Xe Số Phận', 'Vận đang xoay chiều, cơ hội bất ngờ sắp tới.', 'Nắm bắt thời cơ nhanh, thích nghi giỏi.', 'Dễ phó mặc cho may rủi ở việc đáng ra tự quyết được.', 'Lá ngược cho thấy vận đang chậm lại ngoài ý muốn, việc cần làm là giữ vị thế thay vì cưỡng cầu.'],
+    ['Công Lý', 'Cân bằng và hậu quả rõ ràng.', 'Công bằng, minh bạch giấy tờ, nghĩ trước hậu quả.', 'Dễ khắt khe với lỗi nhỏ của người khác.', 'Lá ngược cảnh báo một việc đang thiếu công bằng hoặc giấy tờ chưa rõ ràng, cần rà soát kỹ.'],
+    ['Người Treo', 'Tạm dừng để nhìn việc từ góc khác.', 'Chịu dừng đúng lúc, hy sinh ngắn hạn cho dài hạn.', 'Dễ kẹt trong thế chờ đợi quá lâu.', 'Lá ngược cho thấy sự trì hoãn đã hết tác dụng, bạn đang treo mình vì sợ quyết định.'],
+    ['Thần Chết', 'Một chương cũ khép lại để chương mới mở ra.', 'Dám kết thúc điều đã hết thời, tái sinh mạnh mẽ.', 'Dễ níu giữ quá khứ vì sợ khoảng trống.', 'Lá ngược cho thấy bạn đang chống lại một kết thúc tất yếu, càng giữ càng mệt.'],
+    ['Tiết Độ', 'Điều hòa, cân bằng và chữa lành.', 'Pha trộn khéo các yếu tố, chữa lành tốt cho mình và người.', 'Dễ dĩ hòa vi quý tới mức né tránh vấn đề thật.', 'Lá ngược nhắc nhịp sống đang mất cân bằng, cần cắt bớt một đầu việc hoặc một thói quen.'],
+    ['Ác Quỷ', 'Cẩn thận với cám dỗ và thói quen đang trói bạn.', 'Tham vọng mạnh, chịu được áp lực vật chất cao.', 'Dễ lệ thuộc vào tiền, khoái lạc hoặc một mối quan hệ độc hại.', 'Lá ngược là tín hiệu tốt: bạn đang bắt đầu thoát ra khỏi thứ từng trói mình.'],
+    ['Tháp Đổ', 'Một biến cố bất ngờ phá vỡ điều cũ.', 'Chịu sốc tốt, dựng lại nhanh trên nền đúng hơn.', 'Dễ chủ quan rằng nền móng của mình không thể sập.', 'Lá ngược cho thấy biến cố đã qua đỉnh, hoặc một sự thật đang bị trì hoãn công bố.'],
+    ['Ngôi Sao', 'Hy vọng, cảm hứng và sự hồi phục.', 'Truyền cảm hứng, hồi phục sau khó khăn rất tốt.', 'Dễ mơ xa mà thiếu bước đi cụ thể.', 'Lá ngược nhắc bạn đang tạm mất niềm tin, cần một thắng lợi nhỏ để thắp lại hy vọng.'],
+    ['Mặt Trăng', 'Mọi việc còn mờ, cảm xúc dễ đánh lừa lý trí.', 'Trực cảm mạnh, giàu tưởng tượng và thấu cảm.', 'Dễ quyết định lớn khi thông tin chưa rõ.', 'Lá ngược cho thấy sương mù đang tan, một điều từng mơ hồ sắp rõ ràng.'],
+    ['Mặt Trời', 'Niềm vui, thành công và sự rõ ràng.', 'Lạc quan có cơ sở, tỏa sáng tự nhiên, được yêu quý.', 'Dễ chủ quan vì mọi việc đang quá thuận.', 'Lá ngược chỉ là niềm vui bị chậm lại, không phải mất đi, cứ làm rõ từng việc nhỏ.'],
+    ['Phán Xét', 'Tiếng gọi thức tỉnh và cơ hội làm lại.', 'Dám nhìn lại quá khứ và làm lại tử tế.', 'Dễ tự phán xét mình quá nặng.', 'Lá ngược nhắc bạn đang né một lời gọi thay đổi, hoặc chưa tha thứ cho mình về chuyện cũ.'],
+    ['Thế Giới', 'Hoàn thành một chu trình lớn, viên mãn và được ghi nhận.', 'Nhìn toàn cục tốt, khép việc trọn vẹn.', 'Dễ tự mãn ở đỉnh và ngại bắt đầu chu trình mới.', 'Lá ngược cho thấy một việc đang thiếu đúng một bước cuối để hoàn thành, đừng bỏ dở.']
+  ];
+  function laBaiV2(c) {
+    c.innerHTML = V.tabsHTML([['lbm-main', 'Lá bài bản mệnh của bạn'], ['lbm-ask', 'Rút bài cho một câu hỏi'], ['lbm-all', 'Tra cứu 22 lá ẩn chính']]) +
+      '<div id="lbm-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Họ tên của bạn', '<input type="text" id="nm" value="">', 'ptv-field-name') + '</div>' + df4('b'), 'Rút lá bài bản mệnh') + '</div>' +
+      '<div id="lbm-ask" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Câu hỏi bạn đang băn khoăn (viết ngắn gọn)', '<input type="text" id="q" value="">', 'ptv-field-name') + '</div>', 'Rút một lá cho câu hỏi này') + '</div>' +
+      '<div id="lbm-all" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['lbm-main', 'lbm-ask', 'lbm-all']);
+    c.querySelector('#lbm-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lbm-main');
+      var seed = (box.querySelector('#nm').value || '').toLowerCase() + '|' + box.querySelector('#bd').value + '/' + box.querySelector('#bm').value + '/' + box.querySelector('#by').value;
+      var card = TAROTX[L.hashStr('tarot|' + seed) % 22];
+      var html = '<div class="ptv-kieu-verse"><p>🃏 ' + card[0] + '</p></div>' +
+        '<p><strong>Thông điệp cốt lõi:</strong> ' + card[1] + '</p>' +
+        '<p><strong>Thế mạnh bản mệnh của bạn:</strong> ' + card[2] + '</p>' +
+        '<p><strong>Điểm cần rèn:</strong> ' + card[3] + '</p>' +
+        '<p class="ptv-note">Lá bài bản mệnh được rút CỐ ĐỊNH theo họ tên và ngày sinh, nên mỗi người gắn với một lá duy nhất trong 22 lá ẩn chính của bộ Tarot. Hãy đọc lá bài như một tấm gương tính cách: thế mạnh để phát huy và điểm cần rèn để tránh, thay vì một lời tiên tri.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#lbm-ask form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lbm-ask'), q = (box.querySelector('#q').value || '').trim();
+      if (!q) { L.resultBox(box, '<p>Bạn viết câu hỏi ngắn gọn trước khi rút bài nhé.</p>'); return; }
+      var now = new Date(), dayKey = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+      var h = L.hashStr('ask|' + q.toLowerCase() + '|' + dayKey);
+      var card = TAROTX[h % 22], reversed = (h % 5 === 0);
+      var html = '<div class="ptv-kieu-verse"><p>🃏 ' + card[0] + (reversed ? ' (lá ngược)' : '') + '</p></div>' +
+        '<p><strong>Câu hỏi:</strong> ' + esc(q) + '</p>' +
+        (reversed ? '<p>' + card[4] + '</p>' : '<p>' + card[1] + ' Áp vào câu hỏi của bạn: ' + card[2] + '</p>') +
+        '<p class="ptv-note">Lá bài cho câu hỏi được gieo theo câu hỏi và ngày hôm nay, cùng một câu hỏi trong cùng một ngày sẽ ra cùng một lá, qua ngày mới kết quả có thể khác. Đây là gợi ý để suy ngẫm trước quyết định, không thay thế được phân tích thực tế của bạn.</p>';
+      L.resultBox(box, html);
+    });
+    var rendered = false;
+    c.querySelector('[data-t="lbm-all"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var rows = TAROTX.map(function (t, i) { return '<tr><td><strong>' + (i + 1) + '. ' + t[0] + '</strong></td><td>' + t[1] + '</td></tr>'; }).join('');
+      c.querySelector('#lbm-all .ptv-out').innerHTML = '<h3>22 lá ẩn chính (Major Arcana) và thông điệp cốt lõi</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Lá bài</th><th>Thông điệp</th></tr>' + rows + '</table></div>';
+    });
+  }
+
+  var YEAR_TXT = {
+    career: ['Năm nay cung sự nghiệp của bạn sáng dần từ giữa năm, một cơ hội đổi vai trò hoặc nhận dự án lớn xuất hiện khi bạn chủ động đề xuất thay vì chờ giao việc.', 'Đây là năm tích lũy vị thế: làm chắc việc chuyên môn, xây quan hệ với người có tiếng nói, thành quả lớn thường chốt vào cuối năm.', 'Sự nghiệp năm nay có biến động theo hướng buộc bạn nâng cấp kỹ năng; ai chịu học thêm sẽ biến biến động thành bậc thang.'],
+    money: ['Tài chính năm nay ổn định nếu giữ kỷ luật chi tiêu theo tháng; khoản bất ngờ đến từ việc phụ hoặc tài sản cũ hơn là đầu tư mạo hiểm.', 'Năm nay hợp trả nợ và gom vốn hơn là mở rộng; một quyết định tài chính vào quý ba cần đọc kỹ giấy tờ trước khi ký.', 'Tiền bạc năm nay vào đều nhưng ra cũng nhanh theo cảm xúc; đặt trần chi tiêu cho sở thích sẽ giữ được khoản tích lũy đáng kể.'],
+    love: ['Chuyện tình cảm năm nay có chuyển biến rõ: người độc thân dễ gặp nhân duyên qua công việc và bạn bè chung, người có đôi cần thêm thời gian chất lượng thay vì quà cáp.', 'Năm nay là năm của sự rõ ràng trong tình cảm: điều gì mập mờ sẽ tự lộ diện, và đó là điều tốt dù ban đầu hơi khó nghe.', 'Tình cảm năm nay ấm dần nhờ những việc nhỏ đều đặn; một chuyến đi chung hoặc kế hoạch chung sẽ gắn kết hai người hơn hẳn lời hứa lớn.'],
+    health: ['Sức khỏe năm nay cần chú ý giấc ngủ và cột sống; đừng để công việc dồn nén thành stress kéo dài, khám định kỳ đúng hẹn là việc không nên hoãn.', 'Năm nay thể lực hồi phục tốt nếu bạn giữ vận động đều; kỵ nhất là thức khuya triền miên và ăn uống thất thường theo lịch làm việc.', 'Sức khỏe năm nay nhìn chung ổn, điểm yếu nằm ở tinh thần: dành thời gian cho sở thích và người thân là liều thuốc phòng ngừa tốt nhất.']
+  };
+  function tuViTayV2(c) {
+    var zlist = (window.PTV_TOOLS_DATA || {}).zodiac || [];
+    function zOf(dt) { var b = [[3, 21, 4, 19], [4, 20, 5, 20], [5, 21, 6, 21], [6, 22, 7, 22], [7, 23, 8, 22], [8, 23, 9, 22], [9, 23, 10, 23], [10, 24, 11, 22], [11, 23, 12, 21], [12, 22, 1, 19], [1, 20, 2, 18], [2, 19, 3, 20]]; for (var i = 0; i < 12; i++) { if ((dt.m === b[i][0] && dt.d >= b[i][1]) || (dt.m === b[i][2] && dt.d <= b[i][3])) return zlist[i]; } return zlist[9]; }
+    function zHTML(z) { return '<h3>' + esc(z.sign) + ' (' + esc(z.dates) + ') · Hành ' + esc(z.element) + '</h3><p>' + esc(z.traits) + '</p><p><strong>Sự nghiệp:</strong> ' + esc(z.career) + '</p><p><strong>Tình duyên:</strong> ' + esc(z.love) + '</p><p><strong>May mắn:</strong> ' + esc(z.lucky) + '</p>'; }
+    c.innerHTML = V.tabsHTML([['tvt-year', 'Tử vi năm nay theo cung'], ['tvt-month', 'Tử vi tháng này theo cung']]) +
+      '<div id="tvt-year">' + V.formWrap2(df4('b'), 'Xem tử vi năm nay') + '</div>' +
+      '<div id="tvt-month" hidden>' + V.formWrap2(df4('b'), 'Xem tử vi tháng này') + '</div>';
+    V.wireTabs(c, ['tvt-year', 'tvt-month']);
+    function pick(z, tag, n) { var arr = YEAR_TXT[tag]; return arr[L.hashStr(z.sign + '|' + tag + '|' + n) % arr.length]; }
+    c.querySelector('#tvt-year form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tvt-year');
+      var dt = { d: parseInt(box.querySelector('#bd').value, 10), m: parseInt(box.querySelector('#bm').value, 10), y: parseInt(box.querySelector('#by').value, 10) };
+      var z = zOf(dt), yr = new Date().getFullYear();
+      var html = zHTML(z) + '<h3>Tử vi năm ' + yr + ' của ' + z.sign + '</h3>' +
+        '<p><strong>Sự nghiệp:</strong> ' + pick(z, 'career', yr) + '</p>' +
+        '<p><strong>Tài chính:</strong> ' + pick(z, 'money', yr) + '</p>' +
+        '<p><strong>Tình cảm:</strong> ' + pick(z, 'love', yr) + '</p>' +
+        '<p><strong>Sức khỏe:</strong> ' + pick(z, 'health', yr) + '</p>' +
+        '<p class="ptv-note">Phần tử vi năm do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> luận theo cung hoàng đạo ở mức tổng quan tham khảo, không phải lá số chiêm tinh cá nhân đầy đủ.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#tvt-month form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tvt-month');
+      var dt = { d: parseInt(box.querySelector('#bd').value, 10), m: parseInt(box.querySelector('#bm').value, 10), y: parseInt(box.querySelector('#by').value, 10) };
+      var z = zOf(dt), now = new Date(), mk = now.getFullYear() * 100 + (now.getMonth() + 1);
+      var html = '<h3>Tử vi tháng ' + (now.getMonth() + 1) + '/' + now.getFullYear() + ' của ' + z.sign + '</h3>' +
+        '<p><strong>Công việc và tiền bạc:</strong> ' + pick(z, 'career', mk) + ' Về tiền: ' + pick(z, 'money', mk) + '</p>' +
+        '<p><strong>Tình cảm và sức khỏe:</strong> ' + pick(z, 'love', mk) + ' Về sức khỏe: ' + pick(z, 'health', mk) + '</p>' +
+        '<p class="ptv-note">Luận tháng ở mức tổng quan theo cung, dùng để lên tâm thế và lịch trình là chính.</p>';
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'la-bai-ban-menh': laBaiV2, 'xem-tu-vi-tay-phuong': tuViTayV2 });
+})();
