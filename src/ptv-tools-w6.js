@@ -592,3 +592,73 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-tuoi-xay-nha': xayNhaV2 });
 })();
+
+/* --- Nang cap rieng Xem Huong Giuong Ngu (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var SLEEP_TXT = { 'Thiên Y': 'sao tốt nhất cho giấc ngủ và sức khỏe, chủ về được chăm sóc, bệnh tật chóng qua', 'Sinh Khí': 'sao tốt cho sinh lực và tinh thần sảng khoái mỗi sáng thức dậy', 'Diên Niên': 'sao tốt cho hòa khí vợ chồng, giấc ngủ yên ổn, ít mộng mị', 'Phục Vị': 'sao tốt cho sự bình yên, tâm trí vững vàng, ngủ sâu giấc' };
+  var Q = { 'Sinh Khí': 4, 'Thiên Y': 4, 'Diên Niên': 3, 'Phục Vị': 3, 'Họa Hại': -2, 'Lục Sát': -2, 'Ngũ Quỷ': -3, 'Tuyệt Mệnh': -4 };
+  function ygFields(p) {
+    return '<div class="ptv-row">' + L.field('Năm sinh', L.select(p + 'y', L.yearOptions(1940, 2010, 1990))) + L.field('Giới tính', L.genderSelect(p + 'g')) + '</div>';
+  }
+  function singleHTML(y, g) {
+    var cp = L.cungPhi(y, g);
+    var goods = L.goodDirs(cp.cung, ['Thiên Y', 'Sinh Khí', 'Diên Niên', 'Phục Vị']);
+    var bads = L.starsFor(cp.cung).filter(function (s) { return s.info.t === 'xấu'; });
+    return '<h3>Hướng đầu giường cho người sinh năm ' + y + ' (' + (String(g).toLowerCase() === 'nam' ? 'nam' : 'nữ') + '), mệnh ' + cp.cung + ' thuộc ' + cp.group + '</h3>' +
+      '<p>Hướng đầu giường được tính là hướng đầu người nằm chỉ về khi ngủ. Với mệnh ' + cp.cung + ', hướng nên ưu tiên số một là <strong>' + goods[0].dir + ' (sao ' + goods[0].star + ')</strong>: ' + SLEEP_TXT[goods[0].star] + '.</p>' +
+      '<p><strong>Các hướng tốt còn lại theo thứ tự ưu tiên:</strong> ' + goods.slice(1).map(function (s) { return s.dir + ' (' + s.star + ': ' + SLEEP_TXT[s.star] + ')'; }).join('; ') + '.</p>' +
+      '<p><strong>Các hướng nên tránh đặt đầu giường:</strong> ' + bads.map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '. Trong đó Tuyệt Mệnh và Ngũ Quỷ là hai sao xấu nặng nhất, nếu phòng chỉ còn lựa chọn xấu thì hãy chọn Họa Hại hoặc Lục Sát vì hai sao này nhẹ hơn.</p>' +
+      L.dirTable(cp.cung) + rulesHTML();
+  }
+  function rulesHTML() {
+    return '<h3>Quy tắc kê giường quan trọng không kém hướng</h3><ul>' +
+      '<li>Đầu giường phải tựa vào tường vững chắc, tránh kê giữa phòng hoặc tựa vào cửa sổ vì vừa mất điểm tựa vừa lọt sáng, lọt gió.</li>' +
+      '<li>Tránh nằm dưới xà ngang, dầm nhà hoặc tủ treo phía trên đầu giường, cảm giác đè nén làm giấc ngủ chập chờn.</li>' +
+      '<li>Không để đầu giường đối diện thẳng cửa ra vào hoặc gương soi chiếu thẳng vào giường.</li>' +
+      '<li>Tránh kê đầu giường sát tường chung với bếp nấu hoặc nhà vệ sinh, vừa ồn vừa ẩm, lại là điều phong thủy kiêng.</li>' +
+      '<li>Hai bên giường nên có lối đi và đèn ngủ riêng, giường không chạm tường cả hai phía sẽ bí và khó vệ sinh.</li></ul>' +
+      '<p class="ptv-note">Hướng giường theo Bát Trạch là lớp tham khảo theo mệnh; giấc ngủ ngon trước hết đến từ phòng tối, mát, yên tĩnh và giường nệm phù hợp. Nếu hướng tốt theo mệnh xung đột với bố cục phòng, hãy ưu tiên các quy tắc kê giường phía trên.</p>';
+  }
+  function giuongNguV2(c) {
+    c.innerHTML = V.tabsHTML([['gn-one', 'Xem cho một người'], ['gn-two', 'Xem cho hai vợ chồng']]) +
+      '<div id="gn-one">' + V.formWrap2(ygFields('a'), 'Xem hướng giường của bạn') + '</div>' +
+      '<div id="gn-two" hidden>' + V.formWrap2('<p><strong>Người thứ nhất (chồng)</strong></p>' + ygFields('a') + '<p><strong>Người thứ hai (vợ)</strong></p>' + ygFields('b'), 'Xem hướng giường chung') + '</div>';
+    V.wireTabs(c, ['gn-one', 'gn-two']);
+    c.querySelector('#gn-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gn-one');
+      L.resultBox(box, singleHTML(parseInt(box.querySelector('#ay').value, 10), box.querySelector('#ag').value));
+    });
+    c.querySelector('#gn-two form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gn-two');
+      var y1 = parseInt(box.querySelector('#ay').value, 10), g1 = box.querySelector('#ag').value;
+      var y2 = parseInt(box.querySelector('#by').value, 10), g2 = box.querySelector('#bg').value;
+      var cp1 = L.cungPhi(y1, g1), cp2 = L.cungPhi(y2, g2);
+      var STARS4 = ['Sinh Khí', 'Thiên Y', 'Diên Niên', 'Phục Vị'];
+      var good1 = L.goodDirs(cp1.cung, STARS4).map(function (x) { return x.dir; }), good2 = L.goodDirs(cp2.cung, STARS4).map(function (x) { return x.dir; });
+      var common = good1.filter(function (d) { return good2.indexOf(d) >= 0; });
+      var html = '<h3>Hướng giường chung cho ' + y1 + ' (mệnh ' + cp1.cung + ', ' + cp1.group + ') và ' + y2 + ' (mệnh ' + cp2.cung + ', ' + cp2.group + ')</h3>';
+      if (common.length) {
+        html += '<p><strong>Tin tốt:</strong> hai bạn có ' + common.length + ' hướng cùng tốt cho cả hai: ' + common.map(function (d) {
+          var s1 = L.starsFor(cp1.cung)[L.DIRS.indexOf(d)], s2 = L.starsFor(cp2.cung)[L.DIRS.indexOf(d)];
+          return d + ' (' + s1.star + ' với người thứ nhất, ' + s2.star + ' với người thứ hai)';
+        }).join('; ') + '. Hãy ưu tiên hướng có sao Thiên Y hoặc Sinh Khí cho một trong hai người.</p>';
+      } else {
+        var best = null;
+        L.DIRS.forEach(function (d) {
+          var i = L.DIRS.indexOf(d), s1 = L.starsFor(cp1.cung)[i], s2 = L.starsFor(cp2.cung)[i], tot = Q[s1.star] + Q[s2.star];
+          if (!best || tot > best.tot) best = { d: d, s1: s1, s2: s2, tot: tot };
+        });
+        html += '<p>Hai bạn thuộc hai nhóm mệnh khác nhau (' + cp1.group + ' và ' + cp2.group + ') nên theo Bát Trạch <strong>không có hướng nào tốt tuyệt đối cho cả hai</strong>, đây là trường hợp rất phổ biến ở các cặp vợ chồng. Hướng dung hòa tốt nhất là <strong>' + best.d + '</strong>: với người thứ nhất là sao ' + best.s1.star + ', với người thứ hai là sao ' + best.s2.star + '. Sao Họa Hại và Lục Sát là hai sao xấu nhẹ nhất, nên cách dung hòa thường là để một người được sao tốt lớn, người còn lại chỉ chạm sao xấu nhẹ như vậy.</p>' +
+          '<p>Một nguyên tắc thực tế nữa: hãy ưu tiên hướng tốt cho người khó ngủ hơn hoặc người có sức khỏe yếu hơn trong hai vợ chồng, vì giấc ngủ của người đó ảnh hưởng trực tiếp đến chất lượng sống của cả nhà.</p>';
+      }
+      html += '<p><strong>Hướng tốt của người thứ nhất:</strong> ' + L.goodDirs(cp1.cung, ['Thiên Y', 'Sinh Khí', 'Diên Niên', 'Phục Vị']).map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '.</p>' +
+        '<p><strong>Hướng tốt của người thứ hai:</strong> ' + L.goodDirs(cp2.cung, ['Thiên Y', 'Sinh Khí', 'Diên Niên', 'Phục Vị']).map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '.</p>' + rulesHTML();
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-huong-giuong-ngu': giuongNguV2 });
+})();
