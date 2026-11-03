@@ -515,3 +515,80 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'ngay-mo-hang-dau-nam': moHangV2 });
 })();
+
+/* --- Nang cap rieng Xem Tuoi Xay Nha (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var HO_TXT = { 'Nhất Cát': 'cung tốt, làm nhà tuổi này gia chủ có chốn an cư êm ấm, mọi việc hanh thông', 'Nhì Nghi': 'cung tốt, làm nhà sẽ tấn tài lộc, nhà cửa hưng thịnh, giàu có', 'Tam Địa Sát': 'cung xấu, gia chủ dễ mắc bệnh tật nếu làm nhà năm này', 'Tứ Tấn Tài': 'cung tốt, làm nhà phúc lộc sẽ tới, tiền của dồi dào', 'Ngũ Thọ Tử': 'cung xấu, trong nhà dễ chia rẽ, lâm vào cảnh bất hòa, tử biệt', 'Lục Hoang Ốc': 'cung xấu, làm nhà khó thành đạt, nhà dễ rơi vào cảnh hoang vắng' };
+  function checkYear(birth, year) {
+    var age = year - birth + 1, me = L.yearInfo(birth), yI = L.yearInfo(year);
+    var tt = L.tamTai(me.chi, year) === true;
+    var kl = L.kimLau(age), ho = L.hoangOc(age);
+    return { age: age, me: me, yI: yI, tt: tt, kl: kl, ho: ho, clean: !tt && !kl.bad && !ho.bad };
+  }
+  function hanBlocks(ck) {
+    var ttNames = { };
+    var html = '<p><strong>Tam tai:</strong> ' + (ck.tt ? '<span class="ptv-bad">Phạm tam tai.</span> Tuổi ' + ck.me.chi + ' gặp tam tai vào các năm ' + tamTaiYearsText(ck.me.chi) + ', và năm ' + ck.yI.year + ' (' + ck.yI.chi + ') nằm trong ba năm đó. Dân gian kiêng động thổ, khởi công lớn trong năm tam tai vì cho rằng dễ gặp trắc trở ngoài dự tính.' : '<span class="ptv-good">Không phạm tam tai.</span> Năm ' + ck.yI.year + ' không nằm trong ba năm tam tai của tuổi ' + ck.me.chi + ' (' + tamTaiYearsText(ck.me.chi) + ').') + '</p>';
+    html += '<p><strong>Kim lâu:</strong> ' + (ck.kl.bad ? '<span class="ptv-bad">Phạm kim lâu.</span> Tuổi âm ' + ck.age + ', số dư khi chia cho 9 rơi vào nhóm kim lâu: ' + esc(ck.kl.kind || '') + '.' : '<span class="ptv-good">Không phạm kim lâu.</span> Tuổi âm ' + ck.age + ' chia 9 cho số dư ngoài nhóm 1, 3, 6, 8 nên không phạm.') + '</p>';
+    html += '<p><strong>Hoang ốc:</strong> tuổi âm ' + ck.age + ' rơi vào cung <strong>' + ck.ho.name + '</strong>, ' + HO_TXT[ck.ho.name] + (ck.ho.bad ? ' <span class="ptv-bad">Đây là cung xấu nên kiêng làm nhà.</span>' : ' <span class="ptv-good">Đây là cung tốt cho việc làm nhà.</span>') + '</p>';
+    return html;
+  }
+  function tamTaiYearsText(chi) {
+    var groups = [['Thân', 'Tý', 'Thìn', 'Dần, Mão, Thìn'], ['Dần', 'Ngọ', 'Tuất', 'Thân, Dậu, Tuất'], ['Hợi', 'Mão', 'Mùi', 'Tỵ, Ngọ, Mùi'], ['Tỵ', 'Dậu', 'Sửu', 'Hợi, Tý, Sửu']];
+    for (var i = 0; i < groups.length; i++) if (groups[i].slice(0, 3).indexOf(chi) >= 0) return groups[i][3];
+    return '';
+  }
+  function muonTuoiHTML(birth, year) {
+    var owner = L.yearInfo(birth), cand = [];
+    for (var by = 1945; by <= 2010; by++) {
+      var ck = checkYear(by, year); if (!ck.clean) continue;
+      var ci = L.yearInfo(by), rel = L.chiRelation(owner.chi, ci.chi);
+      cand.push({ by: by, text: ci.text, age: ck.age, rel: rel.label, score: rel.score });
+    }
+    cand.sort(function (a, b) { return b.score - a.score || Math.abs(a.age - 45) - Math.abs(b.age - 45); });
+    if (!cand.length) return '<p>Không tìm được tuổi nào sạch cả ba hạn trong năm ' + year + ' ở dải tuổi đã xét.</p>';
+    return '<h3>Gợi ý tuổi mượn làm nhà năm ' + year + '</h3><p>Các năm sinh dưới đây không phạm tam tai, kim lâu và hoang ốc trong năm ' + year + ', xếp theo mức hợp với tuổi chủ nhà trước:</p>' +
+      '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm sinh người mượn tuổi</th><th>Tuổi</th><th>Tuổi âm năm ' + year + '</th><th>Quan hệ với chủ nhà</th></tr>' +
+      cand.slice(0, 10).map(function (x) { return '<tr><td><strong>' + x.by + '</strong></td><td>' + x.text + '</td><td>' + x.age + '</td><td>' + x.rel + '</td></tr>'; }).join('') + '</table></div>' +
+      '<p class="ptv-note">Khi mượn tuổi, nên chọn người khỏe mạnh, gia đạo êm ấm, tính tình sởi lởi và đang không chịu tang. Người được mượn tuổi sẽ đứng tên làm lễ động thổ, cúng khởi công thay chủ nhà; mọi giấy tờ pháp lý của ngôi nhà vẫn mang tên chủ thật.</p>';
+  }
+  function xayNhaV2(c) {
+    c.innerHTML = V.tabsHTML([['xn-check', 'Kiểm tra năm xây nhà'], ['xn-scan', 'Quét các năm sắp tới'], ['xn-muon', 'Mượn tuổi xây nhà']]) +
+      '<div id="xn-check">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ nhà', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Năm định xây nhà', L.select('by', L.yearOptions(2026, 2035, 2027))) + '</div>', 'Kiểm tra năm xây nhà') + '</div>' +
+      '<div id="xn-scan" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ nhà', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Quét 10 năm sắp tới') + '</div>' +
+      '<div id="xn-muon" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ nhà', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Năm định xây nhà', L.select('by', L.yearOptions(2026, 2035, 2028))) + '</div>', 'Tìm tuổi mượn xây nhà') + '</div>';
+    V.wireTabs(c, ['xn-check', 'xn-scan', 'xn-muon']);
+    c.querySelector('#xn-check form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xn-check'), birth = parseInt(box.querySelector('#y').value, 10), year = parseInt(box.querySelector('#by').value, 10);
+      var ck = checkYear(birth, year);
+      var html = '<h3>Năm ' + year + ' (' + ck.yI.text + ') với chủ nhà sinh năm ' + birth + ' (' + ck.me.text + '), tuổi âm ' + ck.age + ': ' + (ck.clean ? '<span class="ptv-good">Được tuổi, không phạm hạn nào</span>' : '<span class="ptv-bad">Phạm hạn, nên cân nhắc</span>') + '</h3>' + hanBlocks(ck) +
+        (ck.clean ? '<p><strong>Kết luận:</strong> năm ' + year + ' sạch cả ba hạn tam tai, kim lâu, hoang ốc cho tuổi của bạn. Bước tiếp theo là chọn ngày động thổ đẹp theo tuổi ở công cụ <a href="https://phongthuy.vietaa.com/xem-ngay-dong-tho/">Xem ngày động thổ</a> của Phong Thủy VietAA.</p>' : '<p><strong>Kết luận:</strong> theo lệ xem tuổi làm nhà, năm phạm một trong ba hạn thì nên lùi sang năm sạch hơn, hoặc vẫn tiến hành bằng cách mượn tuổi người khác đứng tên động thổ. Danh sách tuổi mượn gợi ý cho năm ' + year + ' ở ngay bên dưới.</p>' + muonTuoiHTML(birth, year));
+      L.resultBox(box, html);
+    });
+    c.querySelector('#xn-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xn-scan'), birth = parseInt(box.querySelector('#y').value, 10);
+      var nowY = new Date().getFullYear(), rows = '', firstClean = 0;
+      for (var y = nowY; y <= nowY + 9; y++) {
+        var ck = checkYear(birth, y);
+        if (ck.clean && !firstClean) firstClean = y;
+        rows += '<tr><td><strong>' + y + '</strong> (' + ck.yI.text + ')</td><td>' + ck.age + '</td><td>' + (ck.tt ? 'Phạm' : 'Không') + '</td><td>' + (ck.kl.bad ? 'Phạm' : 'Không') + '</td><td>' + ck.ho.name + (ck.ho.bad ? ' (xấu)' : ' (tốt)') + '</td><td>' + (ck.clean ? '<strong class="ptv-good">Được tuổi</strong>' : 'Phạm hạn') + '</td></tr>';
+      }
+      var html = '<h3>10 năm từ ' + nowY + ' đến ' + (nowY + 9) + ' cho chủ nhà sinh năm ' + birth + '</h3>' +
+        (firstClean ? '<p>Năm sạch cả ba hạn gần nhất là <strong>' + firstClean + '</strong>. Bạn có thể lấy năm này làm mốc lên kế hoạch tài chính và thiết kế từ bây giờ.</p>' : '<p>Trong 10 năm tới không có năm nào sạch tuyệt đối cả ba hạn, trường hợp này nên tính phương án mượn tuổi cho năm phù hợp nhất với kế hoạch của gia đình.</p>') +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm xây</th><th>Tuổi âm</th><th>Tam tai</th><th>Kim lâu</th><th>Hoang ốc</th><th>Kết luận</th></tr>' + rows + '</table></div>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#xn-muon form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xn-muon'), birth = parseInt(box.querySelector('#y').value, 10), year = parseInt(box.querySelector('#by').value, 10);
+      var ck = checkYear(birth, year);
+      var html = '<h3>Mượn tuổi xây nhà năm ' + year + ' cho chủ nhà sinh năm ' + birth + ' (' + ck.me.text + ')</h3>' +
+        (ck.clean ? '<p>Năm ' + year + ' tuổi của bạn vốn đã sạch cả ba hạn, không cần mượn tuổi. Bạn cứ đứng tên động thổ bình thường.</p>' : '<p>Năm ' + year + ' tuổi của bạn phạm hạn (' + [ck.tt ? 'tam tai' : '', ck.kl.bad ? 'kim lâu' : '', ck.ho.bad ? 'hoang ốc cung ' + ck.ho.name : ''].filter(Boolean).join(', ') + ') nên phương án mượn tuổi là phù hợp theo lệ truyền thống.</p>' + muonTuoiHTML(birth, year));
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-tuoi-xay-nha': xayNhaV2 });
+})();
