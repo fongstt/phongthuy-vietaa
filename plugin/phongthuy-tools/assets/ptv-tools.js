@@ -3871,3 +3871,89 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'tim-nguoi-hop-tuoi': timNguoiV2, 'chon-trang-suc-hop-tuoi': trangSucV2 });
 })();
+
+/* --- Chon cay trong + Chon quan ao v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function guideData() { return window.PTV_MENH_GUIDE || {}; }
+  function genInEl(el) { return Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === el; })[0]; }
+  var PLANTS = [
+    ['Cây kim tiền', 'Kim', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá dày bóng, chịu bóng tốt, là cây phong thủy phổ biến nhất cho quầy thu ngân và bàn làm việc.'],
+    ['Cây kim ngân', 'Mộc', 'ca', ['trong-nha', 'ban-cong'], 'Thân xoắn tượng trưng tụ tài, ưa sáng vừa, hợp phòng khách và cửa hàng.'],
+    ['Cây ngọc ngân', 'Kim', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá đốm trắng hợp hành Kim, chịu bóng, hợp bàn làm việc thiếu sáng.'],
+    ['Cây lan ý', 'Kim', 'it', ['trong-nha'], 'Hoa trắng thanh khiết, lọc không khí tốt, hợp phòng ngủ và phòng khách ít nắng.'],
+    ['Cây trầu bà', 'Mộc', 'ca', ['trong-nha', 'ban-cong', 'ban-lam-viec'], 'Dễ sống bậc nhất, leo hoặc buông, hợp cả chậu treo ban công lẫn bình thủy sinh trên bàn.'],
+    ['Cây phát tài', 'Mộc', 'ca', ['trong-nha', 'truoc-cua'], 'Thân thẳng lá dài, thường đặt hai bên cửa chính hoặc góc phòng khách.'],
+    ['Cây lưỡi hổ', 'Thổ', 'ca', ['trong-nha', 'ban-cong', 'truoc-cua'], 'Chịu hạn và chịu bóng đều tốt, lá dựng thẳng, hợp hành lang và trước cửa.'],
+    ['Cây sen đá', 'Thổ', 'nhieu', ['ban-cong', 'ban-lam-viec'], 'Nhỏ gọn, cần nắng, hợp bậu cửa sổ và bàn làm việc có nắng buổi sáng.'],
+    ['Cây vạn lộc', 'Hỏa', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá điểm hồng đỏ hợp hành Hỏa, chịu bóng vừa, làm điểm nhấn màu cho góc làm việc.'],
+    ['Cây hồng môn', 'Hỏa', 'it', ['trong-nha'], 'Hoa đỏ bền, hợp phòng khách và quầy lễ tân cần điểm nhấn ấm.'],
+    ['Cây thủy sinh để bàn (trầu bà nước, phát tài nước)', 'Thủy', 'it', ['ban-lam-viec', 'trong-nha'], 'Trồng trong nước sạch, hợp người mệnh Thủy và không gian cần yếu tố nước nhẹ nhàng.'],
+    ['Cây cau tiểu trâm', 'Mộc', 'it', ['ban-lam-viec', 'trong-nha'], 'Dáng nhỏ thanh, chịu bóng, là cây để bàn kinh điển cho dân văn phòng.']
+  ];
+  var PLACE_TXT = { 'trong-nha': 'trong nhà', 'ban-cong': 'ban công, sân thượng', 'ban-lam-viec': 'bàn làm việc', 'truoc-cua': 'trước cửa, sảnh' };
+  function cayV2(c) {
+    c.innerHTML = V.tabsHTML([['cay-main', 'Cây hợp theo mệnh của bạn'], ['cay-place', 'Chọn cây theo chỗ đặt']]) +
+      '<div id="cay-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem cây hợp với tôi') + '</div>' +
+      '<div id="cay-place" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Chỗ bạn định đặt cây', L.select('pl', '<option value="trong-nha">Trong nhà, ít nắng</option><option value="ban-cong">Ban công, nhiều nắng</option><option value="ban-lam-viec">Bàn làm việc</option><option value="truoc-cua">Trước cửa, sảnh đón khách</option>')) + '</div>', 'Gợi ý cây cho chỗ này') + '</div>';
+    V.wireTabs(c, ['cay-main', 'cay-place']);
+    c.querySelector('#cay-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cay-main'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), G = guideData(), gi = genInEl(yi.el);
+      var mine = PLANTS.filter(function (p) { return p[1] === yi.el || p[1] === gi; }).map(function (p) { return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + '</td><td>' + p[4] + '</td></tr>'; }).join('');
+      L.resultBox(box, '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
+        '<h3>Cây trồng cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].cay) + '</p>' : '') +
+        '<p>Danh sách dưới đây gồm cây thuộc hành bản mệnh ' + yi.el + ' và hành ' + gi + ' sinh cho mệnh của bạn, kèm điều kiện chăm thực tế:</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cây</th><th>Hành</th><th>Ghi chú chăm và đặt</th></tr>' + mine + '</table></div>' +
+        '<p class="ptv-note">Cây thuộc hành nào là theo phân loại phong thủy phổ biến của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>. Điều kiện nắng và nước trong cột ghi chú mới là yếu tố quyết định cây sống khỏe.</p>');
+    });
+    c.querySelector('#cay-place form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cay-place'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), gi = genInEl(yi.el), pl = box.querySelector('#pl').value;
+      var fit = PLANTS.filter(function (p) { return p[3].indexOf(pl) >= 0; });
+      var good = fit.filter(function (p) { return p[1] === yi.el || p[1] === gi; });
+      var list = (good.length ? good : fit).map(function (p) { return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + (p[1] === yi.el || p[1] === gi ? ' (hợp mệnh bạn)' : '') + '</td><td>' + p[4] + '</td></tr>'; }).join('');
+      L.resultBox(box, '<h3>Cây cho vị trí ' + PLACE_TXT[pl] + ', mệnh ' + yi.el + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cây</th><th>Hành</th><th>Ghi chú</th></tr>' + list + '</table></div>' +
+        '<p>' + (good.length ? 'Các cây trên vừa hợp vị trí vừa hợp mệnh hoặc hành sinh cho mệnh của bạn.' : 'Vị trí này không có cây nào thuộc hành bản mệnh hay hành sinh cho mệnh của bạn trong danh sách phổ biến, nên tiêu chí sống khỏe được ưu tiên; bạn vẫn có thể tăng yếu tố hợp mệnh bằng màu chậu thuộc hành ' + gi + '.') + '</p>');
+    });
+  }
+
+  var QA_SET = {
+    'Kim': { main: 'Trắng, xám, ghi, vàng ánh kim', accent: 'Vàng đất, nâu nhạt (Thổ sinh Kim)', avoid: 'Đỏ, hồng, tím diện rộng (Hỏa khắc Kim)', fabric: 'Vải đứng form, ít nhăn; phụ kiện kim loại như đồng hồ, kính gọng kim loại là điểm mạnh của mệnh Kim.' },
+    'Mộc': { main: 'Xanh lá, xanh rêu, xanh nõn', accent: 'Đen, xanh dương (Thủy sinh Mộc)', avoid: 'Trắng, xám kim loại diện rộng (Kim khắc Mộc)', fabric: 'Vải tự nhiên cotton, linen; họa tiết hoa lá, sọc dọc giúp mệnh Mộc thêm mềm mại và cao ráo.' },
+    'Thủy': { main: 'Đen, xanh dương, xanh biển', accent: 'Trắng, xám bạc (Kim sinh Thủy)', avoid: 'Vàng đất, nâu đất diện rộng (Thổ khắc Thủy)', fabric: 'Vải mềm có độ rủ, lụa và voan; đường cắt uốn lượn hợp khí Thủy uyển chuyển.' },
+    'Hỏa': { main: 'Đỏ, hồng, tím, cam', accent: 'Xanh lá (Mộc sinh Hỏa)', avoid: 'Đen, xanh dương đậm diện rộng (Thủy khắc Hỏa)', fabric: 'Kiểu dáng nổi bật, một điểm nhấn màu mạnh là đủ; mệnh Hỏa nên tiết chế tránh mặc cả cây đỏ trong dịp cần sự điềm tĩnh.' },
+    'Thổ': { main: 'Vàng đất, nâu, be, cam đất', accent: 'Đỏ, hồng, tím (Hỏa sinh Thổ)', avoid: 'Xanh lá diện rộng (Mộc khắc Thổ)', fabric: 'Vải dày dặn, tông trầm ấm; mệnh Thổ hợp phong cách chắc chắn, ít chi tiết rườm rà.' }
+  };
+  var OCCASIONS = {
+    'lam': ['Đi làm hằng ngày', 'Ưu tiên màu bản mệnh ở tông trung tính làm chủ đạo, điểm một phụ kiện màu sinh nhập. Sự gọn gàng và vừa vặn quan trọng hơn màu sắc.'],
+    'phongvan': ['Phỏng vấn, gặp đối tác', 'Dùng màu của hành sinh cho mệnh làm chủ đạo để ở thế được nâng đỡ, thêm một chi tiết màu bản mệnh như cà vạt, khăn túi hoặc giày.'],
+    'henho': ['Hẹn hò, gặp gỡ thân mật', 'Tông màu bản mệnh ở sắc độ mềm hơn thường ngày, thêm màu sinh nhập ở phụ kiện nhỏ. Tránh mặc nguyên bộ màu kỵ vì dễ tạo cảm giác nặng nề không cần thiết.'],
+    'tiec': ['Dự tiệc, sự kiện', 'Đây là dịp được phép nổi bật: dùng màu bản mệnh ở sắc độ mạnh nhất, chất liệu có độ bóng nhẹ. Mệnh Hỏa và Thổ có lợi thế với tông ấm trên ảnh chụp.'],
+    'ky': ['Ký kết, khai trương, việc trọng đại', 'Chọn bộ trang phục có cả màu sinh nhập lẫn màu bản mệnh, tránh toàn bộ trang phục rơi vào màu khắc mệnh trong ngày cần ký giấy tờ quan trọng.']
+  };
+  function quanAoV2(c) {
+    c.innerHTML = V.tabsHTML([['qa-main', 'Bảng phối đồ theo mệnh'], ['qa-occ', 'Phối đồ theo dịp']]) +
+      '<div id="qa-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem bảng phối của tôi') + '</div>' +
+      '<div id="qa-occ" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Dịp bạn cần phối đồ', L.select('o', Object.keys(OCCASIONS).map(function (k) { return '<option value="' + k + '">' + OCCASIONS[k][0] + '</option>'; }).join(''))) + '</div>', 'Gợi ý phối cho dịp này') + '</div>';
+    V.wireTabs(c, ['qa-main', 'qa-occ']);
+    c.querySelector('#qa-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#qa-main'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), G = guideData(), q = QA_SET[yi.el];
+      L.resultBox(box, '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
+        '<h3>Phối đồ cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].quanAo) + '</p>' : '') +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Nhóm</th><th>Màu và chất liệu</th></tr>' +
+        '<tr><td><strong>Màu chủ đạo</strong></td><td>' + q.main + '</td></tr>' +
+        '<tr><td><strong>Màu điểm nhấn</strong></td><td>' + q.accent + '</td></tr>' +
+        '<tr><td><strong>Nên hạn chế</strong></td><td>' + q.avoid + '</td></tr>' +
+        '<tr><td><strong>Chất liệu và form</strong></td><td>' + q.fabric + '</td></tr></table></div>');
+    });
+    c.querySelector('#qa-occ form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#qa-occ'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), q = QA_SET[yi.el], o = OCCASIONS[box.querySelector('#o').value];
+      L.resultBox(box, '<h3>' + o[0] + ' cho mệnh ' + yi.el + '</h3><p><strong>Bộ màu nên dùng:</strong> chủ đạo ' + q.main.toLowerCase() + '; điểm nhấn ' + q.accent.toLowerCase() + '.</p><p>' + o[1] + '</p><p><strong>Tránh:</strong> ' + q.avoid.toLowerCase() + '.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'chon-cay-trong-hop-tuoi': cayV2, 'chon-quan-ao-hop-tuoi': quanAoV2 });
+})();
