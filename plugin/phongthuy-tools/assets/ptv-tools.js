@@ -2058,3 +2058,49 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-nam-sinh-con': namSinhConV2 });
 })();
+
+/* --- Nang cap rieng Xem Gio Xuat Hanh (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, E = window.PTVEngine, esc = L.esc, V = window.PTVDayToolsV2;
+  function todayStr(off) { var d = new Date(); d.setDate(d.getDate() + (off || 0)); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function hoursHTML(info) {
+    var sat = D.satOf(info), hoang = ['Thanh Long', 'Minh Đường', 'Kim Quỹ', 'Thiên Đức', 'Ngọc Đường', 'Tư Mệnh'].indexOf(sat) >= 0;
+    var rows = E.CHI.map(function (g) {
+      var hd = D.GIO_HD[info.day.chi].indexOf(g) >= 0;
+      return '<tr><td><strong>Giờ ' + g + '</strong></td><td>' + E.HOUR_LABEL[g] + '</td><td class="' + (hd ? 'ptv-good' : 'ptv-bad') + '">' + (hd ? 'Hoàng đạo' : 'Hắc đạo') + '</td></tr>';
+    }).join('');
+    var qn = (D.QUY_NHAN[info.day.can] || []).map(function (ch) { return D.CHI_DIR[ch] + ' (' + ch + ')'; }).join(' và ');
+    return '<h3>Giờ xuất hành ngày ' + D.fmtSolar(info) + ' (' + D.fmtLunar(info) + ')</h3>' +
+      '<p>Ngày ' + info.day.text + ', thuộc ngày ' + (hoang ? '<span class="ptv-good">hoàng đạo (' + sat + ')</span>' : '<span class="ptv-bad">hắc đạo (' + sat + ')</span>') + ', trực ' + D.trucOf(info) + '.</p>' +
+      '<p><strong>Hướng xuất hành đón Quý nhân hôm nay:</strong> phương ' + qn + '. Khi ra khỏi nhà, nên đi về hướng này một đoạn trước rồi mới rẽ tới điểm đến, theo lệ dân gian là để đón khí lành đầu ngày.</p>' +
+      '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Giờ</th><th>Khung giờ</th><th>Loại</th></tr>' + rows + '</table></div>' +
+      '<p class="ptv-note">Sáu giờ hoàng đạo trong ngày là các khung nên ưu tiên để khởi hành, mở đầu công việc hoặc làm lễ. Các giờ hắc đạo còn lại không phải là không đi được, chỉ nên tránh dùng cho việc quan trọng nếu bạn còn lựa chọn khác.</p>';
+  }
+  function gioXuatHanhV2(c) {
+    c.innerHTML = V.tabsHTML([['gx-day', 'Giờ hoàng đạo trong ngày'], ['gx-scan', 'Quét ngày xuất hành tốt theo tháng'], ['gx-today', 'Giờ tốt hôm nay và ngày mai']]) +
+      '<div id="gx-day">' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày dương lịch (năm-tháng-ngày)', '<input type="text" id="dt" value="' + todayStr(0) + '">', 'ptv-field-name') + '</div>', 'Xem giờ hoàng đạo') + '</div>' +
+      '<div id="gx-scan" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn xuất hành', L.select('m', V.monthOptions2())) + '</div>', 'Xem ngày xuất hành tốt') + '</div>' +
+      '<div id="gx-today" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['gx-day', 'gx-scan', 'gx-today']);
+    c.querySelector('#gx-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gx-day'), p = box.querySelector('#dt').value.split('-').map(Number);
+      if (p.length !== 3 || !p[0] || !p[1] || !p[2]) { L.resultBox(box, '<p>Ngày chưa đúng định dạng năm-tháng-ngày, ví dụ ' + todayStr(0) + '.</p>'); return; }
+      L.resultBox(box, hoursHTML(D.dayInfo(new Date(p[0], p[1] - 1, p[2]))));
+    });
+    c.querySelector('#gx-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gx-scan'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number);
+      L.resultBox(box, '<h3>Ngày xuất hành tốt tháng ' + parts[1] + '/' + parts[0] + ' cho tuổi ' + me.chi + '</h3>' + V.scanHTML('xuat-hanh', me.chi, parts[0], parts[1], 'xuất hành'));
+    });
+    var rendered = false;
+    c.querySelector('[data-t="gx-today"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var box = c.querySelector('#gx-today .ptv-out');
+      box.innerHTML = hoursHTML(D.dayInfo(new Date())) + '<hr>' + hoursHTML(D.dayInfo(new Date(Date.now() + 86400000)));
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-gio-xuat-hanh': gioXuatHanhV2 });
+})();
