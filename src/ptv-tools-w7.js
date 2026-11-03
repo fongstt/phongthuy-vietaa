@@ -1416,3 +1416,90 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'chon-nghe-hop-tuoi': ngheV2, 'chon-mau-sac-hop-tuoi': mauV2 });
 })();
+
+/* --- Tim nguoi hop tuoi + Chon trang suc v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function guideData() { return window.PTV_MENH_GUIDE || {}; }
+  function scorePair(me, o) {
+    var s = 0, reasons = [];
+    var chi = L.chiRelation(me.chi, o.chi); s += chi.score; if (chi.score >= 2) reasons.push(chi.label); if (chi.score < 0) reasons.push(chi.label);
+    if (L.CAN_HOP[me.can] === o.can) { s += 1; reasons.push('Can hợp'); }
+    var rel = L.relEl(o.el, me.el);
+    if (L.GENERATES[o.el] === me.el) { s += 1.5; reasons.push('Mệnh sinh cho bạn'); }
+    else if (L.GENERATES[me.el] === o.el) { s += 0.3; reasons.push('Bạn sinh cho họ'); }
+    else if (rel.indexOf('Cùng hành') >= 0) { s += 0.5; reasons.push('Cùng hành mệnh'); }
+    else if (rel.indexOf('khắc') >= 0) { s -= 1; reasons.push('Mệnh tương khắc'); }
+    return { s: s, reasons: reasons, chi: chi, rel: rel };
+  }
+  function timNguoiV2(c) {
+    c.innerHTML = V.tabsHTML([['tn-top', '10 tuổi hợp nhất với bạn'], ['tn-one', 'Kiểm tra một tuổi cụ thể']]) +
+      '<div id="tn-top">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Mục đích tìm người hợp tuổi', L.select('p', '<option value="làm ăn">Hợp tác làm ăn</option><option value="kết hôn">Kết hôn</option><option value="bạn bè">Bạn bè, đối tác</option>')) + '</div>', 'Tìm tuổi hợp với tôi') + '</div>' +
+      '<div id="tn-one" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của người kia', L.select('y2', L.yearOptions(1940, 2010, 1994))) + '</div>', 'Kiểm tra độ hợp') + '</div>';
+    V.wireTabs(c, ['tn-top', 'tn-one']);
+    c.querySelector('#tn-top form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tn-top'), y = parseInt(box.querySelector('#y').value, 10), purpose = box.querySelector('#p').value;
+      var me = L.yearInfo(y), scored = [];
+      for (var cy = 1950; cy <= 2012; cy++) {
+        if (cy === y) continue;
+        var o = L.yearInfo(cy), r = scorePair(me, o);
+        scored.push({ y: cy, info: o, s: r.s, reasons: r.reasons });
+      }
+      scored.sort(function (a, b) { return b.s - a.s; });
+      var rows = scored.slice(0, 10).map(function (t) { return '<tr><td><strong>' + t.y + '</strong></td><td>' + t.info.text + '</td><td>' + esc(t.info.napAm) + '</td><td>' + String(Math.round(t.s * 10) / 10).replace('.', ',') + '</td><td>' + t.reasons.join(', ') + '</td></tr>'; }).join('');
+      L.resultBox(box, '<div class="ptv-facts"><span>Bạn sinh năm <strong>' + y + '</strong> (' + me.text + ', mệnh ' + esc(me.napAm) + ')</span><span>Mục đích: <strong>' + purpose + '</strong></span></div><h3>10 tuổi hợp nhất với bạn</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm sinh</th><th>Tuổi</th><th>Mệnh</th><th>Điểm hợp</th><th>Lý do</th></tr>' + rows + '</table></div><p class="ptv-note">Điểm hợp tính từ quan hệ địa chi, thiên can và nạp âm (thang tham khảo, cao nhất quanh 5,5). Hợp tuổi chỉ là một yếu tố, sự hòa hợp thật sự đến từ tính cách và cách cư xử của hai bên.</p>');
+    });
+    c.querySelector('#tn-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tn-one'), y = parseInt(box.querySelector('#y').value, 10), y2 = parseInt(box.querySelector('#y2').value, 10);
+      var me = L.yearInfo(y), o = L.yearInfo(y2), r = scorePair(me, o);
+      var verdict = r.s >= 3.5 ? 'Rất hợp theo can chi và mệnh' : r.s >= 1.5 ? 'Hợp ở mức tốt' : r.s >= 0 ? 'Mức bình hòa, hợp do cách sống' : 'Có điểm xung cần lưu ý';
+      L.resultBox(box, '<h3>' + y + ' (' + me.text + ') và ' + y2 + ' (' + o.text + '): ' + verdict + '</h3>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Yếu tố</th><th>Kết quả</th></tr>' +
+        '<tr><td><strong>Địa chi</strong></td><td>' + r.chi.label + '</td></tr>' +
+        '<tr><td><strong>Thiên can</strong></td><td>' + (L.CAN_HOP[me.can] === o.can ? 'Can hợp (' + me.can + ' hợp ' + o.can + ')' : 'Không thuộc cặp can hợp') + '</td></tr>' +
+        '<tr><td><strong>Nạp âm</strong></td><td>' + r.rel + '</td></tr>' +
+        '<tr><td><strong>Điểm hợp</strong></td><td>' + String(Math.round(r.s * 10) / 10).replace('.', ',') + '</td></tr></table></div>' +
+        '<p>' + (r.reasons.length ? 'Điểm đáng chú ý: ' + r.reasons.join(', ') + '.' : 'Hai tuổi không có điểm hợp hay xung nổi bật, quan hệ êm hay không nằm ở cách hai bên cư xử.') + ' Nếu đây là chuyện làm ăn, hãy thử một dự án nhỏ trước khi góp vốn lớn; nếu là chuyện tình cảm, dùng thêm trang Xem tuổi vợ chồng để xét cả cung phi.</p>');
+    });
+  }
+
+  var STONE_SET = {
+    'Kim': { metal: 'Vàng, bạch kim, bạc và các kim loại sáng màu', stones: 'Kim cương, thạch anh trắng, thạch anh vàng, hổ phách, đá mặt trăng', wear: 'Đeo kim loại trơn hoặc đá trắng, vàng để tăng sự sắc bén và quyết đoán trong công việc.' },
+    'Mộc': { metal: 'Chất liệu gỗ (trầm hương, gỗ sưa) và vàng, bạc điểm đá xanh', stones: 'Ngọc bích, thạch anh xanh, ngọc lục bảo, đá lông công', wear: 'Vòng gỗ trầm và đá xanh lá hợp người mệnh Mộc vì cùng khí nuôi dưỡng, giúp tinh thần thư thái.' },
+    'Thủy': { metal: 'Bạc, bạch kim và kim loại mặt cong, mềm', stones: 'Thạch anh đen, aquamarine, sapphire, đá mắt hổ xanh, ngọc trai đen', wear: 'Trang sức có đường cong, hình giọt nước và đá đen, xanh dương giúp hành Thủy thêm sâu và tĩnh.' },
+    'Hỏa': { metal: 'Vàng hồng, vàng và các thiết kế góc cạnh, nổi bật', stones: 'Ruby, thạch anh hồng, thạch anh tím, garnet, đá mã não đỏ', wear: 'Đá đỏ, hồng, tím làm tăng sự hiện diện và nhiệt huyết, hợp các dịp cần tỏa sáng và thuyết phục.' },
+    'Thổ': { metal: 'Vàng, đồng và các thiết kế chắc chắn, ít chi tiết', stones: 'Thạch anh vàng, hổ phách, đá mắt hổ nâu, mã não vàng, ngọc hoàng long', wear: 'Đá vàng, nâu đất và thiết kế đầm chắc hợp khí Thổ là sự ổn định và chữ tín.' }
+  };
+  function trangSucV2(c) {
+    c.innerHTML = V.tabsHTML([['ts-main', 'Trang sức theo mệnh của bạn'], ['ts-purpose', 'Chọn trang sức theo dịp']]) +
+      '<div id="ts-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem trang sức hợp với tôi') + '</div>' +
+      '<div id="ts-purpose" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Dịp đeo chính', L.select('p', '<option value="daily">Đeo hằng ngày, cầu bình an và tài lộc đều</option><option value="sign">Đi ký kết, đàm phán, việc quan trọng</option><option value="gift">Mua tặng người thân</option><option value="event">Dự tiệc, sự kiện cần nổi bật</option>')) + '</div>', 'Gợi ý cho dịp này') + '</div>';
+    V.wireTabs(c, ['ts-main', 'ts-purpose']);
+    function genInEl(el) { return Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === el; })[0]; }
+    c.querySelector('#ts-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ts-main'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), G = guideData(), st = STONE_SET[yi.el], gi = genInEl(yi.el), stFeed = STONE_SET[gi];
+      L.resultBox(box, '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
+        '<h3>Trang sức cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].trangSuc) + '</p>' : '') +
+        '<p><strong>Chất liệu và kim loại hợp:</strong> ' + st.metal + '.</p>' +
+        '<p><strong>Đá hợp hành bản mệnh ' + yi.el + ':</strong> ' + st.stones + '.</p>' +
+        '<p><strong>Đá của hành ' + gi + ' sinh cho mệnh (đeo để được nâng đỡ):</strong> ' + stFeed.stones + '.</p>' +
+        '<p>' + st.wear + '</p>');
+    });
+    c.querySelector('#ts-purpose form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ts-purpose'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), st = STONE_SET[yi.el], p = box.querySelector('#p').value;
+      var notes = {
+        daily: 'Đeo hằng ngày nên chọn món nhỏ, bền và ít vướng: một chiếc vòng đá bản mệnh hoặc nhẫn kim loại trơn thuộc nhóm hợp mệnh. Vật đeo sát người mỗi ngày mới là vật có ý nghĩa phong thủy rõ nhất.',
+        sign: 'Khi ký kết và đàm phán, ưu tiên trang sức của hành sinh cho mệnh bạn để ở thế được nâng đỡ, thiết kế gọn và đắt vừa đủ để tạo sự tin cậy, tránh phô trương quá mức.',
+        gift: 'Mua tặng thì tính theo MỆNH CỦA NGƯỜI NHẬN, không phải mệnh người tặng. Nếu chưa biết năm sinh người nhận, chọn trang sức bạc hoặc vàng trơn trung tính và tránh đá có màu khắc mạnh.',
+        event: 'Dự tiệc cần nổi bật: chọn đá bản mệnh có độ bắt sáng cao và kích thước lớn hơn ngày thường một chút. Người mệnh Hỏa và Kim có lợi thế tự nhiên với trang sức sự kiện.'
+      };
+      L.resultBox(box, '<h3>Gợi ý cho mệnh ' + yi.el + '</h3><p><strong>Nhóm nên chọn:</strong> ' + st.stones + '; chất liệu: ' + st.metal.toLowerCase() + '.</p><p>' + notes[p] + '</p><p class="ptv-note">Trang sức phong thủy tại <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> là gợi ý về chất liệu và màu đá theo ngũ hành. Giá trị thật của món trang sức vẫn nằm ở chất lượng chế tác và cảm giác của người đeo.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'tim-nguoi-hop-tuoi': timNguoiV2, 'chon-trang-suc-hop-tuoi': trangSucV2 });
+})();

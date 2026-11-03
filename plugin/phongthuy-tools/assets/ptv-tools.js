@@ -885,6 +885,7 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
     'chon-nghe-hop-tuoi': function (c) { chonTheoMenh(c, 'nghe', 'Nghề nghiệp hợp tuổi'); }, 'chon-mau-sac-hop-tuoi': function (c) { chonTheoMenh(c, 'mau', 'Màu sắc hợp tuổi'); },
     'chon-trang-suc-hop-tuoi': function (c) { chonTheoMenh(c, 'trangSuc', 'Trang sức hợp tuổi'); }, 'chon-cay-trong-hop-tuoi': function (c) { chonTheoMenh(c, 'cay', 'Cây trồng hợp tuổi'); },
     'chon-quan-ao-hop-tuoi': function (c) { chonTheoMenh(c, 'quanAo', 'Quần áo hợp tuổi'); } };
+  window.PTV_MENH_GUIDE = MENH_GUIDE;
   window.PTVTools = Object.assign({}, window.PTVToolsW1a || {}, W1b, window.PTVTools || {});
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-ptv-tool]').forEach(function (c) {
@@ -3689,4 +3690,97 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
     });
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'boi-4-so-cuoi-dien-thoai': boi4V2, 'xem-tuoi-vo-chong': voChongV2 });
+})();
+
+/* --- Chon nghe + Chon mau sac v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function guideData() { return window.PTV_MENH_GUIDE || {}; }
+  function genIn(el) { return Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === el; })[0]; }
+  var JOB_GROUPS = [
+    ['Tài chính, ngân hàng, kế toán, kim loại và trang sức', 'Kim'],
+    ['Công nghệ thông tin, cơ khí, kỹ thuật và y khoa', 'Kim'],
+    ['Giáo dục, đào tạo, xuất bản và đồ gỗ nội thất', 'Mộc'],
+    ['Y dược, đông y, nông lâm nghiệp và thời trang', 'Mộc'],
+    ['Logistics, vận tải, du lịch và thương mại linh hoạt', 'Thủy'],
+    ['Thủy hải sản, đồ uống và ngoại giao, đàm phán', 'Thủy'],
+    ['Truyền thông, quảng cáo, giải trí và ẩm thực', 'Hỏa'],
+    ['Điện tử, năng lượng và các nghề trình diễn, sân khấu', 'Hỏa'],
+    ['Xây dựng, bất động sản và kiến trúc', 'Thổ'],
+    ['Nông nghiệp, khai khoáng, gốm sứ và vật liệu', 'Thổ']
+  ];
+  function ngheV2(c) {
+    c.innerHTML = V.tabsHTML([['ng-main', 'Nghề hợp theo mệnh của bạn'], ['ng-check', 'Kiểm tra một nhóm nghề cụ thể']]) +
+      '<div id="ng-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem nghề hợp với tôi') + '</div>' +
+      '<div id="ng-check" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Nhóm nghề bạn đang cân nhắc', L.select('job', JOB_GROUPS.map(function (j, i) { return '<option value="' + i + '">' + j[0] + '</option>'; }).join(''))) + '</div>', 'Kiểm tra nghề này') + '</div>';
+    V.wireTabs(c, ['ng-main', 'ng-check']);
+    function relJob(jobEl, myEl) {
+      if (jobEl === myEl) return ['Rất hợp', 'Nghề thuộc chính hành ' + myEl + ' của bạn: môi trường nghề nuôi dưỡng đúng khí chất bản mệnh, bạn phát huy được thế mạnh tự nhiên và ít phải gồng mình nhất.'];
+      if (L.GENERATES[jobEl] === myEl) return ['Rất hợp', 'Hành ' + jobEl + ' của nghề SINH cho hành ' + myEl + ' của bạn: đây là nhóm hợp nhất theo ngũ hành, nghề nâng đỡ người, càng làm càng có lực.'];
+      if (L.GENERATES[myEl] === jobEl) return ['Hợp vừa, tốn sức', 'Hành ' + myEl + ' của bạn SINH cho hành ' + jobEl + ' của nghề: bạn phải bỏ sức nuôi nghề, làm được và có thành quả nhưng cần chú ý giữ sức và chọn vị trí có tích lũy, tránh nghề đốt sức ngắn hạn.'];
+      if (L.CONTROLS[myEl] === jobEl) return ['Hợp vừa, có thử thách', 'Hành ' + myEl + ' của bạn KHẮC hành ' + jobEl + ' của nghề: bạn ở thế chế ngự được nghề, hợp vai trò quản lý, kiểm soát chất lượng, nhưng cần tránh nóng vội khi nghề gặp trục trặc.'];
+      return ['Ít hợp', 'Hành ' + jobEl + ' của nghề KHẮC hành ' + myEl + ' của bạn: môi trường nghề tạo áp lực ngược lên bản mệnh. Nếu vẫn chọn, hãy bổ trợ bằng màu sắc, không gian làm việc thuộc hành ' + genIn(myEl) + ' sinh ' + myEl + ' và chọn mảng việc nhẹ nhàng nhất trong ngành.'];
+    }
+    c.querySelector('#ng-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ng-main'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), G = guideData();
+      var gi = genIn(yi.el);
+      var mine = JOB_GROUPS.filter(function (j) { return j[1] === yi.el; }).map(function (j) { return j[0].toLowerCase(); }).join('; ');
+      var feed = JOB_GROUPS.filter(function (j) { return j[1] === gi; }).map(function (j) { return j[0].toLowerCase(); }).join('; ');
+      var html = '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
+        '<h3>Nghề hợp cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].nghe) + '</p>' : '') +
+        '<p><strong>Nhóm nghề thuộc hành bản mệnh ' + yi.el + ':</strong> ' + mine + '.</p>' +
+        '<p><strong>Nhóm nghề thuộc hành ' + gi + ' sinh cho mệnh của bạn (được coi là hợp nhất):</strong> ' + feed + '.</p>' +
+        '<p class="ptv-note">Nghề hợp mệnh là lớp tham khảo về khí chất: nghề hợp nhất trên giấy vẫn cần đúng năng lực và thị trường. Sang tab bên cạnh để kiểm tra một nhóm nghề cụ thể bạn đang cân nhắc.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#ng-check form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ng-check'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y);
+      var j = JOB_GROUPS[parseInt(box.querySelector('#job').value, 10)], r = relJob(j[1], yi.el);
+      L.resultBox(box, '<h3>' + r[0] + '</h3><p>Bạn sinh năm ' + y + ', mệnh ' + esc(yi.napAm) + ' hành ' + yi.el + '. Nhóm nghề "' + j[0] + '" thuộc hành ' + j[1] + '.</p><p>' + r[1] + '</p>');
+    });
+  }
+
+  var COLOR_SET = {
+    'Kim': { good: [['Trắng', '#f5f5f5'], ['Xám ghi', '#9e9e9e'], ['Vàng ánh kim', '#c9a227']], feed: [['Vàng đất', '#d9a441'], ['Nâu đất', '#8d5a2b'], ['Cam đất', '#c97b2d']], bad: [['Đỏ', '#c62828'], ['Hồng', '#e57373'], ['Tím', '#7b1fa2']] },
+    'Mộc': { good: [['Xanh lá', '#2e7d32'], ['Xanh rêu', '#5d7052'], ['Xanh nõn', '#9ccc65']], feed: [['Đen', '#212121'], ['Xanh dương', '#1565c0'], ['Xanh biển', '#42a5f5']], bad: [['Trắng', '#f5f5f5'], ['Xám bạc', '#bdbdbd'], ['Vàng ánh kim', '#c9a227']] },
+    'Thủy': { good: [['Đen', '#212121'], ['Xanh dương đậm', '#0d47a1'], ['Xanh biển', '#42a5f5']], feed: [['Trắng', '#f5f5f5'], ['Xám ghi', '#9e9e9e'], ['Bạc', '#cfd8dc']], bad: [['Vàng đất', '#d9a441'], ['Nâu đất', '#8d5a2b'], ['Cam đất', '#c97b2d']] },
+    'Hỏa': { good: [['Đỏ', '#c62828'], ['Hồng', '#e57373'], ['Tím', '#7b1fa2'], ['Cam', '#ef6c00']], feed: [['Xanh lá', '#2e7d32'], ['Xanh rêu', '#5d7052']], bad: [['Đen', '#212121'], ['Xanh dương đậm', '#0d47a1']] },
+    'Thổ': { good: [['Vàng đất', '#d9a441'], ['Nâu đất', '#8d5a2b'], ['Cam đất', '#c97b2d']], feed: [['Đỏ', '#c62828'], ['Hồng', '#e57373'], ['Tím', '#7b1fa2']], bad: [['Xanh lá', '#2e7d32'], ['Xanh rêu', '#5d7052']] }
+  };
+  var PURPOSES = {
+    'xe': 'Khi mua xe, màu hợp mệnh được dùng cho màu sơn chính. Xe là tài sản lớn và gắn với an toàn đi lại, nên ngoài màu hợp mệnh hãy ưu tiên màu bạn nhìn thấy dễ chịu mỗi ngày.',
+    'nha': 'Khi sơn nhà, dùng màu hợp mệnh cho phòng khách và mặt tiền ở tông nhạt, màu sinh nhập cho điểm nhấn. Tránh sơn cả nhà bằng một màu đậm chỉ vì hợp mệnh.',
+    'vi': 'Ví tiền và túi xách là vật theo người hằng ngày, đây là chỗ màu hợp mệnh phát huy rõ nhất vì tiếp xúc thường xuyên. Chọn màu bản mệnh hoặc màu sinh nhập đều tốt.',
+    'phongvan': 'Trang phục phỏng vấn và gặp đối tác: dùng màu sinh nhập làm chủ đạo để được nâng đỡ, điểm một chi tiết màu bản mệnh như cà vạt, khăn hoặc phụ kiện.',
+    'logo': 'Logo và nhận diện thương hiệu: lấy màu bản mệnh làm màu phụ trợ, màu sinh nhập làm màu chính nếu ngành của bạn thuộc hành khắc. Màu logo còn phải hợp ngành nghề trước khi hợp mệnh cá nhân.'
+  };
+  function swatches(list) {
+    return list.map(function (x) { return '<span style="display:inline-block;width:16px;height:16px;border-radius:50%;background:' + x[1] + ';border:1px solid #bbb;vertical-align:-3px;margin-right:4px"></span>' + x[0]; }).join(' · ');
+  }
+  function mauV2(c) {
+    c.innerHTML = V.tabsHTML([['m-main', 'Bảng màu theo mệnh của bạn'], ['m-purpose', 'Chọn màu theo việc cụ thể']]) +
+      '<div id="m-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem bảng màu của tôi') + '</div>' +
+      '<div id="m-purpose" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Việc bạn cần chọn màu', L.select('p', '<option value="xe">Mua xe</option><option value="nha">Sơn nhà</option><option value="vi">Ví tiền, túi xách</option><option value="phongvan">Trang phục phỏng vấn, gặp đối tác</option><option value="logo">Logo, nhận diện thương hiệu</option>')) + '</div>', 'Gợi ý màu cho việc này') + '</div>';
+    V.wireTabs(c, ['m-main', 'm-purpose']);
+    c.querySelector('#m-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#m-main'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), G = guideData(), cs = COLOR_SET[yi.el], gi = genIn(yi.el);
+      var html = '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
+        '<h3>Bảng màu cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].mau) + '</p>' : '') +
+        '<p><strong>Màu bản mệnh (hành ' + yi.el + '):</strong> ' + swatches(cs.good) + '</p>' +
+        '<p><strong>Màu tương sinh (hành ' + gi + ' sinh ' + yi.el + ', được coi là tốt nhất):</strong> ' + swatches(cs.feed) + '</p>' +
+        '<p><strong>Màu nên hạn chế (hành khắc mệnh):</strong> ' + swatches(cs.bad) + '</p>' +
+        '<p class="ptv-note">Màu hợp mệnh là lớp hỗ trợ tâm lý và thẩm mỹ. Sang tab bên cạnh để lấy gợi ý màu theo từng việc cụ thể như mua xe hay sơn nhà.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#m-purpose form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#m-purpose'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), cs = COLOR_SET[yi.el], p = box.querySelector('#p').value;
+      L.resultBox(box, '<h3>Gợi ý màu cho mệnh ' + yi.el + '</h3><p><strong>Ưu tiên:</strong> ' + swatches(cs.feed.concat(cs.good).slice(0, 4)) + '</p><p>' + PURPOSES[p] + '</p><p><strong>Nên tránh làm màu chính:</strong> ' + swatches(cs.bad) + '.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'chon-nghe-hop-tuoi': ngheV2, 'chon-mau-sac-hop-tuoi': mauV2 });
 })();
