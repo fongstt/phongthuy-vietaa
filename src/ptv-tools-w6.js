@@ -450,3 +450,68 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-boi-ngay-sinh': boiNgaySinhV2 });
 })();
+
+/* --- Nang cap rieng Ngay Mo Hang Dau Nam (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, E = window.PTVEngine, esc = L.esc, V = window.PTVDayToolsV2;
+  function dayDetail(info, s) {
+    var qn = (D.QUY_NHAN[info.day.can] || []).map(function (ch) { return D.CHI_DIR[ch] + ' (' + ch + ')'; }).join(' và ');
+    return '<p><strong>Giờ hoàng đạo trong ngày:</strong> ' + D.GIO_HD[info.day.chi].map(function (g) { return 'giờ ' + g + ' (' + E.HOUR_LABEL[g] + ')'; }).join(', ') + '.</p>' +
+      '<p><strong>Hướng đón Quý nhân:</strong> phương ' + qn + '.</p>' +
+      '<p><strong>Các yếu tố chấm điểm:</strong> ' + (s.notes.length ? esc(s.notes.join('; ')) : 'Ngày bình hòa, không có yếu tố nổi bật') + '.</p>';
+  }
+  function moHangV2(c) {
+    c.innerHTML = V.tabsHTML([['mh-rank', 'Ngày mở hàng tốt nhất'], ['mh-guest', 'Chọn người mở hàng hợp tuổi'], ['mh-one', 'Kiểm tra một ngày']]) +
+      '<div id="mh-rank">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ cơ sở', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + '</div>', 'Xem ngày mở hàng đầu năm') + '</div>' +
+      '<div id="mh-guest" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ cơ sở', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + L.field('Ngày mở hàng (tháng Giêng)', L.select('ld', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(function (n) { return '<option value="' + n + '"' + (n === 1 ? ' selected' : '') + '>Mùng ' + n + '</option>'; }).join(''))) + '</div>', 'Xem tuổi người mở hàng hợp') + '</div>' +
+      '<div id="mh-one" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ cơ sở', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + L.field('Ngày muốn kiểm tra (tháng Giêng)', L.select('ld', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(function (n) { return '<option value="' + n + '"' + (n === 1 ? ' selected' : '') + '>Mùng ' + n + '</option>'; }).join(''))) + '</div>', 'Kiểm tra ngày này') + '</div>';
+    V.wireTabs(c, ['mh-rank', 'mh-guest', 'mh-one']);
+    function rank(box) {
+      var y = parseInt(box.querySelector('#y').value, 10), ty = parseInt(box.querySelector('#ty').value, 10);
+      var me = L.yearInfo(y), out = [];
+      for (var ld = 1; ld <= 16; ld++) {
+        var dt = D.lunar2solar(ld, 1, ty, false); if (!dt) continue;
+        var info = D.dayInfo(dt);
+        out.push({ ld: ld, i: info, s: D.scoreDay(info, { purpose: 'mo-hang', birthChi: me.chi }) });
+      }
+      out.sort(function (a, b) { return b.s.score - a.s.score || a.ld - b.ld; });
+      return { me: me, ty: ty, out: out };
+    }
+    c.querySelector('#mh-rank form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mh-rank'), r = rank(box), top = r.out[0];
+      var html = '<h3>Ngày mở hàng đầu năm Tết ' + r.ty + ' cho tuổi ' + r.me.text + ': tốt nhất là mùng ' + top.ld + '</h3>' +
+        '<p>Mùng ' + top.ld + ' tháng Giêng năm ' + r.ty + ' (dương lịch ' + D.fmtSolar(top.i) + ') là ngày ' + top.i.day.text + ', đạt ' + V.fmtScore(top.s.score) + '/10, ' + V.verdictFor(top.s.score).toLowerCase() + ' cho việc mở hàng của tuổi ' + r.me.chi + '.</p>' + dayDetail(top.i, top.s) +
+        '<h3>Bảng xếp hạng đủ 16 ngày đầu tháng Giêng</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Ngày</th><th>Dương lịch</th><th>Can chi</th><th>Điểm</th><th>Nhận định</th></tr>' + r.out.map(function (x) { return '<tr><td><strong>Mùng ' + x.ld + '</strong></td><td>' + D.fmtSolar(x.i) + '</td><td>' + x.i.day.text + '</td><td><strong>' + V.fmtScore(x.s.score) + '</strong></td><td>' + V.verdictFor(x.s.score) + (x.s.hoangDao ? ', ngày hoàng đạo' : ', ngày hắc đạo') + ', trực ' + x.s.truc + '</td></tr>'; }).join('') + '</table></div>' +
+        '<p class="ptv-note">Bảng xét từ mùng 1 đến 16 tháng Giêng. Nếu ngày điểm cao nhất không thuận cho khâu chuẩn bị, bạn hoàn toàn có thể chọn ngày điểm khá ngay phía sau, mở hàng đúng ngày chuẩn bị kỹ vẫn hơn chạy theo ngày đẹp mà cập rập.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#mh-guest form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mh-guest'), y = parseInt(box.querySelector('#y').value, 10), ty = parseInt(box.querySelector('#ty').value, 10), ld = parseInt(box.querySelector('#ld').value, 10);
+      var me = L.yearInfo(y), dt = D.lunar2solar(ld, 1, ty, false), info = D.dayInfo(dt);
+      var rows = E.CHI.map(function (ch) {
+        var r1 = L.chiRelation(me.chi, ch), r2 = L.chiRelation(info.day.chi, ch), tot = r1.score + r2.score;
+        var vd = tot >= 3 ? 'Rất hợp, nên mời' : tot >= 1 ? 'Hợp' : tot >= -1 ? 'Bình hòa' : 'Nên tránh';
+        return { ch: ch, tot: tot, html: '<tr><td><strong>Tuổi ' + ch + '</strong></td><td>' + r1.label + ' với chủ</td><td>' + r2.label + ' với ngày mở hàng</td><td>' + vd + '</td></tr>' };
+      }).sort(function (a, b) { return b.tot - a.tot; });
+      var html = '<h3>Người mở hàng hợp cho ngày mùng ' + ld + ' Tết ' + ty + ' (' + D.fmtSolar(info) + ', ngày ' + info.day.text + ')</h3>' +
+        '<p>Chủ cơ sở tuổi ' + me.text + '. Theo lệ mở hàng đầu năm, vị khách đầu tiên bước vào hoặc người được mời mở hàng nên hợp tuổi với cả chủ lẫn ngày mở hàng, đồng thời tính tình xởi lởi, làm ăn phát đạt để lấy vía tốt cho cả năm.</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Tuổi của người mở hàng</th><th>Quan hệ với tuổi chủ</th><th>Quan hệ với ngày</th><th>Nhận định</th></tr>' + rows.map(function (r) { return r.html; }).join('') + '</table></div>' +
+        '<p class="ptv-note">Bảng tính theo địa chi của tuổi; khi chọn người cụ thể, hãy ưu tiên người khỏe mạnh, vui vẻ và đang làm ăn thuận lợi thật ở ngoài đời, vì vía tốt trước hết là năng lượng thật của con người đó.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#mh-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mh-one'), y = parseInt(box.querySelector('#y').value, 10), ty = parseInt(box.querySelector('#ty').value, 10), ld = parseInt(box.querySelector('#ld').value, 10);
+      var me = L.yearInfo(y), dt = D.lunar2solar(ld, 1, ty, false), info = D.dayInfo(dt);
+      var s = D.scoreDay(info, { purpose: 'mo-hang', birthChi: me.chi });
+      var html = '<h3>Mùng ' + ld + ' tháng Giêng Tết ' + ty + ' (' + D.fmtSolar(info) + '): ' + V.fmtScore(s.score) + '/10, ' + V.verdictFor(s.score) + ' cho mở hàng tuổi ' + me.chi + '</h3>' +
+        '<p>Ngày ' + info.day.text + ', ' + (s.hoangDao ? 'ngày hoàng đạo (' + s.sat + ')' : 'ngày hắc đạo (' + s.sat + ')') + ', trực ' + s.truc + '.</p>' + dayDetail(info, s) +
+        '<p class="ptv-note">Nếu điểm của ngày này chưa cao, hãy mở tab xếp hạng để xem các ngày đầu năm khác hợp hơn cho tuổi của bạn.</p>';
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'ngay-mo-hang-dau-nam': moHangV2 });
+})();

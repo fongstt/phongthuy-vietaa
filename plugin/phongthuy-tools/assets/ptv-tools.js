@@ -2104,3 +2104,52 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-gio-xuat-hanh': gioXuatHanhV2 });
 })();
+
+/* --- Nang cap rieng Xem Boi Ngay Sinh (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
+  function reduceNum(n) { while (n > 9 && n !== 11 && n !== 22) { n = String(n).split('').reduce(function (a, c) { return a + parseInt(c, 10); }, 0); } return n; }
+  function sumDigits(n) { return String(n).split('').reduce(function (a, c) { return a + parseInt(c, 10); }, 0); }
+  function boiNgaySinhV2(c) {
+    c.innerHTML = V.formWrap2('<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="by" inputmode="numeric" value="1995">') + '</div>', 'Xem bói ngày sinh');
+    c.querySelector('form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var d = parseInt(c.querySelector('#bd').value, 10), m = parseInt(c.querySelector('#bm').value, 10), y = parseInt(c.querySelector('#by').value, 10);
+      if (!d || !m || !y || d > 31 || m > 12 || y < 1900 || y > 2100) { L.resultBox(c, '<p>Ngày sinh chưa hợp lệ, bạn kiểm tra lại giúp mình nhé.</p>'); return; }
+      var data = (window.PTV_TOOLS_DATA || {}).thanSoHoc || { numbers: {} };
+      var lp = reduceNum(sumDigits(d) + sumDigits(m) + sumDigits(y));
+      var dayN = reduceNum(d), att = reduceNum(d + m);
+      var nowY = new Date().getFullYear(), py = reduceNum(sumDigits(d) + sumDigits(m) + sumDigits(nowY));
+      var info = D.dayInfo(new Date(y, m - 1, d)), yi = L.yearInfo(info.lunar.y);
+      var wd = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'][new Date(y, m - 1, d).getDay()];
+      function numBlock(title, n, intro) {
+        var e = data.numbers[String(n)] || {};
+        if (!e.traits) return '';
+        return '<p><strong>' + title + ' ' + n + (e.name ? ' (' + esc(e.name.replace(/^Số \d+, /, '')) + ')' : '') + ':</strong> ' + (intro || '') + esc(e.traits) + '</p>' +
+          (e.career ? '<p><strong>Sự nghiệp hợp:</strong> ' + esc(e.career) + '</p>' : '') +
+          (e.love ? '<p><strong>Tình cảm:</strong> ' + esc(e.love) + '</p>' : '');
+      }
+      var html = '<div class="ptv-facts"><span>Sinh: <strong>' + d + '/' + m + '/' + y + '</strong> (' + wd + ')</span><span>Âm lịch: <strong>' + D.fmtLunar(info) + '</strong></span><span>Ngày can chi: <strong>' + info.day.text + '</strong></span><span>Tuổi: <strong>' + yi.text + '</strong>, mệnh ' + esc(yi.napAm) + '</span></div>' +
+        '<h3>Số chủ đạo ' + lp + ' quyết định phần lớn tính cách của bạn</h3>' + numBlock('Số chủ đạo', lp) +
+        '<h3>Hai con số phụ từ chính ngày sinh</h3>' +
+        '<p><strong>Số ngày sinh ' + dayN + '</strong> là tài năng bẩm sinh bạn mang theo từ lúc chào đời: ' + esc((data.numbers[String(dayN)] || {}).traits || '') + '</p>' +
+        '<p><strong>Số thái độ ' + att + '</strong> là cách bạn phản ứng đầu tiên trước mọi việc và ấn tượng người khác nhận được ở lần gặp đầu: ' + esc((data.numbers[String(att)] || {}).traits || '') + '</p>' +
+        '<h3>Năm cá nhân ' + nowY + ' của bạn là số ' + py + '</h3>' +
+        '<p>Theo chu kỳ 9 năm của thần số học, mỗi năm bạn đi qua một con số cá nhân từ 1 đến 9 (và đôi khi là số bậc thầy 11, 22). Năm ' + nowY + ' bạn ở số ' + py + ': ' + esc((data.numbers[String(py)] || {}).traits || '') + ' Hãy đọc phần này như một gợi ý về nhịp năm, việc gì nên đẩy mạnh, việc gì nên chậm lại, thay vì một lời tiên đoán.</p>' +
+        '<h3>Lớp can chi của ngày sinh</h3>' +
+        '<p>Bạn sinh vào ngày ' + info.day.text + ': thiên can ' + info.day.can + ' thuộc hành ' + info.day.canEl + ', địa chi ' + info.day.chi + ' thuộc hành ' + info.day.chiEl + '. Năm sinh ' + yi.text + ' mang mệnh ' + esc(yi.napAm) + ' (hành ' + yi.el + '). Trong cách luận truyền thống, hành của ngày sinh được xem là phần khí chất gần với bản thân nhất, còn mệnh năm sinh là nền chung của cả thế hệ sinh cùng năm. Khi ba lớp số học, can chi ngày và mệnh năm sinh cùng chỉ về một xu hướng, xu hướng đó thường thể hiện khá rõ ở bạn; khi chúng mâu thuẫn nhau, tính cách của bạn sẽ đa diện hơn, tùy hoàn cảnh mà bộc lộ mặt khác nhau.</p>' +
+        '<p class="ptv-note">Toàn bộ phần luận giải trên do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> biên soạn để tham khảo và tự chiêm nghiệm. Ngày sinh cho thấy xu hướng, còn con người thật được tạo nên bởi lựa chọn và nỗ lực mỗi ngày.</p>' +
+        '<p><button type="button" class="ptv-copy-btn">Sao chép tóm tắt kết quả</button></p>';
+      L.resultBox(c, html);
+      var btn = c.querySelector('.ptv-copy-btn');
+      if (btn) btn.addEventListener('click', function () {
+        var e1 = data.numbers[String(lp)] || {};
+        var text = 'Bói ngày sinh ' + d + '/' + m + '/' + y + ' (' + wd + '), ngày ' + info.day.text + ', tuổi ' + yi.text + ' mệnh ' + yi.napAm + '. Số chủ đạo ' + lp + ': ' + (e1.traits || '') + ' Năm cá nhân ' + nowY + ': số ' + py + '. (Phong Thủy VietAA, phongthuy.vietaa.com)';
+        function done() { btn.textContent = 'Đã sao chép'; setTimeout(function () { btn.textContent = 'Sao chép tóm tắt kết quả'; }, 2000); }
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, done); else done();
+      });
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-boi-ngay-sinh': boiNgaySinhV2 });
+})();
