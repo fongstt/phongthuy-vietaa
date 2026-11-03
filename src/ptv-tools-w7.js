@@ -538,3 +538,92 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-la-so-tu-vi': tuViV2, 'giai-ma-tien-kiep': tienKiepV2 });
 })();
+
+/* --- Hau kiep + Duong hoc van v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
+  function df3() {
+    return '<div class="ptv-row">' + L.field('Ngày sinh (dương lịch)', '<input type="text" id="bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="by" inputmode="numeric" value="1995">') + '</div>';
+  }
+  function rd(box) { return { d: parseInt(box.querySelector('#bd').value, 10), m: parseInt(box.querySelector('#bm').value, 10), y: parseInt(box.querySelector('#by').value, 10) }; }
+  var HAU_MENH = {
+    'Kim': 'Hậu vận của người mệnh Kim thường nghiêng về sự gọn gàng và thành quả tích lũy: càng lớn tuổi càng biết mình có gì, cần gì, và sống có trật tự. Điểm cần giữ là sức khỏe hô hấp và xương khớp, cùng thói quen mềm mỏng hơn với con cháu thay vì áp tiêu chuẩn của mình lên thế hệ sau.',
+    'Mộc': 'Hậu vận của người mệnh Mộc nghiêng về sự phát triển bền bỉ và vai trò cây cao bóng cả trong gia đình. Càng về sau càng hợp truyền kinh nghiệm, dạy dỗ lớp trẻ. Điểm cần giữ là gan và gân cốt, cùng sự kiên nhẫn khi con cháu đi con đường khác lựa chọn của mình.',
+    'Thủy': 'Hậu vận của người mệnh Thủy nghiêng về chiều sâu và sự linh hoạt: thích nghi tốt với thay đổi nơi ở, hoàn cảnh, và thường là nơi cả nhà tìm tới khi cần lời khuyên. Điểm cần giữ là thận, giấc ngủ và thói quen không ôm hết lo lắng của mọi người vào mình.',
+    'Hỏa': 'Hậu vận của người mệnh Hỏa nghiêng về sự rực rỡ và ảnh hưởng: càng lớn tuổi càng có tiếng nói trong cộng đồng nếu biết tiết chế nóng nảy. Điểm cần giữ là tim mạch, huyết áp và nhịp sống chậm lại đúng lúc, vì mệnh Hỏa dễ kiệt sức do quá nhiệt huyết.',
+    'Thổ': 'Hậu vận của người mệnh Thổ nghiêng về sự ổn định và tích lũy: nhà cửa, đất đai và nền nếp gia đình thường vững dần theo tuổi. Điểm cần giữ là tiêu hóa, cân nặng và sự cởi mở trước thay đổi, tránh vì quá chắc chắn mà bỏ lỡ cơ hội mới ở tuổi trung niên.'
+  };
+  function hauKiepV2(c) {
+    var data = (window.PTV_TOOLS_DATA || {}).tienKiep || { futurePaths: [], lessons: [] };
+    c.innerHTML = V.tabsHTML([['hk-main', 'Giải mã hậu kiếp'], ['hk-plan', 'Ba việc vun bồi cho hậu vận']]) +
+      '<div id="hk-main">' + V.formWrap2(df3(), 'Giải mã hậu kiếp của tôi') + '</div>' +
+      '<div id="hk-plan" hidden>' + V.formWrap2(df3(), 'Xem việc nên vun bồi') + '</div>';
+    V.wireTabs(c, ['hk-main', 'hk-plan']);
+    c.querySelector('#hk-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hk-main'), dt = rd(box);
+      var info = D.dayInfo(new Date(dt.y, dt.m - 1, dt.d)), yi = L.yearInfo(info.lunar.y);
+      var h = L.hashStr('haukiep|' + dt.d + '/' + dt.m + '/' + dt.y);
+      var p = data.futurePaths[h % data.futurePaths.length], lesson = data.lessons[(h >> 4) % data.lessons.length];
+      var html = '<div class="ptv-facts"><span>Sinh: <strong>' + dt.d + '/' + dt.m + '/' + dt.y + '</strong></span><span>Tuổi: <strong>' + yi.text + '</strong></span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong></span></div>' +
+        '<h3>Hậu vận của bạn: ' + esc(p.path) + '</h3><p>' + esc(p.desc) + '</p>' +
+        '<h3>Hậu vận theo mệnh ' + yi.el + ' của bạn</h3><p>' + HAU_MENH[yi.el] + '</p>' +
+        '<p><strong>Điều nên vun bồi từ bây giờ:</strong> ' + esc(lesson) + '</p>' +
+        '<p class="ptv-note">Hậu kiếp và hậu vận là cách nói dân gian về chặng sau của đời người. Phần luận tại <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> chỉ là gợi ý suy ngẫm, tương lai vẫn nằm trong tay bạn và được quyết định bởi những gì bạn làm từ hôm nay.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#hk-plan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hk-plan'), dt = rd(box);
+      var now = new Date(), age = now.getFullYear() - dt.y;
+      var stage = age < 40 ? 'Bạn đang ở chặng gieo nền (trước 40 tuổi): hậu vận tốt xấu quyết định nhiều nhất ở những năm này, khi sức khỏe, nghề nghiệp và quan hệ đều còn đắp được nền.' : (age < 55 ? 'Bạn đang ở chặng tích lũy (40 đến 55 tuổi): đây là lúc hậu vận bắt đầu hiện hình qua sức khỏe, tài chính và vị thế của bạn, điều chỉnh bây giờ vẫn rất kịp.' : 'Bạn đang ở chặng thu hoạch (sau 55 tuổi): hậu vận lúc này là quả của những gì đã gieo, việc cần làm là giữ nhịp sống lành mạnh và truyền lại kinh nghiệm cho lớp sau.');
+      var h = L.hashStr('haukiep|' + dt.d + '/' + dt.m + '/' + dt.y);
+      var lesson = data.lessons[(h >> 4) % data.lessons.length];
+      var html = '<h3>Ba việc vun bồi cho hậu vận của bạn</h3><p>' + stage + '</p>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>Một, sức khỏe là vốn gốc</span></div><p>Mọi cách luận hậu vận đều vô nghĩa nếu sức khỏe sụp sớm. Khám định kỳ, ngủ đủ và vận động đều là khoản đầu tư có lãi nhất cho chặng sau của đời người, hơn mọi vật phẩm phong thủy.</p></div>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>Hai, tài chính và chỗ ở ổn định</span></div><p>Hậu vận an yên thường đứng trên ba chân: một khoản dự phòng, một chỗ ở chắc chắn và ít nợ nần. Ba chân này xây bằng kỷ luật chi tiêu từ tuổi 30, không xây bằng may rủi.</p></div>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>Ba, quan hệ là tài sản cuối cùng</span></div><p>' + esc(lesson) + ' Người có hậu vận được luận là tốt trong dân gian, nhìn kỹ đều là người giữ được vài mối quan hệ sâu bền tới cuối đời.</p></div>';
+      L.resultBox(box, html);
+    });
+  }
+
+  var LP_STUDY = { '1': 'Bạn học theo kiểu tự chủ: có mục tiêu rõ ràng là bứt tốc rất nhanh, nhưng dễ chán khi bị ép học theo nhịp của người khác. Hợp học qua dự án và thử thách.', '2': 'Bạn học bằng sự đều đặn và cảm xúc an toàn: tiến bộ vững trong môi trường thân thiện, có người đồng hành. Hợp học nhóm nhỏ và ôn tập theo lịch cố định.', '3': 'Bạn học qua nói và viết: giảng lại cho người khác là cách bạn thuộc bài sâu nhất. Hợp các môn ngôn ngữ, xã hội và học qua thảo luận, thuyết trình.', '4': 'Bạn học theo hệ thống: cần giáo trình rõ ràng, từng bước một, không hợp nhảy cóc. Hợp các môn kỹ thuật, kế toán, và ôn luyện bằng sơ đồ, bảng biểu.', '5': 'Bạn học bằng trải nghiệm: ngồi yên một chỗ là cực hình, học qua thực hành, ví dụ thật và thay đổi bối cảnh sẽ nhớ rất lâu. Hợp ngoại ngữ qua giao tiếp và học nghề qua làm thật.', '6': 'Bạn học vì trách nhiệm và người thân: có động lực rõ ràng vì ai là bạn bền bỉ nhất. Hợp các ngành chăm sóc, giáo dục, y tế và học cùng người thân.', '7': 'Bạn học theo chiều sâu và tự nghiên cứu: cần không gian yên tĩnh, tự đặt câu hỏi và đào tới gốc. Hợp nghiên cứu, triết học, khoa học và các kỳ thi cần tư duy phân tích.', '8': 'Bạn học có định hướng thành quả: hợp chương trình gắn với bằng cấp, vị trí và thu nhập cụ thể. Điểm cần rèn là kiên nhẫn ở giai đoạn chưa thấy kết quả.', '9': 'Bạn học rộng và vì lý tưởng: hứng thú với nhiều lĩnh vực, hợp các ngành nhân văn, xã hội và công tác cộng đồng. Điểm cần rèn là học tới nơi tới chốn một chuyên ngành thay vì dàn trải.', '11': 'Bạn học bằng trực giác mạnh: nắm ý rất nhanh khi hứng thú, nhưng hiệu quả lên xuống theo cảm xúc. Cần kỷ luật ôn tập đều để trực giác không bị lãng phí.', '22': 'Bạn học theo tầm nhìn lớn: hợp các chương trình dài hơi xây dựng nền tảng cho sự nghiệp lớn. Cần chia mục tiêu lớn thành chặng nhỏ để không nản giữa đường.' };
+  function hocVanV2(c) {
+    var data = (window.PTV_TOOLS_DATA || {}).hocVan || { byCan: {}, byMenh: {} };
+    c.innerHTML = V.tabsHTML([['hv-main', 'Hồ sơ học vấn của bạn'], ['hv-exam', 'Xem năm thi cử']]) +
+      '<div id="hv-main">' + V.formWrap2(df3(), 'Xem đường học vấn') + '</div>' +
+      '<div id="hv-exam" hidden>' + V.formWrap2(df3() + '<div class="ptv-row">' + L.field('Năm dự định thi hoặc bảo vệ, xin học', '<input type="text" id="ey" inputmode="numeric" value="2026">') + '</div>', 'Xem năm thi này có thuận không') + '</div>';
+    V.wireTabs(c, ['hv-main', 'hv-exam']);
+    function lpOf(dt) { var s = String(dt.d) + String(dt.m) + String(dt.y); var n = s.split('').reduce(function (a, ch) { return a + parseInt(ch, 10); }, 0); while (n > 9 && n !== 11 && n !== 22) { n = String(n).split('').reduce(function (a, ch) { return a + parseInt(ch, 10); }, 0); } return n; }
+    c.querySelector('#hv-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hv-main'), dt = rd(box);
+      var info = D.dayInfo(new Date(dt.y, dt.m - 1, dt.d)), yi = L.yearInfo(info.lunar.y), lp = lpOf(dt);
+      var html = '<div class="ptv-facts"><span>Ngày sinh: <strong>' + dt.d + '/' + dt.m + '/' + dt.y + '</strong></span><span>Ngày can chi: <strong>' + info.day.text + '</strong></span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong></span><span>Số chủ đạo: <strong>' + lp + '</strong></span></div>' +
+        '<h3>Đường học vấn theo can ngày ' + info.day.can + '</h3><p>' + esc(data.byCan[info.day.can] || '') + '</p>' +
+        '<h3>Đường học vấn theo mệnh ' + yi.el + '</h3><p>' + esc(data.byMenh[yi.el] || '') + '</p>' +
+        '<h3>Phong cách học theo số chủ đạo ' + lp + '</h3><p>' + LP_STUDY[String(lp)] + '</p>' +
+        '<p class="ptv-note">Ba lớp luận trên là ba hệ tham khảo khác nhau (can ngày, mệnh nạp âm, thần số học) do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> trình bày minh bạch để bạn đối chiếu. Học vấn thành hay bại, cuối cùng vẫn do nỗ lực và phương pháp của chính bạn.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#hv-exam form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hv-exam'), dt = rd(box), ey = parseInt(box.querySelector('#ey').value, 10);
+      if (!ey) { L.resultBox(box, '<p>Bạn nhập năm dự định thi nhé.</p>'); return; }
+      var info = D.dayInfo(new Date(dt.y, dt.m - 1, dt.d)), yi = L.yearInfo(info.lunar.y);
+      var eyInfo = L.yearInfo(ey);
+      var rel, verdict;
+      if (L.GENERATES[eyInfo.el] === yi.el) { rel = 'hành của năm sinh ra mệnh của bạn'; verdict = 'Theo ngũ hành đây là năm được nâng đỡ: hành lưu niên sinh mệnh, thường ứng với việc gặp thầy tốt, hồ sơ và thủ tục hanh thông. Hãy tận dụng năm này cho kỳ thi quan trọng nhất.'; }
+      else if (yi.el === eyInfo.el) { rel = 'cùng hành với mệnh của bạn'; verdict = 'Năm tỷ hòa, vận khí ổn định và quen thuộc: kết quả phụ thuộc gần như hoàn toàn vào mức độ ôn luyện, không có gió ngược cũng không có gió xuôi đáng kể.'; }
+      else if (L.GENERATES[yi.el] === eyInfo.el) { rel = 'mệnh của bạn sinh ra hành của năm'; verdict = 'Năm sinh xuất, bạn phải bỏ nhiều công sức hơn thường lệ: dễ mệt, dễ phân tán. Nên bắt đầu ôn sớm hơn dự định và giữ sức khỏe, thay vì dồn vào nước rút.'; }
+      else if (L.CONTROLS[eyInfo.el] === yi.el) { rel = 'hành của năm khắc mệnh của bạn'; verdict = 'Năm khắc nhập, áp lực cao hơn mặt bằng chung: dễ gặp trục trặc thủ tục hoặc tâm lý phòng thi. Cách hóa giải thực tế nhất là chuẩn bị sớm, dự phòng giấy tờ và phương án B, thi thử nhiều lần cho quen áp lực.'; }
+      else { rel = 'mệnh của bạn khắc hành của năm'; verdict = 'Năm bạn ở thế chủ động khắc chế: hợp để bứt phá và cạnh tranh, nhưng tránh chủ quan khinh suất ở những phần tưởng là dễ.'; }
+      var html = '<h3>Năm ' + ey + ' (' + eyInfo.text + ', mệnh ' + esc(eyInfo.napAm) + ') với người mệnh ' + yi.el + '</h3>' +
+        '<p>Quan hệ ngũ hành: <strong>' + rel + '</strong>. ' + verdict + '</p>' +
+        '<p class="ptv-note">Luận năm thi theo quan hệ hành của lưu niên với bản mệnh chỉ là một lớp tham khảo dân gian. Lịch thi, đề thi và sự chuẩn bị của bạn mới là những yếu tố quyết định thật sự.</p>';
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'giai-ma-hau-kiep': hauKiepV2, 'xem-duong-hoc-van': hocVanV2 });
+})();
