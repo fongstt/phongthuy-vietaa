@@ -39,7 +39,25 @@
         L.field('Ngày muốn kiểm tra (năm-tháng-ngày)', '<input type="text" id="dt" value="' + today + '">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
       '<div id="mx-quarter" hidden>' + formWrap('<div class="ptv-row">' +
         L.field('Năm sinh của người đứng tên xe', L.select('y2', L.yearOptions(1940, 2010, 1990))) +
-        L.field('Việc chính trong ngày', '<select id="job2"><option value="nhan">Nhận xe</option><option value="ky">Ký hợp đồng, đặt cọc</option></select>') + '</div>', 'Tìm ngày tốt nhất 3 tháng tới') + '</div>';
+        L.field('Việc chính trong ngày', '<select id="job2"><option value="nhan">Nhận xe</option><option value="ky">Ký hợp đồng, đặt cọc</option></select>') + '</div>', 'Tìm ngày tốt nhất 3 tháng tới') + '</div>' +
+      '<div id="mx-up"></div>';
+    (function () {
+      var up = [], base = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      for (var k = 0; k < 30; k++) {
+        var dd = new Date(base.getFullYear(), base.getMonth(), base.getDate() + k);
+        var inf = D.dayInfo(dd), sc = D.scoreDay(inf, { purpose: 'mua-xe' });
+        if (sc.score >= 6.5) up.push({ i: inf, s: sc });
+      }
+      up.sort(function (a, b) { return b.s.score - a.s.score || a.i.jd - b.i.jd; });
+      if (up.length) {
+        c.querySelector('#mx-up').innerHTML = '<h3>Ngày đẹp mua xe sắp tới (30 ngày tới, chưa xét tuổi của bạn)</h3>' +
+          up.slice(0, 5).map(function (x) {
+            var tu = D.tu28Of(x.i);
+            return '<div class="ptv-dayline"><span class="ptv-dayline-date">' + D.fmtSolar(x.i) + '</span> <span class="ptv-dayline-lunar">' + D.fmtLunar(x.i) + ', ngày ' + x.i.day.text + ', sao ' + tu.name + (tu.good > 0 ? ' (tốt)' : tu.good < 0 ? ' (xấu)' : '') + '</span> <span class="ptv-dayline-score">' + String(x.s.score).replace('.', ',') + ' điểm</span><span class="ptv-dayline-why">' + x.s.notes.join('. ') + '.</span></div>';
+          }).join('') +
+          '<p class="ptv-note">Muốn xét thêm hợp xung với tuổi của người đứng tên xe, bạn nhập năm sinh ở các tab phía trên.</p>';
+      }
+    })();
 
     var tabs = c.querySelectorAll('.ptv-xtab');
     function show(t) {

@@ -107,7 +107,9 @@
       } else {
         html += '<p>Quẻ không có hào biến, tình hình tương đối ổn định và diễn biến đúng theo ý nghĩa của quẻ chính trong thời gian tới.</p>';
       }
-      html += '<div class="ptv-kieu-actions"><button type="button" class="ptv-xbtn" id="dx-new">Gieo quẻ mới</button> <button type="button" class="ptv-xbtn" id="dx-copy">Sao chép kết quả</button><span id="dx-copy-msg" class="ptv-note"></span></div>' +
+      var hoLower = triOfBits(bits.slice(1, 4)), hoUpper = triOfBits(bits.slice(2, 5)), qHo = queLookup(hoUpper, hoLower);
+      if (qHo) html += '<p><strong>Quẻ hỗ của quẻ này:</strong> ' + esc(qHo.name) + '. Quẻ hỗ (còn gọi là quẻ hạt nhân) được lập từ các hào giữa của quẻ chính: hào 2, 3, 4 làm quẻ hạ, hào 3, 4, 5 làm quẻ thượng. Người xưa đọc quẻ hỗ để thấy nhân lõi bên trong sự việc, phần động cơ và diễn biến ngầm mà quẻ chính chưa nói hết; khi luận một quẻ, quẻ hỗ là lớp nghĩa thứ hai rất nên đối chiếu.</p>';
+      html += '<div class="ptv-kieu-actions"><button type="button" class="ptv-xbtn" id="dx-new">Gieo quẻ mới</button> <button type="button" class="ptv-xbtn" id="dx-copy">Sao chép kết quả</button> <button type="button" class="ptv-xbtn" id="dx-link">Sao chép link lần gieo này</button><span id="dx-copy-msg" class="ptv-note"></span></div>' +
         '<p class="ptv-note">Gieo quẻ đồng xu trên Phong Thủy VietAA dùng 3 đồng xu gieo 6 lần theo đúng lệ xưa: tổng 6 là lão âm, 7 là thiếu dương, 8 là thiếu âm, 9 là lão dương; hai hào lão là hào biến.</p>';
       L.resultBox(c.querySelector('#dx-gieo'), html);
       try {
@@ -128,7 +130,16 @@
         var msg = c.querySelector('#dx-copy-msg');
         if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { msg.textContent = ' Đã chép xong.'; }, function () { msg.textContent = ' Trình duyệt chặn sao chép.'; });
       });
+      c.querySelector('#dx-link').addEventListener('click', function () {
+        var link = location.origin + location.pathname + '?gieo=' + tosses.join('');
+        var msg = c.querySelector('#dx-copy-msg');
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(function () { msg.textContent = ' Đã chép link, gửi cho ai người đó mở ra sẽ thấy đúng quẻ này.'; }, function () { msg.textContent = ' Trình duyệt chặn sao chép.'; });
+      });
     }
+    try {
+      var gm = /[?&]gieo=([6-9]{6})/.exec(location.search || '');
+      if (gm) { tosses = gm[1].split('').map(Number); btn.style.display = 'none'; c.querySelector('#dx-lines').innerHTML = linesHTML(tosses, false); finish(); }
+    } catch (e) {}
 
     c.querySelector('#dx-tra form').addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -153,14 +164,24 @@
   function verdictFor(s) { return s >= 7.5 ? 'Rất tốt' : s >= 6 ? 'Tốt' : s >= 5 ? 'Khá' : s >= 4 ? 'Trung bình' : s >= 3 ? 'Kém' : 'Nên tránh'; }
   function gioHDText(info) { return D.GIO_HD[info.day.chi].map(function (g) { return g + ' (' + E.HOUR_LABEL[g] + ')'; }).join(', '); }
   function dayLineHTML(x) {
-    var i = x.i, s = x.s;
-    return '<div class="ptv-dayline"><span class="ptv-dayline-date">' + D.fmtSolar(i) + '</span> <span class="ptv-dayline-lunar">' + D.fmtLunar(i) + ', ngày ' + i.day.text + '</span> <span class="ptv-dayline-score">' + fmtScore(s.score) + ' điểm</span><span class="ptv-dayline-why">' + s.notes.join('. ') + '. Giờ hoàng đạo: ' + gioHDText(i) + '.</span></div>';
+    var i = x.i, s = x.s, tu = D.tu28Of(i);
+    return '<div class="ptv-dayline"><span class="ptv-dayline-date">' + D.fmtSolar(i) + '</span> <span class="ptv-dayline-lunar">' + D.fmtLunar(i) + ', ngày ' + i.day.text + ', sao ' + tu.name + (tu.good > 0 ? ' (tốt)' : tu.good < 0 ? ' (xấu)' : '') + '</span> <span class="ptv-dayline-score">' + fmtScore(s.score) + ' điểm</span><span class="ptv-dayline-why">' + s.notes.join('. ') + '. Giờ hoàng đạo: ' + gioHDText(i) + '.</span></div>';
+  }
+  function dayStarsHTML(info) {
+    var tu = D.tu28Of(info), duc = D.ducOf(info), hop = D.hopMonthOf(info);
+    var html = '<p><strong>Nhị thập bát tú:</strong> sao ' + tu.full + ', <span class="' + (tu.good > 0 ? 'ptv-good' : tu.good < 0 ? 'ptv-bad' : 'ptv-mid') + '">' + (tu.good > 0 ? 'cát tú (sao tốt)' : tu.good < 0 ? 'hung tú (sao xấu)' : 'sao có dị bản giữa các lịch thư') + '</span>. ' + tu.note + '.</p>';
+    if (duc.length) html += '<p><strong>Sao Đức theo Ngọc Hạp Thông Thư:</strong> ngày có ' + duc.join(' và ') + ' chiếu, được xem là sao tốt cho mọi việc, riêng Thiên Đức đặc biệt tốt cho động thổ và tu tạo.</p>';
+    if (hop) html += '<p><strong>Quan hệ ngày với tháng:</strong> ' + hop + ', được xem là điểm cộng khi chọn ngày.</p>';
+    html += '<p><strong>Hướng xuất hành trong ngày:</strong> Tài Thần ở hướng ' + D.TAI_THAN[info.day.can] + ', Hỷ Thần ở hướng ' + D.HY_THAN[info.day.can] + ' (tính theo can ngày ' + info.day.can + ').</p>';
+    html += '<p class="ptv-note">Lớp sao tú, sao Đức và quan hệ với tháng hiển thị để bạn đối chiếu thêm theo Ngọc Hạp Thông Thư; điểm số của ngày vẫn tính theo thần hoàng đạo, trực, các ngày kỵ và quan hệ ngày với tuổi của bạn như phần phương pháp tính ở cuối trang.</p>';
+    return html;
   }
   function scanHTML(purpose, birthChi, yy, mm, label, extraOpts) {
     var opts = { purpose: purpose, birthChi: birthChi };
     if (extraOpts) for (var k in extraOpts) opts[k] = extraOpts[k];
     var me = null;
     var scored = D.monthDays(yy, mm).map(function (i) { return { i: i, s: D.scoreDay(i, opts) }; });
+    if (extraOpts && extraOpts.weekendOnly) scored = scored.filter(function (x) { var wd = new Date(x.i.solar.y, x.i.solar.m - 1, x.i.solar.d).getDay(); return wd === 0 || wd === 6; });
     var good = scored.filter(function (x) { return x.s.score >= 7; }).sort(function (a, b) { return b.s.score - a.s.score; });
     var ok = scored.filter(function (x) { return x.s.score >= 5.5 && x.s.score < 7; }).sort(function (a, b) { return b.s.score - a.s.score; });
     var bad = scored.filter(function (x) { return x.s.score <= 3; }).sort(function (a, b) { return a.i.dayOfMonth - b.i.dayOfMonth; });
@@ -190,7 +211,7 @@
     var info = D.dayInfo(new Date(p[0], p[1] - 1, p[2]));
     var s = D.scoreDay(info, { purpose: purpose, birthChi: birthChi });
     return '<h4>Ngày ' + D.fmtSolar(info) + ' (' + D.fmtLunar(info) + '), ngày ' + info.day.text + ': <span class="' + (s.score >= 6 ? 'ptv-good' : s.score >= 4 ? 'ptv-mid' : 'ptv-bad') + '">' + fmtScore(s.score) + '/10, ' + verdictFor(s.score) + '</span></h4>' +
-      '<p>' + s.notes.join('. ') + '.</p><p><strong>Giờ hoàng đạo trong ngày:</strong> ' + gioHDText(info) + '. Khi ' + label + ', nên chọn một giờ hoàng đạo thuận tiện nhất để bắt đầu.</p>';
+      '<p>' + s.notes.join('. ') + '.</p>' + dayStarsHTML(info) + '<p><strong>Giờ hoàng đạo trong ngày:</strong> ' + gioHDText(info) + '. Khi ' + label + ', nên chọn một giờ hoàng đạo thuận tiện nhất để bắt đầu.</p>';
   }
   function tabsHTML(labels) {
     return '<div class="ptv-xtabs">' + labels.map(function (x, i) { return '<button type="button" class="ptv-xtab' + (i === 0 ? ' ptv-on' : '') + '" data-t="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
@@ -251,7 +272,7 @@
     });
   }
 
-  window.PTVDayToolsV2 = { scanHTML: scanHTML, quarterHTML: quarterHTML, checkDayHTML: checkDayHTML, tabsHTML: tabsHTML, wireTabs: wireTabs, formWrap2: formWrap2, monthOptions2: monthOptions2, fmtScore: fmtScore, verdictFor: verdictFor };
+  window.PTVDayToolsV2 = { scanHTML: scanHTML, quarterHTML: quarterHTML, checkDayHTML: checkDayHTML, dayStarsHTML: dayStarsHTML, tabsHTML: tabsHTML, wireTabs: wireTabs, formWrap2: formWrap2, monthOptions2: monthOptions2, fmtScore: fmtScore, verdictFor: verdictFor };
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-dong-tho': dongThoV2 });
 })();
 
@@ -278,7 +299,16 @@
     c.querySelector('#mn-day form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#mn-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
-      L.resultBox(box, V.checkDayHTML('mua-nha', me.chi, box.querySelector('#dt').value, 'ký kết và nhận nhà'));
+      var dtVal = box.querySelector('#dt').value, yr = parseInt((dtVal || '').split('-')[0], 10);
+      var html = V.checkDayHTML('mua-nha', me.chi, dtVal, 'ký kết và nhận nhà');
+      if (yr && yr > 1900 && yr < 2200) {
+        var ageY = yr - me.year + 1, klY = L.kimLau(ageY), hoY = L.hoangOc(ageY), ttY = L.tamTai(me.chi, yr);
+        html += '<p class="ptv-note"><strong>Xét thêm theo năm ' + yr + ' cho gia chủ sinh năm ' + me.year + ' (' + ageY + ' tuổi âm):</strong> ' +
+          (ttY ? 'phạm tam tai' : 'không phạm tam tai') + ', ' +
+          (klY.bad ? 'phạm ' + klY.kind.toLowerCase() : 'không phạm kim lâu') + ', hoang ốc cung ' + hoY.name + (hoY.bad ? ' (cung xấu)' : ' (cung tốt)') +
+          '. Ba hạn này xét theo năm và tuổi, khác lớp điểm theo ngày ở trên; năm phạm hạn mà vẫn cần mua thì nên chọn ngày thật tốt và cân nhắc nhờ người hợp tuổi đứng tên giao dịch chính.</p>';
+      }
+      L.resultBox(box, html);
     });
     c.querySelector('#mn-quarter form').addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -409,7 +439,7 @@
   function reduceNum(n) { while (n > 9 && n !== 11 && n !== 22) { n = String(n).split('').reduce(function (a, c) { return a + parseInt(c, 10); }, 0); } return n; }
   function sumDigits(n) { return String(n).split('').reduce(function (a, c) { return a + parseInt(c, 10); }, 0); }
   function boiNgaySinhV2(c) {
-    c.innerHTML = V.formWrap2('<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="by" inputmode="numeric" value="1995">') + '</div>', 'Xem bói ngày sinh');
+    c.innerHTML = V.formWrap2('<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="by" inputmode="numeric" value="1995">') + '</div><div class="ptv-row">' + L.field('Họ tên đầy đủ (không bắt buộc, để tính thêm số linh hồn và số nhân cách)', '<input type="text" id="fn" value="">', 'ptv-field-name') + '</div>', 'Xem bói ngày sinh');
     c.querySelector('form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var d = parseInt(c.querySelector('#bd').value, 10), m = parseInt(c.querySelector('#bm').value, 10), y = parseInt(c.querySelector('#by').value, 10);
@@ -432,6 +462,31 @@
         '<h3>Hai con số phụ từ chính ngày sinh</h3>' +
         '<p><strong>Số ngày sinh ' + dayN + '</strong> là tài năng bẩm sinh bạn mang theo từ lúc chào đời: ' + esc((data.numbers[String(dayN)] || {}).traits || '') + '</p>' +
         '<p><strong>Số thái độ ' + att + '</strong> là cách bạn phản ứng đầu tiên trước mọi việc và ấn tượng người khác nhận được ở lần gặp đầu: ' + esc((data.numbers[String(att)] || {}).traits || '') + '</p>' +
+        '<h3>Biểu đồ ngày sinh của bạn</h3>' + (function () {
+          var digits = ('' + d + m + y).split(''), counts = {};
+          digits.forEach(function (ch) { if (ch !== '0') counts[ch] = (counts[ch] || 0) + 1; });
+          var rows = [[3, 6, 9], [2, 5, 8], [1, 4, 7]];
+          var grid = rows.map(function (r) { return '<tr>' + r.map(function (n) { var k = counts[String(n)] || 0; return '<td style="text-align:center;font-size:18px">' + (k ? Array(k + 1).join(n + ' ') : '<span style="opacity:.3">.</span>') + '</td>'; }).join('') + '</tr>'; }).join('');
+          var LINES = [[3, 6, 9, 'Mũi tên Trí tuệ: trí nhớ tốt, tư duy phân tích và tổng hợp mạnh'], [2, 5, 8, 'Mũi tên Cảm xúc: nhạy cảm, trực giác tốt, giàu khả năng đồng cảm'], [1, 4, 7, 'Mũi tên Thể chất: thực tế, bền bỉ, giỏi việc vận hành và tay chân'], [1, 2, 3, 'Mũi tên Kế hoạch: tổ chức tốt, làm việc có trình tự'], [4, 5, 6, 'Mũi tên Ý chí: quyết tâm cao, gặp khó không dễ bỏ cuộc'], [7, 8, 9, 'Mũi tên Hành động: năng động, thích bắt tay vào làm ngay'], [1, 5, 9, 'Mũi tên Quyết tâm: mục tiêu rõ và theo đuổi tới cùng'], [3, 5, 7, 'Mũi tên Trực giác: cảm nhận tinh, đọc tình huống nhanh']];
+          var arrows = LINES.filter(function (ln) { return ln.slice(0, 3).every(function (n) { return counts[String(n)]; }); }).map(function (ln) { return '<li><strong>' + ln[3] + '</strong></li>'; }).join('');
+          return '<p>Biểu đồ ngày sinh xếp các chữ số trong ngày tháng năm sinh của bạn vào lưới 3 x 3 cố định của thần số học Pythagore: hàng trên là tầng trí tuệ (3, 6, 9), hàng giữa là tầng cảm xúc (2, 5, 8), hàng dưới là tầng thể chất, thực hành (1, 4, 7). Số xuất hiện càng nhiều lần thì nét đó càng đậm ở bạn; ô trống là mảng bạn ít bẩm sinh, phải rèn thêm trong đời.</p>' +
+            '<div class="ptv-table-wrap"><table class="ptv-table" style="max-width:300px;margin:0 auto">' + grid + '</table></div>' +
+            (arrows ? '<p>Khi ba số của một hàng, một cột hoặc đường chéo cùng xuất hiện, chúng tạo thành một mũi tên thế mạnh:</p><ul>' + arrows + '</ul>' : '<p>Biểu đồ của bạn chưa có hàng, cột hay đường chéo nào đủ cả ba số, tức là chưa tạo thành mũi tên thế mạnh hoàn chỉnh; thế mạnh của bạn nằm ở từng con số riêng lẻ phía trên và được tạo dần qua trải nghiệm.</p>');
+        })() +
+        (function () {
+          var nm = (c.querySelector('#fn').value || '').trim();
+          if (!nm) return '';
+          var plain = nm.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd');
+          var VAL = {}; 'ajs'.split('').forEach(function (ch) { VAL[ch] = 1; }); 'bkt'.split('').forEach(function (ch) { VAL[ch] = 2; }); 'clu'.split('').forEach(function (ch) { VAL[ch] = 3; }); 'dmv'.split('').forEach(function (ch) { VAL[ch] = 4; }); 'enw'.split('').forEach(function (ch) { VAL[ch] = 5; }); 'fox'.split('').forEach(function (ch) { VAL[ch] = 6; }); 'gpy'.split('').forEach(function (ch) { VAL[ch] = 7; }); 'hqz'.split('').forEach(function (ch) { VAL[ch] = 8; }); 'ir'.split('').forEach(function (ch) { VAL[ch] = 9; });
+          var sv = 0, sc = 0;
+          plain.split('').forEach(function (ch) { if (!VAL[ch]) return; if ('aeiouy'.indexOf(ch) >= 0) sv += VAL[ch]; else sc += VAL[ch]; });
+          if (!sv && !sc) return '';
+          var soul = reduceNum(sv), pers = reduceNum(sc), expr = reduceNum(sv + sc);
+          return '<h3>Ba con số từ họ tên của bạn</h3>' +
+            '<p><strong>Số linh hồn ' + soul + '</strong> là khát khao sâu bên trong, điều khiến bạn thấy thỏa mãn thật sự: ' + esc((data.numbers[String(soul)] || {}).traits || '') + '</p>' +
+            '<p><strong>Số nhân cách ' + pers + '</strong> là lớp vỏ người ngoài nhìn thấy ở bạn trước tiên, cách bạn thể hiện ra xã hội: ' + esc((data.numbers[String(pers)] || {}).traits || '') + '</p>' +
+            '<p><strong>Số biểu đạt ' + expr + '</strong> là tổng hòa khả năng tự nhiên mà họ tên mang lại, cách bạn bộc lộ tài năng ra bên ngoài: ' + esc((data.numbers[String(expr)] || {}).traits || '') + '</p>';
+        })() +
         '<h3>Năm cá nhân ' + nowY + ' của bạn là số ' + py + '</h3>' +
         '<p>Theo chu kỳ 9 năm của thần số học, mỗi năm bạn đi qua một con số cá nhân từ 1 đến 9 (và đôi khi là số bậc thầy 11, 22). Năm ' + nowY + ' bạn ở số ' + py + ': ' + esc((data.numbers[String(py)] || {}).traits || '') + ' Hãy đọc phần này như một gợi ý về nhịp năm, việc gì nên đẩy mạnh, việc gì nên chậm lại, thay vì một lời tiên đoán.</p>' +
         '<h3>Lớp can chi của ngày sinh</h3>' +

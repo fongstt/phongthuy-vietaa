@@ -20,10 +20,65 @@
   var SAT = ['Thanh Long', 'Minh Đường', 'Thiên Hình', 'Chu Tước', 'Kim Quỹ', 'Thiên Đức', 'Bạch Hổ', 'Ngọc Đường', 'Thiên Lao', 'Huyền Vũ', 'Tư Mệnh', 'Câu Trần'];
   var HOANG = { 'Thanh Long': 1, 'Minh Đường': 1, 'Kim Quỹ': 1, 'Thiên Đức': 1, 'Ngọc Đường': 1, 'Tư Mệnh': 1 };
   function satOf(info) {
-    var monthChiIdx = (info.lunar.m + 1) % 12;
-    var start = (monthChiIdx + 4) % 12;
+    // Thanh Long khoi tai chi tuy thang am: thang 1,7 o Ty; 2,8 o Dan; 3,9 o Thin; 4,10 o Ngo; 5,11 o Than; 6,12 o Tuat.
+    // Kiem chung: 3/11/2026 (25/9 am, ngay Ty) = Minh Duong hoang dao; 24/12/2026 (16/11 am, ngay Than) = Thanh Long.
+    var start = ((info.lunar.m - 1) % 6) * 2;
     var dayChiIdx = CHI.indexOf(info.day.chi);
     return SAT[(dayChiIdx - start + 24) % 12];
+  }
+  var TU28 = [
+    ['Giác', 'Giác Mộc Giao', 1, 'Tốt cho công danh, thi cử, cưới hỏi; kỵ xây cất mộ phần'],
+    ['Cang', 'Cang Kim Long', -1, 'Tránh việc đại sự, nhất là cưới hỏi; cẩn trọng tiền bạc'],
+    ['Đê', 'Đê Thổ Lạc', -1, 'Việc dễ đổ vỡ, dở dang; kỵ thi cử, nhận chức, kinh doanh lớn'],
+    ['Phòng', 'Phòng Nhật Thố', 1, 'Trăm sự đều lợi, hợp động thổ, nhập trạch, cưới hỏi'],
+    ['Tâm', 'Tâm Nguyệt Hồ', -1, 'Chủ thất thoát, thị phi, kiện tụng; không nên làm việc lớn'],
+    ['Vĩ', 'Vĩ Hỏa Hổ', 1, 'Cưới hỏi, xây nhà, lập khế ước giao dịch đều thuận'],
+    ['Cơ', 'Cơ Thủy Báo', 1, 'Chủ tài lộc, danh lợi; hợp làm nhà, khai trương'],
+    ['Đẩu', 'Đẩu Mộc Giải', 1, 'May mắn, vinh quang; hợp hôn sự, chuyển chỗ ở, trồng trọt, chăn nuôi'],
+    ['Ngưu', 'Ngưu Kim Ngưu', -1, 'Hao tổn tài sản và sức khỏe; kỵ cưới hỏi, khai trương, động thổ'],
+    ['Nữ', 'Nữ Thổ Bức', -1, 'Bại tinh, đại kỵ xuất hành, buôn bán, khai trương'],
+    ['Hư', 'Hư Nhật Thử', -1, 'Chủ phiền toái, lo âu; tránh việc quan trọng'],
+    ['Nguy', 'Nguy Nguyệt Yên', -1, 'Bất lợi cho hôn nhân, gia đạo; dễ sinh mâu thuẫn'],
+    ['Thất', 'Thất Hỏa Trư', 1, 'Hợp cưới hỏi, xây dựng, khai trương, đầu tư'],
+    ['Bích', 'Bích Thủy Du', 1, 'Chủ tài lộc, công thành danh toại; hợp hôn sự, động thổ'],
+    ['Khuê', 'Khuê Mộc Lang', -1, 'Nhiều rắc rối, rủi ro; tránh công to việc lớn'],
+    ['Lâu', 'Lâu Kim Cẩu', 1, 'Hưng thịnh, hồng phát; hợp hợp tác làm ăn, khai trương, xây dựng'],
+    ['Vị', 'Vị Thổ Trĩ', 1, 'Hưng vượng, sung túc, có quý nhân phù trợ; trăm sự cát lợi'],
+    ['Mão', 'Mão Nhật Kê', -1, 'Bất lợi trồng trọt, chăn nuôi; kỵ đóng giường ghế, khai thông hào rãnh'],
+    ['Tất', 'Tất Nguyệt Ô', 1, 'Hợp các việc đại sự như cưới hỏi, xây nhà, nhận chức'],
+    ['Chủy', 'Chủy Hỏa Hầu', -1, 'Trăm việc trắc trở; kỵ nhất là chôn cất và tạo tác'],
+    ['Sâm', 'Sâm Thủy Viên', 1, 'Tài vận hanh thông; khai trương, buôn bán thuận lợi'],
+    ['Tỉnh', 'Tỉnh Mộc Hãn', 1, 'Bình an, may mắn, công thành danh toại'],
+    ['Quỷ', 'Quỷ Kim Dương', -1, 'Sát tinh, đại kỵ cưới hỏi, nhập mộ, cải táng'],
+    ['Liễu', 'Liễu Thổ Chương', -1, 'Chủ phá tán, chia ly; kỵ khai trương, kết hôn, hợp tác'],
+    ['Tinh', 'Tinh Nhật Mã', -1, 'Không thích hợp cho động thổ, xây nhà'],
+    ['Trương', 'Trương Nguyệt Lộc', 0, 'Dị bản giữa các lịch thư: Ngọc Hạp chánh tông xếp cát tú, hợp khởi công, động thổ, hôn nhân; vài lịch thư khác xếp hung tú'],
+    ['Dực', 'Dực Hỏa Xà', 1, 'Vượng tài lộc, con cháu hưởng phúc; hợp động thổ, xây dựng, hôn thú'],
+    ['Chẩn', 'Chẩn Thủy Dẫn', 1, 'Hợp xuất hành đi xa, làm ăn kinh doanh, khai trương']
+  ];
+  function tu28Of(info) {
+    // Neo chu ky: 3/11/2026 = sao Chuy (Santa Lich va BNews cung ghi), 26/10/1998 = sao Tam.
+    var idx = ((info.jd + 11) % 28 + 28) % 28;
+    var t = TU28[idx];
+    return { name: t[0], full: t[1], good: t[2], note: t[3] };
+  }
+  var THIEN_DUC = [null, 'Đinh', 'Thân', 'Nhâm', 'Tân', 'Hợi', 'Giáp', 'Quý', 'Dần', 'Bính', 'Ất', 'Tỵ', 'Canh'];
+  var NGUYET_DUC = { 'Dần': 'Bính', 'Ngọ': 'Bính', 'Tuất': 'Bính', 'Thân': 'Nhâm', 'Tý': 'Nhâm', 'Thìn': 'Nhâm', 'Hợi': 'Giáp', 'Mão': 'Giáp', 'Mùi': 'Giáp', 'Tỵ': 'Canh', 'Dậu': 'Canh', 'Sửu': 'Canh' };
+  function ducOf(info) {
+    var out = [];
+    var td = THIEN_DUC[info.lunar.m];
+    if (td && (info.day.can === td || info.day.chi === td)) out.push('Thiên Đức');
+    var monthChi = CHI[(info.lunar.m + 1) % 12];
+    if (NGUYET_DUC[monthChi] && info.day.can === NGUYET_DUC[monthChi]) out.push('Nguyệt Đức');
+    return out;
+  }
+  var LUC_HOP_PAIR = { 'Tý': 'Sửu', 'Sửu': 'Tý', 'Dần': 'Hợi', 'Hợi': 'Dần', 'Mão': 'Tuất', 'Tuất': 'Mão', 'Thìn': 'Dậu', 'Dậu': 'Thìn', 'Tỵ': 'Thân', 'Thân': 'Tỵ', 'Ngọ': 'Mùi', 'Mùi': 'Ngọ' };
+  var TAM_HOP_GROUP = { 'Thân': 'Thủy cục', 'Tý': 'Thủy cục', 'Thìn': 'Thủy cục', 'Dần': 'Hỏa cục', 'Ngọ': 'Hỏa cục', 'Tuất': 'Hỏa cục', 'Hợi': 'Mộc cục', 'Mão': 'Mộc cục', 'Mùi': 'Mộc cục', 'Tỵ': 'Kim cục', 'Dậu': 'Kim cục', 'Sửu': 'Kim cục' };
+  function hopMonthOf(info) {
+    var monthChi = CHI[(info.lunar.m + 1) % 12];
+    if (LUC_HOP_PAIR[info.day.chi] === monthChi) return 'Ngày lục hợp với tháng ' + monthChi;
+    if (TAM_HOP_GROUP[info.day.chi] && TAM_HOP_GROUP[info.day.chi] === TAM_HOP_GROUP[monthChi]) return 'Ngày tam hợp với tháng ' + monthChi + ' (' + TAM_HOP_GROUP[monthChi] + ')';
+    return '';
   }
   var GIO_HD = {
     'Tý': ['Tý', 'Sửu', 'Mão', 'Ngọ', 'Thân', 'Dậu'], 'Ngọ': ['Tý', 'Sửu', 'Mão', 'Ngọ', 'Thân', 'Dậu'],
@@ -95,5 +150,5 @@
     var r = ((lunarDay + lunarMonth + (CHI_KHAC[hourChi] || 1) - 2) % 6 + 6) % 6;
     return LTP_NAMES[r];
   }
-  window.PTVDay = { dayInfo: dayInfo, fmtSolar: fmtSolar, fmtLunar: fmtLunar, trucOf: trucOf, satOf: satOf, GIO_HD: GIO_HD, scoreDay: scoreDay, monthDays: monthDays, lunar2solar: lunar2solar, QUY_NHAN: QUY_NHAN, CHI_DIR: CHI_DIR, PURPOSE_TRUC: PURPOSE_TRUC, TAI_THAN: TAI_THAN, HY_THAN: HY_THAN, ltpOf: ltpOf, LTP_TEXT: LTP_TEXT, LTP_GOOD: LTP_GOOD };
+  window.PTVDay = { dayInfo: dayInfo, fmtSolar: fmtSolar, fmtLunar: fmtLunar, trucOf: trucOf, satOf: satOf, GIO_HD: GIO_HD, scoreDay: scoreDay, monthDays: monthDays, lunar2solar: lunar2solar, QUY_NHAN: QUY_NHAN, CHI_DIR: CHI_DIR, PURPOSE_TRUC: PURPOSE_TRUC, TAI_THAN: TAI_THAN, HY_THAN: HY_THAN, ltpOf: ltpOf, LTP_TEXT: LTP_TEXT, LTP_GOOD: LTP_GOOD, tu28Of: tu28Of, ducOf: ducOf, hopMonthOf: hopMonthOf, TU28: TU28 };
 })();

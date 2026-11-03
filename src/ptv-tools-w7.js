@@ -55,9 +55,24 @@
   }
 
   /* --- Xem huong bep nau v2 --- */
+  function spouseNote(box, cp) {
+    var byEl = box.querySelector('#by');
+    if (!byEl || !byEl.value) return '';
+    var cp2 = L.cungPhi(parseInt(byEl.value, 10), box.querySelector('#bg').value);
+    if (cp2.group === cp.group) {
+      return '<h3>Đối chiếu với vợ hoặc chồng của gia chủ</h3><p>Vợ hoặc chồng của gia chủ có mệnh ' + cp2.cung + ', <strong>cùng nhóm ' + cp.group + '</strong> với gia chủ. Đây là trường hợp thuận nhất cho gian bếp: một bộ hướng tốt xấu dùng chung được cho cả hai người, không cần đánh đổi khi chọn vị trí đặt bếp và hướng cửa bếp.</p>';
+    }
+    var g2 = goodsSorted(cp2.cung), b2 = badsSorted(cp2.cung);
+    return '<h3>Khi vợ chồng khác nhóm mệnh thì đặt bếp theo ai</h3>' +
+      '<p>Vợ hoặc chồng của gia chủ có mệnh ' + cp2.cung + ' thuộc nhóm ' + cp2.group + ', <strong>khác nhóm</strong> với gia chủ mệnh ' + cp.cung + ' nhóm ' + cp.group + '. Hai nhóm Đông tứ và Tây tứ có bộ hướng tốt xấu gần như đối ngược nhau, nên một gian bếp không thể vừa tọa hung hướng cát cho cả hai người cùng lúc. Cách xử lý được các thầy phong thủy dùng phổ biến gồm:</p><ul>' +
+      '<li><strong>Lấy theo người nấu chính:</strong> bếp gắn với người trực tiếp nấu ăn hằng ngày, theo lệ dân gian bếp thuộc phần của người vợ, nữ chủ trong nhà. Nếu một người nấu là chính, hãy tính hướng bếp theo cung mệnh của người đó.</li>' +
+      '<li><strong>Ưu tiên hướng cửa bếp dung hòa:</strong> chọn hướng cửa bếp là hướng Phục Vị của người nấu chính, vì Phục Vị là hướng bình hòa, ít xung nhất với người còn lại.</li>' +
+      '<li><strong>Bù cho người còn lại ở không gian riêng:</strong> giường ngủ và bàn làm việc là không gian cá nhân, hãy quay đầu giường và mặt bàn của người còn lại về hướng tốt của chính họ (với mệnh ' + cp2.cung + ', hướng tốt là ' + g2.map(function (s) { return s.dir; }).join(', ') + '; vị trí đặt bếp hợp cho họ nếu tính riêng là tại ' + b2[0].dir + ').</li>' +
+      '<li>Tránh sửa bếp qua lại nhiều lần vì bất đồng hướng: một gian bếp đặt yên ổn, sạch sẽ, lửa đều và thông thoáng vẫn hơn một gian bếp hợp hướng trên giấy nhưng dùng bất tiện.</li></ul>';
+  }
   function bepV2(c) {
     c.innerHTML = V.tabsHTML([['bp-dir', 'Hướng bếp theo tuổi gia chủ'], ['bp-check', 'Kiểm tra bếp hiện tại']]) +
-      '<div id="bp-dir">' + V.formWrap2(yg('a'), 'Xem hướng đặt bếp') + '</div>' +
+      '<div id="bp-dir">' + V.formWrap2(yg('a') + '<div class="ptv-row">' + L.field('Năm sinh của vợ hoặc chồng (không bắt buộc)', '<select id="by"><option value="">Không đối chiếu</option>' + L.yearOptions(1940, 2010, 1990) + '</select>') + L.field('Giới tính của vợ hoặc chồng', L.select('bg', '<option value="Nữ">Nữ</option><option value="Nam">Nam</option>')) + '</div>', 'Xem hướng đặt bếp') + '</div>' +
       '<div id="bp-check" hidden>' + V.formWrap2(yg('a') + '<div class="ptv-row">' + dirSelect('toa', 'Bếp đang đặt tại phía nào của nhà (tọa)') + dirSelect('cua', 'Cửa bếp, hướng người nấu quay mặt tới') + '</div>', 'Kiểm tra bếp này') + '</div>';
     V.wireTabs(c, ['bp-dir', 'bp-check']);
     c.querySelector('#bp-dir form').addEventListener('submit', function (ev) {
@@ -77,6 +92,7 @@
         '<li>Không đặt bếp đối diện cửa nhà vệ sinh, cửa phòng ngủ, và không đặt bếp dưới phòng ngủ hoặc dưới nhà vệ sinh tầng trên.</li>' +
         '<li>Bếp không đặt giữa nhà (trung cung) và không để góc nhọn của tủ, cột chĩa thẳng vào bếp.</li>' +
         '<li>Lưng bếp nên tựa tường vững, tránh đặt bếp trước cửa sổ lớn vì gió lùa làm lửa chập chờn, vừa mất an toàn vừa phạm lệ hỏa không yên.</li></ul>' +
+        spouseNote(box, cp) +
         L.dirTable(cp.cung);
       L.resultBox(box, html);
     });
@@ -174,10 +190,11 @@
   var ROOM_TXT = {
     'phong-khach': { name: 'Phòng khách, cửa chính', good: 'Đặt tại hướng tốt là lý tưởng: đây là nơi đón khí vào nhà, khí tốt vào từ hướng tốt thì cả nhà được hưởng.', bad: 'Phòng khách rơi vào hướng xấu của gia chủ: nên giữ khu vực này thật sáng và thoáng, treo đèn sáng ấm, tránh để đồ cũ hỏng chắn lối, và nếu có thể hãy mở thêm cửa phụ ở hướng tốt để cân bằng dòng khí ra vào.' },
     'ban-tho': { name: 'Bàn thờ', good: 'Bàn thờ tại phương này là tốt so với mệnh gia chủ, giữ lưng bàn thờ tựa tường và phía trước thoáng là đạt.', bad: 'Bàn thờ không nên đặt tại phương xấu của gia chủ. Nếu kết cấu nhà không đổi được, hãy chuyển bàn thờ sang phương tốt gần nhất, ưu tiên Sinh Khí hoặc Thiên Y.' },
-    'bep': { name: 'Bếp nấu (vị trí đặt bếp)', good: 'Đặt bếp tại hướng tốt là chưa đúng nguyên tắc tọa hung: bếp thuộc hỏa, đặt ở hướng tốt được cho là đốt khí lành. Nếu bếp đã cố định ở đây, hãy bảo đảm cửa bếp quay về hướng tốt để cân bằng.', bad: 'Đặt bếp tại phương xấu là ĐÚNG nguyên tắc tọa hung hướng cát: lửa trấn áp khí xấu tại phương này. Chỉ cần cửa bếp quay về hướng tốt nữa là đạt trọn vẹn.' },
+    'bep': { name: 'Bếp nấu (vị trí đặt bếp)', good: 'Đặt bếp tại hướng tốt là chưa đúng nguyên tắc tọa hung: bếp thuộc hỏa, đặt ở hướng tốt được cho là đốt khí lành. Nếu bếp đã cố định ở đây, hãy bảo đảm cửa bếp quay về hướng tốt để cân bằng.', bad: 'Đặt bếp tại phương xấu là ĐÚNG nguyên tắc tọa hung hướng cát: lửa trấn áp khí xấu tại phương này. Chỉ cần cửa bếp quay về hướng tốt nữa là đạt trọn vẹn.', extra: ['Tiêu chí phụ của bếp: bếp nấu (hỏa) không đối diện hoặc sát bồn rửa, tủ lạnh (thủy), nên có khoảng đệm ít nhất một gang tay.', 'Bếp không đặt đối diện cửa nhà vệ sinh, không nằm dưới nhà vệ sinh tầng trên và không đặt giữa nhà (trung cung).', 'Lưng bếp tựa tường vững, tránh đặt trước cửa sổ lớn để lửa khỏi chập chờn vì gió lùa.'] },
     'giuong': { name: 'Giường ngủ chính (hướng đầu giường)', good: 'Đầu giường quay về hướng tốt của gia chủ là đạt, ưu tiên Thiên Y cho sức khỏe và giấc ngủ.', bad: 'Đầu giường quay về hướng xấu của gia chủ thì nên xoay lại nếu phòng cho phép; nếu không xoay được, ít nhất giữ đầu giường tựa tường và tránh hai sao nặng Tuyệt Mệnh, Ngũ Quỷ.' },
-    'wc': { name: 'Nhà vệ sinh, kho', good: 'Nhà vệ sinh đặt tại hướng tốt là uổng khí tốt và không đúng lệ trấn áp; nếu đã xây cố định thì giữ vệ sinh thật sạch, cửa luôn đóng và thông gió tốt để giảm ảnh hưởng.', bad: 'Nhà vệ sinh, kho đặt tại phương xấu là ĐÚNG cách dân gian dùng để trấn áp khí xấu, đây là vị trí nên ưu tiên khi thiết kế nhà mới.' },
-    'ban-lam-viec': { name: 'Bàn làm việc, bàn học', good: 'Bàn làm việc tại hướng tốt, nhất là Phục Vị hoặc Sinh Khí, được cho là giúp tập trung và ổn định, rất nên tận dụng.', bad: 'Bàn làm việc tại hướng xấu thì nên dịch sang phương tốt nếu phòng còn chỗ; nếu không, hãy quay mặt bàn về hướng tốt của bạn thay vì nhìn vào tường phía xấu.' }
+    'wc': { name: 'Nhà vệ sinh, kho', good: 'Nhà vệ sinh đặt tại hướng tốt là uổng khí tốt và không đúng lệ trấn áp; nếu đã xây cố định thì giữ vệ sinh thật sạch, cửa luôn đóng và thông gió tốt để giảm ảnh hưởng.', bad: 'Nhà vệ sinh, kho đặt tại phương xấu là ĐÚNG cách dân gian dùng để trấn áp khí xấu, đây là vị trí nên ưu tiên khi thiết kế nhà mới.', extra: ['Tiêu chí phụ của nhà vệ sinh: cửa vệ sinh không mở đối diện cửa chính, cửa bếp hoặc cửa phòng ngủ.', 'Nhà vệ sinh không đặt tại trung cung (giữa nhà) và không nằm trên phòng thờ, bếp hoặc phòng ngủ ở tầng dưới.', 'Giữ cửa vệ sinh luôn đóng, nắp bồn cầu đậy khi không dùng và thông gió tốt, đó là phần hóa giải thiết thực nhất nếu vị trí đã cố định.'] },
+    'ban-lam-viec': { name: 'Bàn làm việc, bàn học', good: 'Bàn làm việc tại hướng tốt, nhất là Phục Vị hoặc Sinh Khí, được cho là giúp tập trung và ổn định, rất nên tận dụng.', bad: 'Bàn làm việc tại hướng xấu thì nên dịch sang phương tốt nếu phòng còn chỗ; nếu không, hãy quay mặt bàn về hướng tốt của bạn thay vì nhìn vào tường phía xấu.' },
+    'cua-chinh': { name: 'Cửa chính (hướng mở và vị trí)', good: 'Cửa chính nằm ở phương tốt và mở về hướng tốt của gia chủ là cách đón khí lý tưởng nhất của cả ngôi nhà.', bad: 'Cửa chính rơi vào phương xấu của gia chủ: giữ cửa luôn sáng, sạch và thông thoáng, tránh để thùng rác, giày dép cũ chắn ngay cửa, và cân nhắc thêm cửa phụ hoặc cửa sổ ở phương tốt để cân bằng dòng khí.', extra: ['Cửa chính không mở thẳng một mạch tới cửa sau hoặc cửa nhà vệ sinh ở cuối nhà, vì khí vào nhà thoát ngay không tụ lại được; nếu nhà đã xây theo thế này, đặt bình phong hoặc kệ thấp giữa lối đi là cách xử lý quen thuộc.', 'Cửa chính tránh đối diện trực xung với cầu thang đi xuống, miệng cống, góc nhọn nhà đối diện; cây xanh hoặc đèn trước cửa giúp làm dịu luồng xung.', 'Kích thước thông thủy của cửa nên rơi vào cung tốt của thước Lỗ Ban 52,2 cm, bạn tra nhanh ở công cụ Thước Lỗ Ban trên trang này.'] }
   };
   function phongThuyNhaV2(c) {
     c.innerHTML = V.tabsHTML([['ptn-plan', 'Bản đồ phong thủy cả nhà'], ['ptn-room', 'Kiểm tra từng phòng']]) +
@@ -210,6 +227,7 @@
       var isBadGood = (box.querySelector('#room').value === 'bep' || box.querySelector('#room').value === 'wc');
       var html = '<h3>' + room.name + ' tại phương ' + pdir + ' với gia chủ mệnh ' + cp.cung + ': sao ' + s.star + '</h3>' +
         '<p>' + (good ? room.good : room.bad) + '</p>' +
+        (room.extra && room.extra.length ? '<h3>Tiêu chí phụ cần kiểm tra thêm</h3><ul>' + room.extra.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' : '') +
         '<p class="ptv-note">' + (isBadGood ? 'Lưu ý: riêng bếp và nhà vệ sinh, đặt tại phương xấu lại là đúng lệ trấn áp, ngược với các phòng sinh hoạt khác.' : 'Với các phòng sinh hoạt chính, phương tốt của gia chủ là nơi nên đặt.') + '</p>' + L.dirTable(cp.cung);
       L.resultBox(box, html);
     });
@@ -520,8 +538,15 @@
       var life = data.pastLives[h % data.pastLives.length], lesson = data.lessons[(h >> 3) % data.lessons.length];
       var html = '<h3>Tiền kiếp của bạn: ' + esc(life.role) + '</h3><p>' + esc(life.desc) + '</p><h3>Bài học còn mang theo sang đời này</h3><p>' + esc(lesson) + '</p>' +
         '<p>Bạn có thể bấm giải mã lại để gieo một lát cắt khác, vì theo quan niệm luân hồi một người trải qua nhiều kiếp với nhiều vai khác nhau, mỗi lần gieo là một lát cắt tham khảo. Cách dùng có ích nhất là đọc như một tấm gương soi tính cách hiện tại: phần nào trong mô tả khiến bạn gật gù, phần đó thường chạm đúng thói quen bạn đang có.</p>' +
-        '<p class="ptv-note">Giải mã tiền kiếp tại <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> là luận giải giải trí dựa trên ngày sinh, không phải khẳng định về quá khứ thật của bất kỳ ai.</p>';
+        '<p class="ptv-note">Giải mã tiền kiếp tại <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> là luận giải giải trí dựa trên ngày sinh, không phải khẳng định về quá khứ thật của bất kỳ ai.</p>' +
+        '<p><button type="button" class="ptv-xbtn" id="tk-copy">Sao chép kết quả tiền kiếp của tôi</button><span id="tk-copy-msg" class="ptv-note"></span></p>';
       L.resultBox(box, html);
+      var tkBtn = box.querySelector('#tk-copy');
+      if (tkBtn) tkBtn.addEventListener('click', function () {
+        var txt = 'Tiền kiếp của mình theo ngày sinh: ' + life.role + '. ' + (life.desc || '') + ' Xem thử của bạn tại https://phongthuy.vietaa.com/giai-ma-tien-kiep/';
+        var msg = box.querySelector('#tk-copy-msg');
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { msg.textContent = ' Đã chép xong, dán vào nơi bạn muốn chia sẻ nhé.'; }, function () { msg.textContent = ' Trình duyệt chặn sao chép.'; });
+      });
       try {
         var hist = JSON.parse(localStorage.getItem('ptvTienKiepHistory') || '[]');
         hist.unshift({ d: box.querySelector('#bd').value + '/' + box.querySelector('#bm').value + '/' + box.querySelector('#by').value, role: life.role });
@@ -660,11 +685,34 @@
     ['Thế Giới', 'Hoàn thành một chu trình lớn, viên mãn và được ghi nhận.', 'Nhìn toàn cục tốt, khép việc trọn vẹn.', 'Dễ tự mãn ở đỉnh và ngại bắt đầu chu trình mới.', 'Lá ngược cho thấy một việc đang thiếu đúng một bước cuối để hoàn thành, đừng bỏ dở.']
   ];
   function laBaiV2(c) {
-    c.innerHTML = V.tabsHTML([['lbm-main', 'Lá bài bản mệnh của bạn'], ['lbm-ask', 'Rút bài cho một câu hỏi'], ['lbm-all', 'Tra cứu 22 lá ẩn chính']]) +
+    c.innerHTML = V.tabsHTML([['lbm-main', 'Lá bài bản mệnh của bạn'], ['lbm-ask', 'Rút bài cho một câu hỏi'], ['lbm-all', 'Tra cứu 22 lá ẩn chính'], ['lbm-card52', 'Lá bài tây bản mệnh 52 lá']]) +
       '<div id="lbm-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Họ tên của bạn', '<input type="text" id="nm" value="">', 'ptv-field-name') + '</div>' + df4('b'), 'Rút lá bài bản mệnh') + '</div>' +
       '<div id="lbm-ask" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Câu hỏi bạn đang băn khoăn (viết ngắn gọn)', '<input type="text" id="q" value="">', 'ptv-field-name') + '</div>', 'Rút một lá cho câu hỏi này') + '</div>' +
-      '<div id="lbm-all" hidden><div class="ptv-out"></div></div>';
-    V.wireTabs(c, ['lbm-main', 'lbm-ask', 'lbm-all']);
+      '<div id="lbm-all" hidden><div class="ptv-out"></div></div>' +
+      '<div id="lbm-card52" hidden>' + V.formWrap2(df4('c'), 'Tra lá bài tây bản mệnh') + '</div>';
+    V.wireTabs(c, ['lbm-main', 'lbm-ask', 'lbm-all', 'lbm-card52']);
+    c.querySelector('#lbm-card52 form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lbm-card52');
+      var d = parseInt(box.querySelector('#cd').value, 10), m = parseInt(box.querySelector('#cm').value, 10);
+      if (!d || !m || d < 1 || d > 31 || m < 1 || m > 12) { L.resultBox(box, '<p class="ptv-bad">Ngày tháng sinh chưa hợp lệ, bạn kiểm tra lại nhé.</p>'); return; }
+      var v = 55 - (2 * m + d);
+      if (v === 0) {
+        L.resultBox(box, '<h3>Ngày sinh 31/12: lá Joker</h3><p>Trong hệ lá bài bản mệnh theo ngày sinh, ngày 31/12 là ngày duy nhất không ứng với một lá trong 52 lá mà ứng với lá Joker, lá bài tự do không thuộc chất nào. Người sinh ngày này được coi là mang tính cách linh hoạt nhất trong hệ: thích ứng được với mọi môi trường, khó bị đóng khung, nhưng cũng vì thế mà cần tự chọn cho mình một hướng đi rõ ràng thay vì để hoàn cảnh đẩy đưa.</p><p class="ptv-note">Hệ bài tây bản mệnh (còn gọi là khoa học lá bài) gán mỗi ngày sinh trong năm một lá cố định; đây là hệ tham khảo giải trí có nguồn gốc từ các hội quán bài phương Tây đầu thế kỷ 20.</p>');
+        return;
+      }
+      if (v < 0) v += 52;
+      var suits = [['Cơ', '♥', 'tình cảm, quan hệ và đời sống tinh thần'], ['Chuồn', '♣', 'tri thức, công việc và giao tiếp'], ['Rô', '♦', 'tiền bạc, giá trị và thành quả vật chất'], ['Bích', '♠', 'ý chí, thử thách và sự trưởng thành qua trải nghiệm']];
+      var ranks = ['Át', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+      var rankTraits = ['khởi đầu mạnh, độc lập, thích tự mở đường', 'cân bằng và hợp tác, giỏi gắn kết hai phía', 'sáng tạo, linh hoạt, nhiều ý tưởng', 'ổn định, thực tế, xây nền chắc', 'thích thay đổi và trải nghiệm, khó ngồi yên một chỗ', 'coi trọng gia đình và trách nhiệm với người thân', 'sâu sắc, hướng nội, giỏi phân tích', 'tham vọng về thành quả và vị thế, làm việc có tổ chức', 'bao dung, giàu cảm xúc, dễ đồng cảm', 'kiên trì tới cùng, đã đặt mục tiêu là theo đuổi đến nơi', 'trẻ trung, ham học, giỏi lan tỏa năng lượng', 'trực giác tốt, khéo chăm sóc và điều hòa con người', 'chủ kiến mạnh, có tố chất dẫn dắt và quyết đoán'];
+      var si = Math.floor((v - 1) / 13), ri = (v - 1) % 13, suit = suits[si], rank = ranks[ri];
+      var html = '<div class="ptv-kieu-verse"><p>' + rank + suit[1] + ' Lá bài tây bản mệnh của bạn: ' + rank + ' ' + suit[0] + '</p></div>' +
+        '<p><strong>Cách tính:</strong> lấy 55 trừ đi (tháng sinh nhân 2 cộng ngày sinh): 55 trừ (2 x ' + m + ' + ' + d + ') bằng ' + v + ', đối chiếu thứ tự 52 lá theo vòng Cơ, Chuồn, Rô, Bích cho ra lá ' + rank + ' ' + suit[0] + '. Mỗi ngày sinh trong năm ứng với đúng một lá cố định trong hệ này.</p>' +
+        '<p><strong>Tính cách theo hạng bài ' + rank + ':</strong> bạn ' + rankTraits[ri] + '.</p>' +
+        '<p><strong>Lĩnh vực trội theo chất ' + suit[0] + ':</strong> lá của bạn thuộc nhóm ' + suit[2] + '; đây là mảng đời sống mà người mang lá này thường dành nhiều năng lượng nhất và cũng gặt kết quả rõ nhất.</p>' +
+        '<p class="ptv-note">Hệ bài tây bản mệnh khác với lá Tarot ở tab đầu tiên: Tarot trên trang này rút theo họ tên và ngày sinh trong 22 lá ẩn chính, còn hệ 52 lá chỉ cần ngày tháng sinh và là bảng đối chiếu cố định được nhiều người tra cứu. Bạn có thể xem cả hai hệ như hai tấm gương khác nhau về cùng một con người.</p>';
+      L.resultBox(box, html);
+    });
     c.querySelector('#lbm-main form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#lbm-main');
@@ -865,11 +913,32 @@
     var list = (window.PTV_DATA || {}).que64 || [];
     var triOpts = TRI8.map(function (t) { return '<option>' + t + '</option>'; }).join('');
     var nameOpts = list.map(function (q) { return '<option value="' + q.name + '">' + q.name + '</option>'; }).join('');
-    c.innerHTML = V.tabsHTML([['lt-tri', 'Tra theo quẻ thượng, quẻ hạ'], ['lt-name', 'Tra theo tên quẻ'], ['lt-all', 'Bảng 64 quẻ']]) +
+    c.innerHTML = V.tabsHTML([['lt-tri', 'Tra theo quẻ thượng, quẻ hạ'], ['lt-name', 'Tra theo tên quẻ'], ['lt-all', 'Bảng 64 quẻ'], ['lt-grid', 'Lưới tra 8 x 8']]) +
       '<div id="lt-tri">' + V.formWrap2('<div class="ptv-row">' + L.field('Quẻ thượng', L.select('up', triOpts)) + L.field('Quẻ hạ', L.select('lo', triOpts)) + '</div>', 'Tra quẻ này') + '</div>' +
       '<div id="lt-name" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Tên quẻ', L.select('nm', nameOpts), 'ptv-field-name') + '</div>', 'Tra theo tên') + '</div>' +
-      '<div id="lt-all" hidden><div class="ptv-out"></div></div>';
-    V.wireTabs(c, ['lt-tri', 'lt-name', 'lt-all']);
+      '<div id="lt-all" hidden><div class="ptv-out"></div></div>' +
+      '<div id="lt-grid" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['lt-tri', 'lt-name', 'lt-all', 'lt-grid']);
+    var gridRendered = false;
+    c.querySelector('[data-t="lt-grid"]').addEventListener('click', function () {
+      if (gridRendered) return; gridRendered = true;
+      var head = '<tr><th>Thượng \\ Hạ</th>' + TRI8.map(function (t) { return '<th>' + t + '</th>'; }).join('') + '</tr>';
+      var rows = TRI8.map(function (up) {
+        return '<tr><th>' + up + '</th>' + TRI8.map(function (lo) {
+          var q = queLookup(up, lo);
+          return '<td><button type="button" class="ptv-grid-cell" data-up="' + up + '" data-lo="' + lo + '">' + (q ? q.name.replace(/^Quẻ /, '') : '') + '</button></td>';
+        }).join('') + '</tr>';
+      }).join('');
+      var out = c.querySelector('#lt-grid .ptv-out');
+      out.innerHTML = '<h3>Lưới tra quẻ theo quẻ thượng (hàng) và quẻ hạ (cột)</h3><p>Bấm vào một ô để xem luận giải đầy đủ của quẻ đó ngay bên dưới lưới.</p><div class="ptv-table-wrap"><table class="ptv-table ptv-grid-table">' + head + rows + '</table></div><div id="lt-grid-detail"></div>';
+      out.querySelectorAll('.ptv-grid-cell').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var q = queLookup(btn.getAttribute('data-up'), btn.getAttribute('data-lo'));
+          out.querySelector('#lt-grid-detail').innerHTML = queFullHTML(q);
+          out.querySelector('#lt-grid-detail').scrollIntoView({ block: 'nearest' });
+        });
+      });
+    });
     c.querySelector('#lt-tri form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#lt-tri');
@@ -1016,6 +1085,23 @@
 (function () {
   'use strict';
   var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var NM_TRAITS = {
+    'Kim': 'sắc sảo, quyết đoán, coi trọng chữ tín và hiệu quả; điểm cần mềm lại là sự cứng rắn khi tranh luận',
+    'Mộc': 'nhân hòa, giàu sức sống, thích nuôi dưỡng và phát triển dài hạn; điểm cần sửa là cả nể và khó nói lời từ chối',
+    'Thủy': 'linh hoạt, khéo léo trong giao tiếp, thích ứng nhanh với hoàn cảnh; điểm cần giữ là sự kiên định khi đã chọn hướng đi',
+    'Hỏa': 'nhiệt huyết, bộc trực, giàu năng lượng và thích được ghi nhận; điểm cần tiết chế là nóng vội trong quyết định lớn',
+    'Thổ': 'điềm tĩnh, bền bỉ, trọng ổn định và tích lũy; điểm cần mở ra là tốc độ đổi mới khi hoàn cảnh thay đổi'
+  };
+  function nmApplyHTML(yi) {
+    var G = (window.PTV_MENH_GUIDE || {})[yi.el] || {};
+    var gi = Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === yi.el; })[0];
+    var ctrl = L.CONTROLS[yi.el], ctrld = Object.keys(L.CONTROLS).filter(function (k) { return L.CONTROLS[k] === yi.el; })[0];
+    return '<h3>Ứng dụng của mệnh ' + yi.el + ' trong đời sống</h3>' +
+      '<p><strong>Tính cách nền của hành ' + yi.el + ':</strong> người mệnh ' + yi.el + ' nói chung ' + NM_TRAITS[yi.el] + '. Đây là nét chung của hành, từng niên mệnh cụ thể như ' + esc(yi.napAm) + ' còn mang sắc thái riêng của nạp âm đó.</p>' +
+      '<p><strong>Hành sinh trợ:</strong> hành ' + gi + ' sinh cho hành ' + yi.el + ' của bạn, nên màu sắc, vật phẩm và môi trường thuộc hành ' + gi + ' được coi là lớp nâng đỡ. Ngược lại, hành ' + yi.el + ' khắc hành ' + ctrl + ' và bị hành ' + ctrld + ' khắc, là hai quan hệ cần cân nhắc khi chọn màu và hướng lâu dài.</p>' +
+      (G.mau ? '<p><strong>Màu sắc hợp mệnh:</strong> ' + esc(G.mau) + ' Xem chi tiết tại <a href="https://phongthuy.vietaa.com/chon-mau-sac-hop-tuoi/">Chọn màu sắc hợp tuổi</a>.</p>' : '') +
+      (G.nghe ? '<p><strong>Nghề gợi ý theo mệnh:</strong> ' + esc(G.nghe) + ' Xem chi tiết tại <a href="https://phongthuy.vietaa.com/chon-nghe-hop-tuoi/">Chọn nghề hợp tuổi</a>.</p>' : '');
+  }
   function nienMenhV2(c) {
     c.innerHTML = V.tabsHTML([['nm-one', 'Niên mệnh theo năm sinh'], ['nm-compare', 'So niên mệnh hai năm sinh']]) +
       '<div id="nm-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1930, 2025, 1990)), 'ptv-field-name') + '</div>', 'Tìm niên mệnh của tôi') + '</div>' +
@@ -1029,9 +1115,10 @@
       var sameNapAm = [];
       for (var yy = 1924; yy <= 2043; yy++) { if (yy !== y && L.yearInfo(yy).napAm === yi.napAm) sameNapAm.push(yy); }
       var html = '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong></span><span>Tuổi: <strong>' + yi.text + '</strong></span><span>Niên mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
-        '<p>Người sinh năm ' + y + ' thuộc tuổi ' + yi.text + ', có niên mệnh (mệnh nạp âm) là <strong>' + esc(yi.napAm) + '</strong>, thuộc hành ' + yi.el + '. Thiên can ' + yi.can + ' thuộc hành ' + yi.canEl + ', địa chi ' + yi.chi + ' thuộc hành ' + yi.chiEl + '.</p>' +
+        '<p>Người sinh năm ' + y + ' thuộc tuổi ' + yi.text + ', có niên mệnh (mệnh nạp âm) là <strong>' + esc(yi.napAm) + '</strong>, thuộc hành ' + yi.el + '. Thiên can ' + yi.can + ' thuộc hành ' + yi.canEl + ', địa chi ' + yi.chi + ' thuộc hành ' + ({ 'Tý': 'Thủy', 'Sửu': 'Thổ', 'Dần': 'Mộc', 'Mão': 'Mộc', 'Thìn': 'Thổ', 'Tỵ': 'Hỏa', 'Ngọ': 'Hỏa', 'Mùi': 'Thổ', 'Thân': 'Kim', 'Dậu': 'Kim', 'Tuất': 'Thổ', 'Hợi': 'Thủy' })[yi.chi] + '.</p>' +
         '<p><strong>Các năm cùng tuổi ' + yi.text + ' (cùng can chi, chu kỳ 60 năm):</strong> ' + (sameCycle.length ? sameCycle.join(', ') : 'không có năm nào khác trong khoảng 1924 đến 2043') + '.</p>' +
         '<p><strong>Các năm cùng niên mệnh ' + esc(yi.napAm) + ' trong hoa giáp hiện tại:</strong> ' + sameNapAm.join(', ') + '. Trong mỗi chu kỳ 60 năm, một mệnh nạp âm thường ứng với hai cặp năm can chi khác nhau, nên người khác tuổi vẫn có thể trùng niên mệnh với bạn.</p>' +
+        nmApplyHTML(yi) +
         '<p>Niên mệnh là lớp mệnh được dùng nhiều nhất trong các tra cứu theo tuổi của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>: chọn màu hợp tuổi, chọn nghề, xem tuổi vợ chồng, chọn người xông đất và xem năm sinh con.</p>';
       L.resultBox(box, html);
     });
@@ -1188,21 +1275,29 @@
   }
   function simV2(c) {
     c.innerHTML = V.tabsHTML([['sim-one', 'Luận một sim'], ['sim-many', 'So sánh nhiều sim']]) +
-      '<div id="sim-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Số điện thoại', '<input type="text" id="phone" inputmode="numeric" value="">', 'ptv-field-name') + '</div><div class="ptv-row">' + L.field('Năm sinh của bạn (không bắt buộc, để đối chiếu mệnh)', L.select('y', '<option value="">Không nhập</option>' + L.yearOptions(1940, 2015, 1990))) + '</div>', 'Xem sim này') + '</div>' +
+      '<div id="sim-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Số điện thoại', '<input type="text" id="phone" inputmode="numeric" value="">', 'ptv-field-name') + '</div><div class="ptv-row">' + L.field('Ngày sinh của bạn (không bắt buộc, để đối chiếu mệnh), dạng năm-tháng-ngày', '<input type="text" id="dob" value="" placeholder="ví dụ 1992-09-20">', 'ptv-field-name') + '</div>', 'Xem sim này') + '</div>' +
       '<div id="sim-many" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Danh sách số điện thoại, mỗi dòng một số', '<textarea id="list" rows="5">0901234568\n0912345679\n0987654321</textarea>', 'ptv-field-name') + '</div><div class="ptv-row">' + L.field('Năm sinh của bạn (không bắt buộc)', L.select('y', '<option value="">Không nhập</option>' + L.yearOptions(1940, 2015, 1990))) + '</div>', 'So sánh và xếp hạng') + '</div>';
     V.wireTabs(c, ['sim-one', 'sim-many']);
     c.querySelector('#sim-one form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#sim-one'), digits = box.querySelector('#phone').value.replace(/\D/g, '');
       if (digits.length < 9) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập số điện thoại đầy đủ, ít nhất 9 chữ số nhé.</p>'); return; }
-      var yv = box.querySelector('#y').value, r = simScore(digits, yv);
+      var yv = '', dobTxt = '', dobParts = (box.querySelector('#dob').value || '').split('-').map(Number);
+      if (dobParts.length === 3 && dobParts[0] && dobParts[1] && dobParts[2]) {
+        var lu = E.convertSolar2Lunar(dobParts[2], dobParts[1], dobParts[0], 7);
+        yv = String(lu.year);
+        dobTxt = 'Bạn sinh ngày ' + dobParts[2] + '/' + dobParts[1] + '/' + dobParts[0] + ' dương lịch, tuổi âm tính theo năm ' + lu.year + (lu.year < dobParts[0] ? ' (sinh trước Tết nên lùi một năm so với năm dương lịch)' : '') + ', mệnh ' + esc(L.yearInfo(lu.year).napAm) + '. Hành chủ đạo của sim so với mệnh của bạn: ';
+      }
+      var r = simScore(digits, yv);
       var pats = simPatterns(digits);
+      var odd = digits.split('').filter(function (ch) { return parseInt(ch, 10) % 2 === 1; }).length, even = digits.length - odd;
+      var amduong = '<div class="ptv-block"><div class="ptv-block-head"><span>Cân bằng âm dương của dãy số</span><span class="ptv-block-score">' + odd + ' số lẻ, ' + even + ' số chẵn</span></div><p>' + (Math.abs(odd - even) <= 2 ? 'Dãy số khá cân bằng âm dương: số lẻ (dương) và số chẵn (âm) chênh nhau không quá 2, theo quan niệm sim phong thủy đây là thế cân bằng, hợp dùng lâu dài cho cả công việc lẫn liên lạc cá nhân.' : odd > even ? 'Dãy số thiên dương: nhiều số lẻ, khí động mạnh, hợp người làm kinh doanh, ngoại giao, cần sự nhanh nhạy; điểm trừ là dễ tạo cảm giác gấp gáp.' : 'Dãy số thiên âm: nhiều số chẵn, khí tĩnh, hợp người cần sự ổn định, bền bỉ; điểm trừ là thiếu lực bật cho các việc cần bùng nổ.') + '</p></div>';
       var html = '<h3>Luận sim ' + esc(digits) + '</h3>' +
         '<div class="ptv-block"><div class="ptv-block-head"><span>Số nút của dãy số</span><span class="ptv-block-score">' + r.nut + ' nút</span></div><p>' + (r.nut >= 8 ? 'Số nút cao, theo quan niệm sim số đây là dãy số đẹp, dễ nhớ và mang khí vượng.' : r.nut >= 5 ? 'Số nút ở mức khá, dãy số cân bằng.' : 'Số nút thấp, dãy số thiên về trầm, hợp người thích sự điềm tĩnh hơn là cầu tài.') + '</p></div>' +
         '<div class="ptv-block"><div class="ptv-block-head"><span>4 số cuối ' + r.last4 + ' theo quẻ số ' + r.h.num + '</span><span class="ptv-block-score">' + r.h.entry.rating + '</span></div><p>' + esc(r.h.entry.text) + '</p></div>' +
-        '<div class="ptv-block"><div class="ptv-block-head"><span>Ngũ hành chủ đạo của dãy số</span><span class="ptv-block-score">Hành ' + r.dom + '</span></div><p>Các chữ số trong sim nghiêng về hành ' + r.dom + ' (' + r.counts[r.dom] + '/' + digits.length + ' số).</p></div>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>Ngũ hành chủ đạo của dãy số</span><span class="ptv-block-score">Hành ' + r.dom + '</span></div><p>Các chữ số trong sim nghiêng về hành ' + r.dom + ' (' + r.counts[r.dom] + '/' + digits.length + ' số).</p></div>' + amduong +
         (pats.length ? '<div class="ptv-block"><div class="ptv-block-head"><span>Dạng số đẹp nhận diện được</span></div>' + pats.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</div>' : '') +
-        (yv ? '<div class="ptv-block"><div class="ptv-block-head"><span>Đối chiếu với mệnh của bạn</span></div><p>Bạn sinh năm ' + yv + ', mệnh ' + esc(L.yearInfo(parseInt(yv, 10)).napAm) + '. Hành chủ đạo của sim so với mệnh của bạn: ' + r.rel + '.</p></div>' : '') +
+        (yv ? '<div class="ptv-block"><div class="ptv-block-head"><span>Đối chiếu với mệnh của bạn</span></div><p>' + dobTxt + r.rel + '.</p></div>' : '') +
         '<div class="ptv-score-wrap"><div class="ptv-score-circle" style="border-color:' + (r.score >= 7 ? '#2e7d32' : r.score >= 5 ? '#b8860b' : '#c62828') + '">' + String(r.score).replace('.', ',') + '<span>/ 10</span></div><div><p class="ptv-verdict">' + (r.score >= 8 ? 'Sim rất hợp, khí số vượng' : r.score >= 6.5 ? 'Sim khá tốt' : r.score >= 5 ? 'Sim ở mức trung bình khá' : 'Sim thiên về trầm, nên cân nhắc') + '</p><p class="ptv-note">Điểm gồm số nút, quẻ của 4 số cuối theo bảng 81 số và độ hợp hành giữa dãy số với mệnh người dùng. Đây là luận giải tham khảo theo sim phong thủy dân gian.</p></div></div>';
       L.resultBox(box, html);
     });
@@ -1223,7 +1318,7 @@
 /* --- Boi 4 so cuoi + Xem tuoi vo chong v2 --- */
 (function () {
   'use strict';
-  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
   var DIGIT_EL = { '0': 'Thủy', '1': 'Thủy', '2': 'Thổ', '3': 'Mộc', '4': 'Mộc', '5': 'Thổ', '6': 'Kim', '7': 'Kim', '8': 'Thổ', '9': 'Hỏa' };
   function nut4(v) { var s = v.split('').reduce(function (a, ch) { return a + parseInt(ch, 10); }, 0); var n = s % 10; return n === 0 ? 10 : n; }
   function hoachOf(n) { var r = n % 80; if (r === 0) r = 80; return { num: r, entry: ((window.PTV_DATA || {}).hoach81 || {})[String(r)] || { rating: 'Bình', text: '' } }; }
@@ -1263,17 +1358,42 @@
   }
 
   function voChongV2(c) {
+    var dobFields = '<div class="ptv-row">' + L.field('Ngày sinh của chồng (năm-tháng-ngày)', '<input type="text" id="hd" value="1990-06-15">') + L.field('Ngày sinh của vợ (năm-tháng-ngày)', '<input type="text" id="wd" value="1992-09-20">') + '</div>';
     c.innerHTML = V.tabsHTML([['vc-main', 'Chấm điểm tuổi vợ chồng'], ['vc-year', 'Năm cưới nào hợp cho hai bạn']]) +
-      '<div id="vc-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chồng', L.select('hy', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của vợ', L.select('wy', L.yearOptions(1940, 2010, 1992))) + '</div>', 'Xem tuổi vợ chồng') + '</div>' +
-      '<div id="vc-year" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chồng', L.select('hy', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của vợ', L.select('wy', L.yearOptions(1940, 2010, 1992))) + '</div>', 'Quét các năm cưới sắp tới') + '</div>';
+      '<div id="vc-main">' + V.formWrap2(dobFields, 'Xem tuổi vợ chồng') + '</div>' +
+      '<div id="vc-year" hidden>' + V.formWrap2(dobFields, 'Quét các năm cưới sắp tới') + '</div>';
     V.wireTabs(c, ['vc-main', 'vc-year']);
+    function parseDob(box, id) {
+      var p = (box.querySelector('#' + id).value || '').split('-').map(Number);
+      if (p.length !== 3 || !p[0] || !p[1] || !p[2]) return null;
+      var dt = new Date(p[0], p[1] - 1, p[2]);
+      if (isNaN(dt.getTime())) return null;
+      var info = D.dayInfo(dt);
+      return { solar: dt, solarYear: p[0], lunarYear: info.lunar.y, preTet: info.lunar.y < p[0] };
+    }
     function couple(box) {
-      var hy = parseInt(box.querySelector('#hy').value, 10), wy = parseInt(box.querySelector('#wy').value, 10);
-      return { hy: hy, wy: wy, H: L.yearInfo(hy), W: L.yearInfo(wy) };
+      var h = parseDob(box, 'hd'), w = parseDob(box, 'wd');
+      if (!h || !w) return null;
+      return { hy: h.lunarYear, wy: w.lunarYear, H: L.yearInfo(h.lunarYear), W: L.yearInfo(w.lunarYear), h: h, w: w };
+    }
+    function dobNote(cp) {
+      var parts = [];
+      if (cp.h.preTet) parts.push('chồng sinh trước Tết nên tuổi âm tính theo năm ' + cp.hy);
+      if (cp.w.preTet) parts.push('vợ sinh trước Tết nên tuổi âm tính theo năm ' + cp.wy);
+      return parts.length ? '<p class="ptv-note">Lưu ý quy đổi âm lịch: ' + parts.join('; ') + '. Đây là điểm hay làm lệch kết quả khi chỉ nhập năm sinh dương lịch.</p>' : '';
+    }
+    var qs = new URLSearchParams(window.location.search);
+    if (qs.get('chong') && qs.get('vo')) {
+      var mBox = c.querySelector('#vc-main');
+      mBox.querySelector('#hd').value = qs.get('chong');
+      mBox.querySelector('#wd').value = qs.get('vo');
+      setTimeout(function () { mBox.querySelector('form').dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true })); }, 0);
     }
     c.querySelector('#vc-main form').addEventListener('submit', function (ev) {
       ev.preventDefault();
-      var box = c.querySelector('#vc-main'), cp = couple(box), H = cp.H, W = cp.W;
+      var box = c.querySelector('#vc-main'), cp = couple(box);
+      if (!cp) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày sinh theo dạng năm-tháng-ngày, ví dụ 1992-09-20 nhé.</p>'); return; }
+      var H = cp.H, W = cp.W;
       var chi = L.chiRelation(H.chi, W.chi), canHop = L.CAN_HOP[H.can] === W.can, naRel = L.relEl(H.el, W.el);
       var hCung = L.cungPhi(cp.hy, 'Nam').cung, wCung = L.cungPhi(cp.wy, 'Nữ').cung, star = L.coupleStar(hCung, wCung);
       var parts = { chi: chi.score, can: canHop ? 1 : 0, na: naRel.indexOf('tương sinh') >= 0 ? 1.2 : naRel.indexOf('Cùng hành') >= 0 ? 0.5 : naRel.indexOf('khắc') >= 0 ? -1.2 : 0, star: { 'Sinh Khí': 2, 'Diên Niên': 2, 'Thiên Y': 1.5, 'Phục Vị': 1, 'Họa Hại': -0.5, 'Lục Sát': -1, 'Ngũ Quỷ': -1.5, 'Tuyệt Mệnh': -2 }[star] || 0 };
@@ -1287,7 +1407,7 @@
         na: 'Hành nạp âm của hai mệnh có chỗ khắc hoặc chưa sinh được cho nhau. Cách bù là chọn năm sinh con có hành sinh được cho cả cha lẫn mẹ, và chọn màu sắc, hướng nhà theo mệnh của người yếu thế hơn trong hai người.',
         star: 'Sao cung phi của hai bạn rơi vào nhóm sao cần chú ý của Bát Trạch. Cách hóa giải truyền thống là chọn hướng nhà và hướng giường thuộc bộ hướng tốt của chủ hộ, đồng thời chọn ngày cưới và giờ rước dâu vào ngày giờ hợp tuổi hai người.'
       }[weakest];
-      var html = '<div class="ptv-facts"><span>Chồng: <strong>' + cp.hy + '</strong> (' + H.text + ', ' + esc(H.napAm) + ', cung ' + hCung + ')</span><span>Vợ: <strong>' + cp.wy + '</strong> (' + W.text + ', ' + esc(W.napAm) + ', cung ' + wCung + ')</span></div>' +
+      var html = '<div class="ptv-facts"><span>Chồng: sinh <strong>' + cp.h.solar.getDate() + '/' + (cp.h.solar.getMonth() + 1) + '/' + cp.h.solarYear + '</strong>, tuổi âm năm ' + cp.hy + ' (' + H.text + ', ' + esc(H.napAm) + ', cung ' + hCung + ')</span><span>Vợ: sinh <strong>' + cp.w.solar.getDate() + '/' + (cp.w.solar.getMonth() + 1) + '/' + cp.w.solarYear + '</strong>, tuổi âm năm ' + cp.wy + ' (' + W.text + ', ' + esc(W.napAm) + ', cung ' + wCung + ')</span></div>' + dobNote(cp) +
         '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Yếu tố</th><th>Kết quả</th><th>Nhận xét</th></tr>' +
         row('Địa chi', chi.label, chi.score >= 2 ? 'Hai tuổi thuộc nhóm rất hợp nhau về tính khí và đường đời.' : chi.score < 0 ? 'Hai tuổi có điểm xung khắc, cần nhường nhịn và phân chia việc rõ ràng.' : 'Hai tuổi không xung không hợp đặc biệt, êm đềm do cách sống.') +
         row('Thiên can', canHop ? 'Can hợp (' + H.can + ' hợp ' + W.can + ')' : 'Không thuộc cặp can hợp', canHop ? 'Can hợp là điểm cộng lớn, vợ chồng dễ đồng lòng làm ăn.' : 'Không có điểm cộng cũng không trừ điểm ở yếu tố này.') +
@@ -1296,12 +1416,22 @@
         '</table></div>' +
         '<div class="ptv-score-wrap"><div class="ptv-score-circle" style="border-color:' + (score >= 7 ? '#2e7d32' : score >= 5 ? '#b8860b' : '#c62828') + '">' + String(score).replace('.', ',') + '<span>/ 10</span></div><div><p class="ptv-verdict">' + (score >= 8 ? 'Rất hợp, thuộc nhóm vợ chồng đồng lòng' : score >= 6.5 ? 'Hợp nhau ở mức tốt' : score >= 5 ? 'Ở mức trung bình, sống chung hòa hợp do nhường nhịn' : 'Có nhiều điểm xung, cần chú ý cách hóa giải') + '</p><p class="ptv-note">Điểm tổng hợp 4 yếu tố trên thang 10. Tuổi xung không có nghĩa là không nên duyên, phong thủy chỉ gợi ý những điểm cần chú ý để hai người bù trừ cho nhau.</p></div></div>' +
         '<p><strong>Lời khuyên theo điểm yếu nhất:</strong> ' + advice + '</p>' +
-        '<p>Sang tab năm cưới bên cạnh để xem những năm sắp tới năm nào cưới là nhẹ nhàng nhất cho hai bạn.</p>';
+        '<p>Sang tab năm cưới bên cạnh để xem những năm sắp tới năm nào cưới là nhẹ nhàng nhất cho hai bạn.</p>' +
+        '<p><button type="button" class="ptv-btn" id="vc-copy">Sao chép link kết quả này</button> <span id="vc-copy-msg" class="ptv-note"></span></p>';
       L.resultBox(box, html);
+      var cpBtn = box.querySelector('#vc-copy');
+      if (cpBtn) cpBtn.addEventListener('click', function () {
+        var link = window.location.origin + window.location.pathname + '?chong=' + box.querySelector('#hd').value + '&vo=' + box.querySelector('#wd').value;
+        var msg = box.querySelector('#vc-copy-msg');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).then(function () { msg.textContent = 'Đã sao chép link, bạn gửi cho người thương để xem chung kết quả.'; }, function () { msg.textContent = 'Link kết quả: ' + link; });
+        } else { msg.textContent = 'Link kết quả: ' + link; }
+      });
     });
     c.querySelector('#vc-year form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#vc-year'), cp = couple(box);
+      if (!cp) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày sinh theo dạng năm-tháng-ngày, ví dụ 1992-09-20 nhé.</p>'); return; }
       var nowY = new Date().getFullYear(), rows = [], good = [];
       for (var y = nowY; y <= nowY + 8; y++) {
         var wAge = y - cp.wy + 1, hAge = y - cp.hy + 1;
@@ -1316,7 +1446,7 @@
         if (!flags.length) good.push(y);
         rows.push('<tr><td><strong>' + y + '</strong></td><td>' + verdict + '</td></tr>');
       }
-      L.resultBox(box, '<h3>Năm cưới cho chồng ' + cp.hy + ' và vợ ' + cp.wy + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm</th><th>Đánh giá</th></tr>' + rows.join('') + '</table></div>' +
+      L.resultBox(box, '<h3>Năm cưới cho chồng tuổi âm ' + cp.hy + ' và vợ tuổi âm ' + cp.wy + '</h3>' + dobNote(cp) + '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm</th><th>Đánh giá</th></tr>' + rows.join('') + '</table></div>' +
         (good.length ? '<p><strong>Các năm không phạm cả ba hạn Kim Lâu, Hoàng Ốc và Tam Tai:</strong> ' + good.join(', ') + '. Trong các năm này, bạn chọn tiếp ngày cưới cụ thể bằng công cụ Xem ngày cưới hỏi.</p>' : '<p>Chín năm tới luôn có ít nhất một hạn chen vào; trường hợp này dân gian thường cưới vào năm chỉ phạm một hạn nhẹ nhất và hóa giải bằng việc chọn ngày giờ tốt.</p>') +
         '<p class="ptv-note">Kim Lâu tính theo tuổi âm của vợ, Hoàng Ốc theo tuổi âm của chồng, Tam Tai theo tuổi của từng người. Bảng này do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> tính theo đúng các bảng hạn đang dùng trên toàn trang.</p>');
     });
@@ -1330,6 +1460,27 @@
   var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
   function guideData() { return window.PTV_MENH_GUIDE || {}; }
   function genIn(el) { return Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === el; })[0]; }
+  var EL_STRENGTH = {
+    'Kim': 'Quyết đoán, kỷ luật, giỏi hệ thống và con số; hợp vai trò cần sự chính xác và ra quyết định nhanh. Điểm cần tiết chế là sự cứng rắn: nghề càng cần mềm mỏng với con người, bạn càng phải tập lắng nghe trước khi kết luận.',
+    'Mộc': 'Sáng tạo, nhân hòa, giỏi nuôi dưỡng và phát triển dài hạn; hợp vai trò xây dựng con người và sản phẩm. Điểm cần tiết chế là cả nể và ôm đồm: hãy học cách nói không và chốt deadline rõ ràng.',
+    'Thủy': 'Linh hoạt, khéo giao tiếp, giỏi thích ứng và nắm bắt tâm lý; hợp vai trò đối ngoại, thương lượng và dịch vụ. Điểm cần tiết chế là sự thay đổi thất thường: cần một hệ thống kỷ luật tự giữ nhịp.',
+    'Hỏa': 'Nhiệt huyết, truyền cảm hứng, giỏi sân khấu, bán hàng và dẫn dắt đội nhóm. Điểm cần tiết chế là nóng vội và thích hào nhoáng: thành quả bền đến từ việc kiên trì sau giai đoạn bùng nổ ban đầu.',
+    'Thổ': 'Điềm tĩnh, chữ tín, giỏi vận hành ổn định và tích lũy lâu dài; hợp vai trò quản trị, hậu cần và chăm sóc khách hàng thân thiết. Điểm cần tiết chế là chậm đổi mới: hãy chủ động học công cụ mới trước khi thị trường ép thay đổi.'
+  };
+  var ZODIAC_JOBS = {
+    'Tý': ['Nhanh trí, giỏi nắm bắt cơ hội và quản lý tiền bạc, tháo vát trong môi trường thay đổi nhanh.', 'Tài chính, kinh doanh, thương mại điện tử, logistics, nghề cần tính toán và xoay vòng vốn.', 'Tránh ôm quá nhiều việc nhỏ cùng lúc; thế mạnh của tuổi Tý phát huy tốt nhất khi có sổ sách và quy trình rõ ràng.'],
+    'Sửu': ['Kiên nhẫn, bền bỉ, chữ tín cao, làm việc có hệ thống và chịu được áp lực dài hạn.', 'Kỹ thuật, xây dựng, nông nghiệp công nghệ, kế toán, quản lý vận hành và chất lượng.', 'Đừng ngại thay đổi công cụ và cách làm mới; sự bền bỉ cần đi cùng cập nhật kỹ năng.'],
+    'Dần': ['Mạnh mẽ, quyết đoán, có tố chất lãnh đạo và dám nhận việc khó.', 'Quản lý, kinh doanh, marketing, thể thao, nghề cần dẫn dắt đội nhóm và ra quyết định.', 'Tiết chế tính nóng và thích độc lập quá mức; thành công lớn của tuổi Dần thường đến khi biết dùng người.'],
+    'Mão': ['Khéo léo, tinh tế, giỏi giao tiếp mềm và có gu thẩm mỹ tốt.', 'Thiết kế, truyền thông, chăm sóc khách hàng, giáo dục, nghề làm đẹp và dịch vụ cao cấp.', 'Tránh né tránh xung đột quá lâu; cần học cách báo tin xấu sớm và rõ ràng.'],
+    'Thìn': ['Tham vọng, tự tin, có tầm nhìn lớn và khả năng truyền cảm hứng.', 'Khởi nghiệp, quản trị cấp cao, bất động sản, nghề sáng tạo và biểu diễn.', 'Giữ kỳ vọng thực tế và kiểm chứng bằng số liệu; tuổi Thìn dễ đặt mục tiêu lớn hơn nguồn lực hiện có.'],
+    'Tỵ': ['Sâu sắc, quan sát giỏi, làm việc độc lập tốt, có trực giác mạnh về con người và rủi ro.', 'Phân tích dữ liệu, nghiên cứu, tài chính, y khoa, nghề cần chuyên môn sâu và bảo mật.', 'Đừng giữ hết việc và thông tin cho riêng mình; chia sẻ đúng lúc giúp tuổi Tỵ thăng tiến nhanh hơn.'],
+    'Ngọ': ['Năng động, nhiệt tình, giỏi giao tiếp và thích môi trường nhiều biến động.', 'Kinh doanh, du lịch, sự kiện, bán hàng, truyền thông và nghề dịch vụ nhịp độ nhanh.', 'Cần kỷ luật hoàn thành việc tới nơi tới chốn; tuổi Ngọ mạnh ở khởi đầu, cần cơ chế giữ lửa ở chặng cuối.'],
+    'Mùi': ['Ôn hòa, giàu đồng cảm, có năng khiếu nghệ thuật và chăm sóc con người.', 'Giáo dục mầm non, y tế chăm sóc, thiết kế, ẩm thực, công tác xã hội và dịch vụ cộng đồng.', 'Học cách đặt ranh giới và nói rõ kỳ vọng về lương thưởng; tuổi Mùi dễ chịu thiệt vì ngại đòi hỏi.'],
+    'Thân': ['Thông minh, linh hoạt, giỏi ứng biến và học kỹ năng mới rất nhanh.', 'Công nghệ, marketing, thương mại, nghề sáng tạo nội dung và các nghề cần xoay chuyển tình huống.', 'Tránh nhảy việc hoặc đổi hướng quá nhanh; chọn một chuyên môn lõi để đào sâu bên cạnh sự linh hoạt.'],
+    'Dậu': ['Tỉ mỉ, cầu toàn, có mắt thẩm mỹ và tiêu chuẩn chất lượng cao.', 'Kiểm định chất lượng, kế toán kiểm toán, thiết kế, làm đẹp, nghề thủ công tinh xảo.', 'Tiết chế thói quen soi chi tiết của người khác; tiêu chuẩn cao cần đi cùng cách góp ý dễ nghe.'],
+    'Tuất': ['Trung thực, trách nhiệm, bảo vệ đội nhóm, hợp các việc cần sự tin cậy tuyệt đối.', 'An ninh, pháp lý, y tế, quản lý nhân sự, nghề dịch vụ cộng đồng và chăm sóc khách hàng lâu dài.', 'Tránh ôm việc vì lo cho người khác tới kiệt sức; tuổi Tuất cần học cách phân quyền.'],
+    'Hợi': ['Hiền hòa, may mắn về nhân duyên, giỏi tích lũy và sống biết đủ, làm việc chắc chắn khi đã vào guồng.', 'Ẩm thực, dịch vụ, tài chính cá nhân, nghề chăm sóc và các công việc hậu cần ổn định.', 'Cần chủ động hơn trong đàm phán và bảo vệ quyền lợi; sự hiền hòa không nên thành nhường nhịn mọi việc.']
+  };
   var JOB_GROUPS = [
     ['Tài chính, ngân hàng, kế toán, kim loại và trang sức', 'Kim'],
     ['Công nghệ thông tin, cơ khí, kỹ thuật và y khoa', 'Kim'],
@@ -1343,10 +1494,16 @@
     ['Nông nghiệp, khai khoáng, gốm sứ và vật liệu', 'Thổ']
   ];
   function ngheV2(c) {
-    c.innerHTML = V.tabsHTML([['ng-main', 'Nghề hợp theo mệnh của bạn'], ['ng-check', 'Kiểm tra một nhóm nghề cụ thể']]) +
+    c.innerHTML = V.tabsHTML([['ng-main', 'Nghề hợp theo mệnh của bạn'], ['ng-check', 'Kiểm tra một nhóm nghề cụ thể'], ['ng-zodiac', 'Nghề theo con giáp']]) +
       '<div id="ng-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem nghề hợp với tôi') + '</div>' +
-      '<div id="ng-check" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Nhóm nghề bạn đang cân nhắc', L.select('job', JOB_GROUPS.map(function (j, i) { return '<option value="' + i + '">' + j[0] + '</option>'; }).join(''))) + '</div>', 'Kiểm tra nghề này') + '</div>';
-    V.wireTabs(c, ['ng-main', 'ng-check']);
+      '<div id="ng-check" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Nhóm nghề bạn đang cân nhắc', L.select('job', JOB_GROUPS.map(function (j, i) { return '<option value="' + i + '">' + j[0] + '</option>'; }).join(''))) + '</div>', 'Kiểm tra nghề này') + '</div>' +
+      '<div id="ng-zodiac" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Con giáp của bạn', L.select('chi', ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'].map(function (x) { return '<option>' + x + '</option>'; }).join('')), 'ptv-field-name') + '</div>', 'Xem nghề theo con giáp') + '</div>';
+    V.wireTabs(c, ['ng-main', 'ng-check', 'ng-zodiac']);
+    c.querySelector('#ng-zodiac form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ng-zodiac'), chi = box.querySelector('#chi').value, z = ZODIAC_JOBS[chi];
+      L.resultBox(box, '<h3>Nghề hợp với tuổi ' + chi + '</h3><p><strong>Khí chất nổi bật:</strong> ' + z[0] + '</p><p><strong>Nhóm nghề thường hợp:</strong> ' + z[1] + '</p><p><strong>Lưu ý khi chọn nghề:</strong> ' + z[2] + '</p><p class="ptv-note">Xem theo con giáp là lớp tính cách chung của tuổi; kết quả đầy đủ hơn khi đối chiếu thêm mệnh ngũ hành ở tab đầu tiên, vì cùng một con giáp nhưng khác năm sinh sẽ khác mệnh.</p>');
+    });
     function relJob(jobEl, myEl) {
       if (jobEl === myEl) return ['Rất hợp', 'Nghề thuộc chính hành ' + myEl + ' của bạn: môi trường nghề nuôi dưỡng đúng khí chất bản mệnh, bạn phát huy được thế mạnh tự nhiên và ít phải gồng mình nhất.'];
       if (L.GENERATES[jobEl] === myEl) return ['Rất hợp', 'Hành ' + jobEl + ' của nghề SINH cho hành ' + myEl + ' của bạn: đây là nhóm hợp nhất theo ngũ hành, nghề nâng đỡ người, càng làm càng có lực.'];
@@ -1364,7 +1521,8 @@
         '<h3>Nghề hợp cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].nghe) + '</p>' : '') +
         '<p><strong>Nhóm nghề thuộc hành bản mệnh ' + yi.el + ':</strong> ' + mine + '.</p>' +
         '<p><strong>Nhóm nghề thuộc hành ' + gi + ' sinh cho mệnh của bạn (được coi là hợp nhất):</strong> ' + feed + '.</p>' +
-        '<p class="ptv-note">Nghề hợp mệnh là lớp tham khảo về khí chất: nghề hợp nhất trên giấy vẫn cần đúng năng lực và thị trường. Sang tab bên cạnh để kiểm tra một nhóm nghề cụ thể bạn đang cân nhắc.</p>';
+        '<p><strong>Thế mạnh tính cách của mệnh ' + yi.el + ' khi làm nghề:</strong> ' + EL_STRENGTH[yi.el] + '</p>' +
+        '<p class="ptv-note">Nghề hợp mệnh là lớp tham khảo về khí chất: nghề hợp nhất trên giấy vẫn cần đúng năng lực và thị trường. Sang tab bên cạnh để kiểm tra một nhóm nghề cụ thể bạn đang cân nhắc, hoặc xem gợi ý theo con giáp ở tab thứ ba.</p>';
       L.resultBox(box, html);
     });
     c.querySelector('#ng-check form').addEventListener('submit', function (ev) {
@@ -1473,6 +1631,35 @@
     'Hỏa': { metal: 'Vàng hồng, vàng và các thiết kế góc cạnh, nổi bật', stones: 'Ruby, thạch anh hồng, thạch anh tím, garnet, đá mã não đỏ', wear: 'Đá đỏ, hồng, tím làm tăng sự hiện diện và nhiệt huyết, hợp các dịp cần tỏa sáng và thuyết phục.' },
     'Thổ': { metal: 'Vàng, đồng và các thiết kế chắc chắn, ít chi tiết', stones: 'Thạch anh vàng, hổ phách, đá mắt hổ nâu, mã não vàng, ngọc hoàng long', wear: 'Đá vàng, nâu đất và thiết kế đầm chắc hợp khí Thổ là sự ổn định và chữ tín.' }
   };
+  var STONE_PRICE = {
+    'Kim cương': 'từ vài triệu tới hàng trăm triệu đồng tùy kích thước và giấy kiểm định',
+    'Thạch anh trắng': 'vòng tay phổ thông khoảng 200 nghìn tới 1,5 triệu đồng',
+    'Thạch anh vàng': 'vòng tay phổ thông khoảng 300 nghìn tới 3 triệu đồng',
+    'Hổ phách': 'khoảng 500 nghìn tới 5 triệu đồng tùy độ trong và tuổi hổ phách',
+    'Đá mặt trăng': 'khoảng 300 nghìn tới 2 triệu đồng cho món trang sức phổ thông',
+    'Ngọc bích': 'khoảng 500 nghìn tới vài chục triệu đồng tùy loại ngọc và độ trong',
+    'Thạch anh xanh': 'vòng tay phổ thông khoảng 200 nghìn tới 1,5 triệu đồng',
+    'Ngọc lục bảo': 'từ vài triệu tới hàng trăm triệu đồng tùy chất lượng đá',
+    'Đá lông công': 'khoảng 300 nghìn tới 2 triệu đồng cho món trang sức phổ thông',
+    'Thạch anh đen': 'vòng tay phổ thông khoảng 200 nghìn tới 1 triệu đồng',
+    'Aquamarine': 'khoảng 1 tới 10 triệu đồng cho món trang sức phổ thông',
+    'Sapphire': 'từ vài triệu tới hàng trăm triệu đồng tùy màu và độ sạch',
+    'Đá mắt hổ xanh': 'vòng tay phổ thông khoảng 200 nghìn tới 1 triệu đồng',
+    'Ngọc trai đen': 'khoảng 1 tới 20 triệu đồng tùy kích thước và độ bóng',
+    'Ruby': 'từ vài triệu tới hàng trăm triệu đồng tùy chất lượng đá',
+    'Thạch anh hồng': 'vòng tay phổ thông khoảng 200 nghìn tới 1,5 triệu đồng',
+    'Thạch anh tím': 'vòng tay phổ thông khoảng 200 nghìn tới 2 triệu đồng',
+    'Garnet': 'khoảng 500 nghìn tới 5 triệu đồng cho món trang sức phổ thông',
+    'Đá mã não đỏ': 'vòng tay phổ thông khoảng 150 nghìn tới 800 nghìn đồng',
+    'Đá mắt hổ nâu': 'vòng tay phổ thông khoảng 200 nghìn tới 1 triệu đồng',
+    'Mã não vàng': 'vòng tay phổ thông khoảng 150 nghìn tới 800 nghìn đồng',
+    'Ngọc hoàng long': 'khoảng 300 nghìn tới 3 triệu đồng cho món trang sức phổ thông'
+  };
+  function stonePriceRows(stonesStr) {
+    var lower = {};
+    Object.keys(STONE_PRICE).forEach(function (k) { lower[k.toLowerCase()] = STONE_PRICE[k]; });
+    return stonesStr.split(',').map(function (x) { return x.trim(); }).filter(function (n) { return lower[n.toLowerCase()]; }).map(function (n) { return '<tr><td><strong>' + n + '</strong></td><td>' + lower[n.toLowerCase()] + '</td></tr>'; }).join('');
+  }
   function trangSucV2(c) {
     c.innerHTML = V.tabsHTML([['ts-main', 'Trang sức theo mệnh của bạn'], ['ts-purpose', 'Chọn trang sức theo dịp']]) +
       '<div id="ts-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem trang sức hợp với tôi') + '</div>' +
@@ -1487,7 +1674,9 @@
         '<p><strong>Chất liệu và kim loại hợp:</strong> ' + st.metal + '.</p>' +
         '<p><strong>Đá hợp hành bản mệnh ' + yi.el + ':</strong> ' + st.stones + '.</p>' +
         '<p><strong>Đá của hành ' + gi + ' sinh cho mệnh (đeo để được nâng đỡ):</strong> ' + stFeed.stones + '.</p>' +
-        '<p>' + st.wear + '</p>');
+        '<p>' + st.wear + '</p>' +
+        '<h3>Khoảng giá tham khảo của các loại đá hợp với bạn</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Loại đá</th><th>Khoảng giá thị trường phổ thông</th></tr>' + stonePriceRows(st.stones) + stonePriceRows(stFeed.stones) + '</table></div>' +
+        '<p class="ptv-note">Giá chỉ là khoảng tham khảo cho trang sức phổ thông tại thị trường Việt Nam, chênh lệch rất lớn theo kích thước, độ sạch, nguồn gốc và giấy kiểm định. Phong Thủy VietAA không bán trang sức; khi mua đá quý giá trị cao bạn nên yêu cầu giấy kiểm định từ đơn vị uy tín.</p>');
     });
     c.querySelector('#ts-purpose form').addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -1511,20 +1700,29 @@
   function guideData() { return window.PTV_MENH_GUIDE || {}; }
   function genInEl(el) { return Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === el; })[0]; }
   var PLANTS = [
-    ['Cây kim tiền', 'Kim', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá dày bóng, chịu bóng tốt, là cây phong thủy phổ biến nhất cho quầy thu ngân và bàn làm việc.'],
-    ['Cây kim ngân', 'Mộc', 'ca', ['trong-nha', 'ban-cong'], 'Thân xoắn tượng trưng tụ tài, ưa sáng vừa, hợp phòng khách và cửa hàng.'],
-    ['Cây ngọc ngân', 'Kim', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá đốm trắng hợp hành Kim, chịu bóng, hợp bàn làm việc thiếu sáng.'],
-    ['Cây lan ý', 'Kim', 'it', ['trong-nha'], 'Hoa trắng thanh khiết, lọc không khí tốt, hợp phòng ngủ và phòng khách ít nắng.'],
-    ['Cây trầu bà', 'Mộc', 'ca', ['trong-nha', 'ban-cong', 'ban-lam-viec'], 'Dễ sống bậc nhất, leo hoặc buông, hợp cả chậu treo ban công lẫn bình thủy sinh trên bàn.'],
-    ['Cây phát tài', 'Mộc', 'ca', ['trong-nha', 'truoc-cua'], 'Thân thẳng lá dài, thường đặt hai bên cửa chính hoặc góc phòng khách.'],
-    ['Cây lưỡi hổ', 'Thổ', 'ca', ['trong-nha', 'ban-cong', 'truoc-cua'], 'Chịu hạn và chịu bóng đều tốt, lá dựng thẳng, hợp hành lang và trước cửa.'],
-    ['Cây sen đá', 'Thổ', 'nhieu', ['ban-cong', 'ban-lam-viec'], 'Nhỏ gọn, cần nắng, hợp bậu cửa sổ và bàn làm việc có nắng buổi sáng.'],
-    ['Cây vạn lộc', 'Hỏa', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá điểm hồng đỏ hợp hành Hỏa, chịu bóng vừa, làm điểm nhấn màu cho góc làm việc.'],
-    ['Cây hồng môn', 'Hỏa', 'it', ['trong-nha'], 'Hoa đỏ bền, hợp phòng khách và quầy lễ tân cần điểm nhấn ấm.'],
-    ['Cây thủy sinh để bàn (trầu bà nước, phát tài nước)', 'Thủy', 'it', ['ban-lam-viec', 'trong-nha'], 'Trồng trong nước sạch, hợp người mệnh Thủy và không gian cần yếu tố nước nhẹ nhàng.'],
-    ['Cây cau tiểu trâm', 'Mộc', 'it', ['ban-lam-viec', 'trong-nha'], 'Dáng nhỏ thanh, chịu bóng, là cây để bàn kinh điển cho dân văn phòng.']
+    ['Cây kim tiền', 'Kim', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá dày bóng, chịu bóng tốt, là cây phong thủy phổ biến nhất cho quầy thu ngân và bàn làm việc.', 'Tưới ít, khoảng 2 tới 3 tuần một lần, cây trữ nước trong thân nên rất kỵ úng.'],
+    ['Cây kim ngân', 'Mộc', 'ca', ['trong-nha', 'ban-cong'], 'Thân xoắn tượng trưng tụ tài, ưa sáng vừa, hợp phòng khách và cửa hàng.', 'Tưới 1 lần mỗi tuần, giữ đất ẩm nhẹ, tránh nắng gắt trực tiếp làm cháy lá.'],
+    ['Cây ngọc ngân', 'Kim', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá đốm trắng hợp hành Kim, chịu bóng, hợp bàn làm việc thiếu sáng.', 'Tưới 2 lần mỗi tuần, phun sương lên lá vào ngày khô nóng.'],
+    ['Cây lan ý', 'Kim', 'it', ['trong-nha'], 'Hoa trắng thanh khiết, lọc không khí tốt, hợp phòng ngủ và phòng khách ít nắng.', 'Tưới 2 tới 3 lần mỗi tuần, đất luôn ẩm nhẹ; lá rủ xuống là dấu hiệu đang thiếu nước.'],
+    ['Cây trầu bà', 'Mộc', 'ca', ['trong-nha', 'ban-cong', 'ban-lam-viec'], 'Dễ sống bậc nhất, leo hoặc buông, hợp cả chậu treo ban công lẫn bình thủy sinh trên bàn.', 'Tưới 2 lần mỗi tuần với chậu đất; trồng thủy sinh thì thay nước mỗi tuần một lần.'],
+    ['Cây phát tài', 'Mộc', 'ca', ['trong-nha', 'truoc-cua'], 'Thân thẳng lá dài, thường đặt hai bên cửa chính hoặc góc phòng khách.', 'Tưới 1 lần mỗi tuần, thoát nước tốt, lá vàng thường do tưới quá nhiều.'],
+    ['Cây lưỡi hổ', 'Thổ', 'ca', ['trong-nha', 'ban-cong', 'truoc-cua'], 'Chịu hạn và chịu bóng đều tốt, lá dựng thẳng, hợp hành lang và trước cửa.', 'Tưới rất ít, 2 tới 3 tuần một lần, thuộc nhóm cây chịu hạn tốt nhất.'],
+    ['Cây sen đá', 'Thổ', 'nhieu', ['ban-cong', 'ban-lam-viec'], 'Nhỏ gọn, cần nắng, hợp bậu cửa sổ và bàn làm việc có nắng buổi sáng.', 'Tưới 1 tới 2 tuần một lần, chỉ tưới vào gốc, tránh để nước đọng trên lá.'],
+    ['Cây vạn lộc', 'Hỏa', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá điểm hồng đỏ hợp hành Hỏa, chịu bóng vừa, làm điểm nhấn màu cho góc làm việc.', 'Tưới 2 lần mỗi tuần, cần độ ẩm không khí cao, đặt xa máy lạnh thổi trực tiếp.'],
+    ['Cây hồng môn', 'Hỏa', 'it', ['trong-nha'], 'Hoa đỏ bền, hợp phòng khách và quầy lễ tân cần điểm nhấn ấm.', 'Tưới 2 tới 3 lần mỗi tuần, giữ ẩm đều để hoa ra liên tục.'],
+    ['Cây thủy sinh để bàn (trầu bà nước, phát tài nước)', 'Thủy', 'it', ['ban-lam-viec', 'trong-nha'], 'Trồng trong nước sạch, hợp người mệnh Thủy và không gian cần yếu tố nước nhẹ nhàng.', 'Thay nước sạch mỗi tuần, rửa rễ nhẹ nhàng, tránh để nước đục và có mùi.'],
+    ['Cây cau tiểu trâm', 'Mộc', 'it', ['ban-lam-viec', 'trong-nha'], 'Dáng nhỏ thanh, chịu bóng, là cây để bàn kinh điển cho dân văn phòng.', 'Tưới 2 lần mỗi tuần, phun sương giữ ẩm cho tán lá.'],
+    ['Cây phú quý', 'Hỏa', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá xanh viền đỏ hồng hợp hành Hỏa, là cây để bàn mang ý nghĩa giàu sang được ưa chuộng.', 'Tưới 2 lần mỗi tuần, lá nhạt màu là dấu hiệu thiếu sáng, nên đưa ra gần cửa sổ vài ngày.'],
+    ['Cây bạch mã hoàng tử', 'Kim', 'it', ['trong-nha'], 'Lá xanh gân trắng sang và sạch, hợp hành Kim, thường đặt phòng khách và sảnh.', 'Tưới 1 tới 2 lần mỗi tuần, chịu bóng tốt, tránh nắng trực tiếp làm bạc lá.'],
+    ['Cây đại phú gia', 'Mộc', 'ca', ['trong-nha', 'truoc-cua'], 'Tán lá lớn xanh đậm, trồng chậu lớn đặt góc phòng khách hoặc hai bên cửa.', 'Tưới 1 lần mỗi tuần với lượng nước nhiều cho chậu lớn, bảo đảm lỗ thoát nước thông.'],
+    ['Cây thiết mộc lan', 'Mộc', 'ca', ['trong-nha', 'truoc-cua'], 'Thân gỗ thẳng, lá dài xanh, hay đặt cạnh cửa chính và cầu thang.', 'Tưới 1 lần mỗi tuần, ưa sáng, đặt nơi tối lâu ngày cây sẽ thưa lá.'],
+    ['Cây ngũ gia bì', 'Mộc', 'it', ['trong-nha', 'ban-lam-viec'], 'Lá chét xòe như bàn tay, được cho là giúp giữ tài khí, dễ chăm trên bàn làm việc.', 'Tưới 2 lần mỗi tuần, chịu bóng vừa, cắt tỉa nhẹ để tán gọn.'],
+    ['Cây trường sinh', 'Thổ', 'it', ['ban-lam-viec', 'trong-nha'], 'Lá mọng xanh bóng, nhỏ gọn, tượng trưng cho sự bền bỉ và trường tồn.', 'Tưới 1 lần mỗi tuần, kỵ úng nước, hợp chậu nhỏ trên bàn.'],
+    ['Cây hương thảo', 'Mộc', 'nhieu', ['ban-cong'], 'Cây gia vị có mùi thơm thư giãn, cần nắng nhiều, hợp ban công và bậu cửa sổ hướng nắng.', 'Tưới mỗi ngày vào mùa nắng với lượng vừa, đất phải thật thoát nước.'],
+    ['Cây hạnh phúc', 'Mộc', 'ca', ['trong-nha'], 'Tán lá tim xanh mướt, là cây quà tặng tân gia và cưới hỏi được chọn nhiều.', 'Tưới 2 lần mỗi tuần, cần sáng gián tiếp, lá rủ là dấu hiệu thiếu nước.']
   ];
   var PLACE_TXT = { 'trong-nha': 'trong nhà', 'ban-cong': 'ban công, sân thượng', 'ban-lam-viec': 'bàn làm việc', 'truoc-cua': 'trước cửa, sảnh' };
+  var LIGHT_TXT = { 'it': 'Ít nắng, chịu bóng', 'ca': 'Nắng vừa, sáng gián tiếp', 'nhieu': 'Cần nhiều nắng' };
   function cayV2(c) {
     c.innerHTML = V.tabsHTML([['cay-main', 'Cây hợp theo mệnh của bạn'], ['cay-place', 'Chọn cây theo chỗ đặt']]) +
       '<div id="cay-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + '</div>', 'Xem cây hợp với tôi') + '</div>' +
@@ -1533,11 +1731,11 @@
     c.querySelector('#cay-main form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#cay-main'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), G = guideData(), gi = genInEl(yi.el);
-      var mine = PLANTS.filter(function (p) { return p[1] === yi.el || p[1] === gi; }).map(function (p) { return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + '</td><td>' + p[4] + '</td></tr>'; }).join('');
+      var mine = PLANTS.filter(function (p) { return p[1] === yi.el || p[1] === gi; }).map(function (p) { return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + '</td><td>' + p[4] + '</td><td>' + LIGHT_TXT[p[2]] + '. ' + p[5] + '</td></tr>'; }).join('');
       L.resultBox(box, '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
         '<h3>Cây trồng cho mệnh ' + yi.el + '</h3>' + (G[yi.el] ? '<p>' + esc(G[yi.el].cay) + '</p>' : '') +
         '<p>Danh sách dưới đây gồm cây thuộc hành bản mệnh ' + yi.el + ' và hành ' + gi + ' sinh cho mệnh của bạn, kèm điều kiện chăm thực tế:</p>' +
-        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cây</th><th>Hành</th><th>Ghi chú chăm và đặt</th></tr>' + mine + '</table></div>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cây</th><th>Hành</th><th>Ghi chú về cây</th><th>Ánh sáng và tưới nước</th></tr>' + mine + '</table></div>' +
         '<p class="ptv-note">Cây thuộc hành nào là theo phân loại phong thủy phổ biến của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>. Điều kiện nắng và nước trong cột ghi chú mới là yếu tố quyết định cây sống khỏe.</p>');
     });
     c.querySelector('#cay-place form').addEventListener('submit', function (ev) {
@@ -1545,8 +1743,8 @@
       var box = c.querySelector('#cay-place'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y), gi = genInEl(yi.el), pl = box.querySelector('#pl').value;
       var fit = PLANTS.filter(function (p) { return p[3].indexOf(pl) >= 0; });
       var good = fit.filter(function (p) { return p[1] === yi.el || p[1] === gi; });
-      var list = (good.length ? good : fit).map(function (p) { return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + (p[1] === yi.el || p[1] === gi ? ' (hợp mệnh bạn)' : '') + '</td><td>' + p[4] + '</td></tr>'; }).join('');
-      L.resultBox(box, '<h3>Cây cho vị trí ' + PLACE_TXT[pl] + ', mệnh ' + yi.el + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cây</th><th>Hành</th><th>Ghi chú</th></tr>' + list + '</table></div>' +
+      var list = (good.length ? good : fit).map(function (p) { return '<tr><td><strong>' + p[0] + '</strong></td><td>' + p[1] + (p[1] === yi.el || p[1] === gi ? ' (hợp mệnh bạn)' : '') + '</td><td>' + p[4] + '</td><td>' + LIGHT_TXT[p[2]] + '. ' + p[5] + '</td></tr>'; }).join('');
+      L.resultBox(box, '<h3>Cây cho vị trí ' + PLACE_TXT[pl] + ', mệnh ' + yi.el + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cây</th><th>Hành</th><th>Ghi chú</th><th>Ánh sáng và tưới nước</th></tr>' + list + '</table></div>' +
         '<p>' + (good.length ? 'Các cây trên vừa hợp vị trí vừa hợp mệnh hoặc hành sinh cho mệnh của bạn.' : 'Vị trí này không có cây nào thuộc hành bản mệnh hay hành sinh cho mệnh của bạn trong danh sách phổ biến, nên tiêu chí sống khỏe được ưu tiên; bạn vẫn có thể tăng yếu tố hợp mệnh bằng màu chậu thuộc hành ' + gi + '.') + '</p>');
     });
   }
@@ -1593,10 +1791,10 @@
 /* --- Xem ngay cuoi hoi + Xem ngay xuat hanh v2 --- */
 (function () {
   'use strict';
-  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
   function cuoiHoiV2(c) {
     c.innerHTML = V.tabsHTML([['ch-scan', 'Quét ngày cưới tốt theo tháng'], ['ch-day', 'Kiểm tra một ngày cưới'], ['ch-quarter', 'Top ngày cưới 3 tháng tới']]) +
-      '<div id="ch-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996))) + L.field('Năm sinh của chú rể', L.select('hy', L.yearOptions(1985, 2010, 1994))) + '</div><div class="ptv-row">' + L.field('Tháng muốn cưới', L.select('m', V.monthOptions2()), 'ptv-field-name') + '</div>', 'Xem ngày cưới tốt') + '</div>' +
+      '<div id="ch-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996))) + L.field('Năm sinh của chú rể', L.select('hy', L.yearOptions(1985, 2010, 1994))) + '</div><div class="ptv-row">' + L.field('Tháng muốn cưới', L.select('m', V.monthOptions2())) + L.field('Lọc ngày', '<select id="wk"><option value="">Tất cả các ngày</option><option value="1">Chỉ thứ Bảy và Chủ nhật</option></select>') + '</div>', 'Xem ngày cưới tốt') + '</div>' +
       '<div id="ch-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996))) + L.field('Ngày dự kiến cưới (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
       '<div id="ch-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996)), 'ptv-field-name') + '</div>', 'Tìm ngày cưới tốt nhất 3 tháng tới') + '</div>';
     V.wireTabs(c, ['ch-scan', 'ch-day', 'ch-quarter']);
@@ -1604,9 +1802,11 @@
       ev.preventDefault();
       var box = c.querySelector('#ch-scan'), bride = L.yearInfo(parseInt(box.querySelector('#wy').value, 10)), groom = L.yearInfo(parseInt(box.querySelector('#hy').value, 10));
       var parts = box.querySelector('#m').value.split('-').map(Number);
-      var wAge = parts[0] - bride.year + 1, kl = L.kimLau(wAge);
-      var note = '<p class="ptv-note">Ngày cưới trên trang này chấm theo tuổi của <strong>cô dâu ' + bride.text + '</strong> (lệ truyền thống lấy tuổi cô dâu làm gốc cho ngày cưới), chú rể ' + groom.text + ' là thông tin đối chiếu. Năm ' + parts[0] + ' cô dâu ' + wAge + ' tuổi âm: ' + (kl.bad ? 'năm này cô dâu PHẠM Kim Lâu (' + kl.kind + '), nhiều gia đình sẽ cân nhắc dời năm hoặc làm lễ theo lệ địa phương; bảng ngày dưới đây vẫn chấm theo ngày tốt xấu trong tháng.' : 'năm này cô dâu không phạm Kim Lâu, điều kiện năm đã thuận.') + '</p>';
-      L.resultBox(box, '<h3>Ngày cưới tốt tháng ' + parts[1] + '/' + parts[0] + ' cho cô dâu ' + bride.text + '</h3>' + note + V.scanHTML('cuoi-hoi', bride.chi, parts[0], parts[1], 'cưới hỏi'));
+      var wAge = parts[0] - bride.year + 1, kl = L.kimLau(wAge), hoB = L.hoangOc(wAge), ttB = L.tamTai(bride.chi, parts[0]);
+      var gAge = parts[0] - groom.year + 1, ttG = L.tamTai(groom.chi, parts[0]);
+      var note = '<p class="ptv-note">Ngày cưới trên trang này chấm theo tuổi của <strong>cô dâu ' + bride.text + '</strong> (lệ truyền thống lấy tuổi cô dâu làm gốc cho ngày cưới), chú rể ' + groom.text + ' là thông tin đối chiếu. <strong>Kiểm tra năm ' + parts[0] + ':</strong> cô dâu ' + wAge + ' tuổi âm, ' + (kl.bad ? 'PHẠM Kim Lâu (' + kl.kind + ')' : 'không phạm Kim Lâu') + ', hoang ốc cung ' + hoB.name + (hoB.bad ? ' (cung xấu)' : ' (cung tốt)') + ', ' + (ttB ? 'PHẠM Tam Tai' : 'không phạm Tam Tai') + '; chú rể ' + gAge + ' tuổi âm, ' + (ttG ? 'PHẠM Tam Tai' : 'không phạm Tam Tai') + '. ' + ((kl.bad || hoB.bad || ttB || ttG) ? 'Năm cưới có hạn ở trên không có nghĩa là phải hủy cưới: nhiều gia đình vẫn cưới trong năm phạm hạn nhưng chọn ngày giờ thật tốt, làm lễ đầy đủ theo lệ địa phương và kiêng kỹ hơn trong năm đó; bảng ngày dưới đây vẫn chấm theo ngày tốt xấu trong tháng.' : 'Cả hai bên đều không phạm hạn lớn trong năm này, điều kiện năm đã thuận.') + '</p>';
+      var wk = box.querySelector('#wk').value === '1';
+      L.resultBox(box, '<h3>Ngày cưới tốt tháng ' + parts[1] + '/' + parts[0] + ' cho cô dâu ' + bride.text + (wk ? ' (chỉ thứ Bảy, Chủ nhật)' : '') + '</h3>' + note + V.scanHTML('cuoi-hoi', bride.chi, parts[0], parts[1], 'cưới hỏi', wk ? { weekendOnly: true } : null));
     });
     c.querySelector('#ch-day form').addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -1639,7 +1839,15 @@
     c.querySelector('#xh-day form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#xh-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
-      L.resultBox(box, V.checkDayHTML('xuat-hanh', me.chi, box.querySelector('#dt').value, 'xuất hành'));
+      var html = V.checkDayHTML('xuat-hanh', me.chi, box.querySelector('#dt').value, 'xuất hành');
+      var p = (box.querySelector('#dt').value || '').split('-').map(Number);
+      if (p.length === 3 && p[0] && p[1] && p[2]) {
+        var inf = D.dayInfo(new Date(p[0], p[1] - 1, p[2]));
+        var CHIS12 = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+        var good = CHIS12.filter(function (ch) { return D.LTP_GOOD[D.ltpOf(inf.lunar.d, inf.lunar.m, ch)]; });
+        html += '<p><strong>Giờ xuất hành Lý Thuần Phong tốt trong ngày:</strong> giờ ' + good.join(', giờ ') + '. Đây là hệ giờ tính theo ngày và tháng âm lịch dành riêng cho việc khởi hành, bạn đối chiếu với giờ hoàng đạo ở trên và chọn giờ nằm trong cả hai hệ nếu được.</p>';
+      }
+      L.resultBox(box, html);
     });
     c.querySelector('#xh-quarter form').addEventListener('submit', function (ev) {
       ev.preventDefault();
@@ -1715,15 +1923,17 @@
 /* --- Doi ngay am lich v2 --- */
 (function () {
   'use strict';
-  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
+  var L = window.PTVLib, D = window.PTVDay, E = window.PTVEngine, esc = L.esc, V = window.PTVDayToolsV2;
   var WD = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
   function doiNgayV2(c) {
     var now = new Date();
-    c.innerHTML = V.tabsHTML([['dn-one', 'Đổi một ngày'], ['dn-month', 'Lịch âm của một tháng dương'], ['dn-count', 'Đếm ngày giữa hai mốc']]) +
+    c.innerHTML = V.tabsHTML([['dn-one', 'Đổi một ngày'], ['dn-month', 'Lịch âm của một tháng dương'], ['dn-count', 'Đếm ngày giữa hai mốc'], ['dn-again', 'Ngày âm này các năm tới']]) +
       '<div id="dn-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Chiều đổi', L.select('mode', '<option value="s2l">Dương lịch sang Âm lịch</option><option value="l2s">Âm lịch sang Dương lịch</option>')) + L.field('Ngày', '<input type="text" id="dd" inputmode="numeric" value="' + now.getDate() + '">') + L.field('Tháng', '<input type="text" id="mm" inputmode="numeric" value="' + (now.getMonth() + 1) + '">') + L.field('Năm', '<input type="text" id="yy" inputmode="numeric" value="' + now.getFullYear() + '">') + '</div><div class="ptv-row">' + L.field('Tháng nhuận (chỉ khi đổi Âm sang Dương)', L.select('leap', '<option value="">Tháng thường</option><option value="1">Tháng nhuận</option>')) + '</div>', 'Đổi ngày này') + '</div>' +
       '<div id="dn-month" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Tháng dương lịch muốn xem', L.select('m', V.monthOptions2()), 'ptv-field-name') + '</div>', 'Xem lịch âm tháng này') + '</div>' +
-      '<div id="dn-count" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Từ ngày (năm-tháng-ngày)', '<input type="text" id="d1" value="2027-01-01">') + L.field('Đến ngày (năm-tháng-ngày)', '<input type="text" id="d2" value="2027-02-16">') + '</div>', 'Đếm khoảng ngày') + '</div>';
-    V.wireTabs(c, ['dn-one', 'dn-month', 'dn-count']);
+      '<div id="dn-count" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Từ ngày (năm-tháng-ngày)', '<input type="text" id="d1" value="2027-01-01">') + L.field('Đến ngày (năm-tháng-ngày)', '<input type="text" id="d2" value="2027-02-16">') + '</div>', 'Đếm khoảng ngày') + '</div>' +
+      '<div id="dn-again" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày âm lịch', '<input type="text" id="ad" inputmode="numeric" value="15">') + L.field('Tháng âm lịch', '<input type="text" id="am" inputmode="numeric" value="8">') + L.field('Từ năm âm lịch', '<input type="text" id="ay" inputmode="numeric" value="' + now.getFullYear() + '">') + '</div>', 'Xem ngày này 5 năm tới') + '</div>';
+    V.wireTabs(c, ['dn-one', 'dn-month', 'dn-count', 'dn-again']);
+    function gioHDLine(info) { return '<p><strong>Giờ hoàng đạo trong ngày:</strong> ' + D.GIO_HD[info.day.chi].map(function (g) { return 'giờ ' + g + ' (' + E.HOUR_LABEL[g] + ')'; }).join(', ') + '.</p>'; }
     c.querySelector('#dn-one form').addEventListener('submit', function (ev) {
       ev.preventDefault();
       var box = c.querySelector('#dn-one');
@@ -1732,7 +1942,7 @@
         var dt = new Date(yy, mm - 1, dd), info = D.dayInfo(dt);
         var hours = D.goodHours ? D.goodHours(info) : null;
         var html = '<h3>' + WD[dt.getDay()] + ', ngày ' + dd + '/' + mm + '/' + yy + ' dương lịch</h3>' +
-          '<p>Đổi sang âm lịch là ngày <strong>' + D.fmtLunar(info) + '</strong> năm ' + L.yearInfo(info.lunar.y).text + ', ngày can chi <strong>' + info.day.text + '</strong>, trực ' + D.trucOf(info) + ', thuộc ngày ' + D.satOf(info) + '.</p>' +
+          '<p>Đổi sang âm lịch là ngày <strong>' + D.fmtLunar(info) + '</strong> năm ' + L.yearInfo(info.lunar.y).text + ', ngày can chi <strong>' + info.day.text + '</strong>, trực ' + D.trucOf(info) + ', thuộc ngày ' + D.satOf(info) + '.</p>' + gioHDLine(info) +
           '<p>Tháng này theo âm lịch là tháng ' + info.lunar.m + ' năm ' + L.yearInfo(info.lunar.y).text + '. Các mốc được nhiều người tra nhất trong tháng âm là mùng 1 và ngày rằm (15 âm lịch), bạn xem ở tab lịch âm của tháng dương để thấy vị trí của chúng.</p>';
         L.resultBox(box, html);
       } else {
@@ -1740,7 +1950,7 @@
         var sdt = D.lunar2solar(dd, mm, yy, leap);
         if (!sdt) { L.resultBox(box, '<p class="ptv-bad">Không tìm thấy ngày dương lịch tương ứng, bạn kiểm tra lại ngày tháng âm lịch (năm ' + yy + ' có thể không có tháng nhuận này).</p>'); return; }
         var info2 = D.dayInfo(sdt);
-        L.resultBox(box, '<h3>Ngày ' + dd + '/' + mm + '/' + yy + ' âm lịch' + (leap ? ' (tháng nhuận)' : '') + '</h3><p>Đổi sang dương lịch là <strong>' + WD[sdt.getDay()] + ', ngày ' + sdt.getDate() + '/' + (sdt.getMonth() + 1) + '/' + sdt.getFullYear() + '</strong>, ngày can chi <strong>' + info2.day.text + '</strong>, trực ' + D.trucOf(info2) + ', thuộc ngày ' + D.satOf(info2) + '.</p>');
+        L.resultBox(box, '<h3>Ngày ' + dd + '/' + mm + '/' + yy + ' âm lịch' + (leap ? ' (tháng nhuận)' : '') + '</h3><p>Đổi sang dương lịch là <strong>' + WD[sdt.getDay()] + ', ngày ' + sdt.getDate() + '/' + (sdt.getMonth() + 1) + '/' + sdt.getFullYear() + '</strong>, ngày can chi <strong>' + info2.day.text + '</strong>, trực ' + D.trucOf(info2) + ', thuộc ngày ' + D.satOf(info2) + '.</p>' + gioHDLine(info2));
       }
     });
     c.querySelector('#dn-month form').addEventListener('submit', function (ev) {
@@ -1761,6 +1971,20 @@
       if (isNaN(a.getTime()) || isNaN(b.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày, ví dụ 2027-03-17.</p>'); return; }
       var diff = Math.round((b - a) / 86400000), ia = D.dayInfo(a), ib = D.dayInfo(b);
       L.resultBox(box, '<h3>Khoảng cách giữa hai mốc</h3><p>Từ <strong>' + a.getDate() + '/' + (a.getMonth() + 1) + '/' + a.getFullYear() + '</strong> (âm lịch ' + D.fmtLunar(ia) + ') đến <strong>' + b.getDate() + '/' + (b.getMonth() + 1) + '/' + b.getFullYear() + '</strong> (âm lịch ' + D.fmtLunar(ib) + ') là <strong>' + diff + ' ngày</strong>' + (diff >= 0 ? ', tính cả hai đầu là ' + (diff + 1) + ' ngày.' : '.') + '</p><p>Khoảng đếm này hay dùng để tính ngày cúng tuần, 49 ngày và 100 ngày cho người đã khuất, đếm ngược tới ngày cưới, ngày dự sinh theo tuần thai quy đổi, hoặc tính số ngày còn lại trước một hạn chót. Lưu ý lệ cúng tuần thường tính đủ ngày theo lịch âm, bạn đối chiếu thêm cột âm lịch của hai mốc ở trên.</p>');
+    });
+    c.querySelector('#dn-again form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-again');
+      var ad = parseInt(box.querySelector('#ad').value, 10), am = parseInt(box.querySelector('#am').value, 10), ay = parseInt(box.querySelector('#ay').value, 10);
+      if (!ad || !am || !ay || ad < 1 || ad > 30 || am < 1 || am > 12) { L.resultBox(box, '<p class="ptv-bad">Ngày âm từ 1 tới 30, tháng âm từ 1 tới 12, bạn kiểm tra lại nhé.</p>'); return; }
+      var rows = '';
+      for (var k = 0; k < 5; k++) {
+        var ly = ay + k, sd = D.lunar2solar(ad, am, ly, false);
+        if (!sd) { rows += '<tr><td><strong>' + ly + '</strong></td><td colspan="3">Tháng ' + am + ' âm lịch năm ' + ly + ' không có ngày ' + ad + ' (tháng thiếu), ngày giỗ hoặc sinh nhật âm dời sang ngày cuối tháng theo lệ nhà bạn.</td></tr>'; continue; }
+        var inf = D.dayInfo(sd);
+        rows += '<tr><td><strong>' + ly + '</strong></td><td>' + WD[sd.getDay()] + ', ' + sd.getDate() + '/' + (sd.getMonth() + 1) + '/' + sd.getFullYear() + '</td><td>' + inf.day.text + '</td><td>' + D.satOf(inf) + (D.satOf(inf) && ['Thanh Long', 'Minh Đường', 'Kim Quỹ', 'Thiên Đức', 'Ngọc Đường', 'Tư Mệnh'].indexOf(D.satOf(inf)) >= 0 ? ' (hoàng đạo)' : ' (hắc đạo)') + '</td></tr>';
+      }
+      L.resultBox(box, '<h3>Ngày ' + ad + '/' + am + ' âm lịch trong 5 năm từ ' + ay + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm âm lịch</th><th>Ngày dương tương ứng</th><th>Can chi ngày</th><th>Thần trực</th></tr>' + rows + '</table></div><p class="ptv-note">Bảng này phục vụ tra ngày giỗ, sinh nhật âm và các lễ lặp lại theo âm lịch: ngày âm giữ nguyên qua các năm, chỉ ngày dương thay đổi. Nếu tháng đó là tháng nhuận trong một năm nào, lệ phổ biến vẫn cúng theo tháng thường, trừ khi gia đình có lệ riêng cúng tháng nhuận.</p>');
     });
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'doi-ngay-am-lich': doiNgayV2 });
@@ -1821,6 +2045,17 @@
       '<div id="xd-top">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + '</div>', 'Tìm tuổi xông đất') + '</div>' +
       '<div id="xd-one" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của khách xông đất', L.select('gy', L.yearOptions(1940, 2010, 1986))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + '</div>', 'Kiểm tra người này') + '</div>';
     V.wireTabs(c, ['xd-top', 'xd-one']);
+    (function () {
+      var tet = L.yearInfo(2027), chis = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+      var rows = chis.map(function (chi) {
+        var r = L.chiRelation(tet.chi, chi);
+        var verdict = r.score >= 2 ? 'Rất hợp với năm mới' : r.score >= 0 ? 'Bình hòa' : 'Nên cân nhắc';
+        return '<tr><td><strong>' + chi + '</strong></td><td>' + r.label + '</td><td>' + verdict + '</td></tr>';
+      }).join('');
+      var div = document.createElement('div');
+      div.innerHTML = '<h3>Bảng nhanh: 12 con giáp xông đất Tết 2027 (năm ' + tet.text + ')</h3><p>Bảng dưới đây chỉ xét một lớp là quan hệ giữa tuổi của khách với năm mới ' + tet.text + ', để bạn có cái nhìn nhanh trước khi tra chi tiết theo tuổi gia chủ ở công cụ phía trên. Tuổi khách hợp với năm mới là điều kiện tốt, nhưng quyết định cuối cùng vẫn theo độ hợp với chính gia chủ.</p><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Tuổi của khách</th><th>Quan hệ với năm 2027</th><th>Đánh giá nhanh</th></tr>' + rows + '</table></div>';
+      c.appendChild(div);
+    })();
     function scoreGuest(host, tet, o) {
       var s = 0, reasons = [];
       var r1 = L.chiRelation(host.chi, o.chi); s += r1.score; if (r1.score >= 2) reasons.push(r1.label + ' với gia chủ'); if (r1.score < 0) reasons.push(r1.label + ' với gia chủ');
@@ -1972,6 +2207,10 @@
         tabs.push(['mv-group', 'Xem theo vùng cơ thể']);
         h += '<div id="mv-group" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn vùng cơ thể', L.select('grp', groups.map(function (g, i) { return '<option value="' + i + '">' + g.name + '</option>'; }).join('')), 'ptv-field-name') + '</div>', 'Xem các vị trí trong vùng') + '</div>';
       }
+      if (key === 'moleFace') {
+        tabs.push(['mv-map', 'Sơ đồ mặt đánh số']);
+        h += '<div id="mv-map" hidden><div class="ptv-form"><p>Sơ đồ ' + dict.length + ' vị trí nốt ruồi trên mặt xếp theo thứ tự từ trán xuống cằm. Bấm vào một số để xem ngay ý nghĩa của vị trí đó, khỏi phải tìm trong danh sách dài.</p><div class="ptv-face-map">' + dict.map(function (e, i) { return '<button type="button" class="ptv-xbtn ptv-mole-num" data-i="' + i + '">' + (i + 1) + '. ' + esc(e.position) + '</button>'; }).join(' ') + '</div></div><div class="ptv-out"></div></div>';
+      }
       tabs.push(['mv-health', 'Khi nào nốt ruồi cần đi khám']);
       h += '<div id="mv-health" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Nốt ruồi của bạn có thay đổi gần đây không', L.select('chg', '<option value="0">Không thay đổi gì</option><option value="1">To nhanh hoặc đổi hình dạng</option><option value="2">Đổi màu, loang màu</option><option value="3">Ngứa, đau, chảy máu hoặc đóng vảy không lành</option><option value="4">Mới xuất hiện sau tuổi 30 và trông khác hẳn các nốt khác</option>'), 'ptv-field-name') + '</div>', 'Nhận khuyến nghị') + '</div>';
       c.innerHTML = V.tabsHTML(tabs) + h;
@@ -1992,6 +2231,12 @@
         var box = c.querySelector('#mv-group'), g = groups[parseInt(box.querySelector('#grp').value, 10)];
         var items = dict.filter(function (e) { return g.positions.indexOf(e.position) >= 0; });
         L.resultBox(box, '<h3>Nốt ruồi vùng ' + g.name + '</h3>' + items.map(function (e) { return '<p><strong>' + esc(e.position) + ':</strong> ' + esc(e.meaning) + '</p>'; }).join(''));
+      });
+      if (key === 'moleFace') c.querySelectorAll('.ptv-mole-num').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var e = dict[parseInt(btn.getAttribute('data-i'), 10)]; if (!e) return;
+          L.resultBox(c.querySelector('#mv-map'), '<h3>Vị trí số ' + (parseInt(btn.getAttribute('data-i'), 10) + 1) + ': nốt ruồi ở ' + esc(e.position) + '</h3><p>' + esc(e.meaning) + '</p>');
+        });
       });
       c.querySelector('#mv-health form').addEventListener('submit', function (ev) {
         ev.preventDefault();
@@ -2033,9 +2278,9 @@
     'boi-not-ruoi-tren-mat': moleV2('moleFace', 'trên mặt', null),
     'boi-not-ruoi-toan-than': moleV2('moleBody', 'trên cơ thể', [
       { name: 'Đầu và cổ', positions: ['Cổ phía trước', 'Sau gáy'] },
-      { name: 'Thân trên', positions: ['Vai phải', 'Vai trái', 'Giữa ngực', 'Lưng', 'Eo', 'Bụng', 'Quanh rốn'] },
-      { name: 'Tay', positions: ['Cánh tay', 'Khuỷu tay', 'Mu bàn tay', 'Lòng bàn tay', 'Ngón tay'] },
-      { name: 'Chân', positions: ['Mông', 'Đùi', 'Đầu gối', 'Bắp chân', 'Mu bàn chân', 'Lòng bàn chân', 'Gót chân', 'Mắt cá chân'] }
+      { name: 'Thân trên', positions: ['Vai phải', 'Vai trái', 'Giữa ngực', 'Ngực trái', 'Ngực phải', 'Lưng', 'Giữa lưng', 'Thắt lưng', 'Eo', 'Bụng', 'Quanh rốn'] },
+      { name: 'Tay', positions: ['Cánh tay', 'Khuỷu tay', 'Cổ tay trong', 'Mu bàn tay', 'Lòng bàn tay', 'Ngón tay'] },
+      { name: 'Chân', positions: ['Mông', 'Đùi', 'Đùi trong', 'Đầu gối', 'Bắp chân', 'Mu bàn chân', 'Lòng bàn chân', 'Gót chân', 'Mắt cá chân'] }
     ]),
     'xem-y-nghia-hinh-xam': tattooV2
   });
@@ -2184,7 +2429,7 @@
       if (isNaN(dt.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày nhé.</p>'); return; }
       var info = D.dayInfo(dt), dirs = dirsOf(info);
       L.resultBox(box, '<h3>Ngày ' + D.fmtSolar(info) + ' (ngày ' + info.day.text + ', ' + D.fmtLunar(info) + ')</h3>' +
-        '<p><strong>Giờ hoàng đạo trong ngày:</strong> giờ ' + D.GIO_HD[info.day.chi].join(', ') + '.</p>' +
+        '<p><strong>Giờ hoàng đạo trong ngày:</strong> giờ ' + D.GIO_HD[info.day.chi].join(', ') + '.</p>' + V.dayStarsHTML(info) +
         '<p><strong>Ba hướng thần của ngày (theo can ' + info.day.can + '):</strong> Quý Nhân hướng ' + dirs.qn + ' (đón quý khí, hợp mọi chuyến đi); Tài Thần hướng ' + dirs.tai + ' (hợp chuyến đi cầu tài, ký kết, mở hàng); Hỷ Thần hướng ' + dirs.hy + ' (hợp chuyến đi cầu vui, hỷ sự, gặp gỡ). Chọn một hướng theo mục đích chính của chuyến đi, ra cửa đi về hướng đó một đoạn rồi rẽ tới điểm đến.</p>' +
         '<p class="ptv-note">Giờ hoàng đạo và giờ Lý Thuần Phong là hai hệ khác nhau; xem thêm tab Lý Thuần Phong để đối chiếu trước khi chốt giờ khởi hành.</p>');
     });
