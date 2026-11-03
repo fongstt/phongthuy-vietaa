@@ -124,6 +124,7 @@
   var SAO_NAM = ['La Hầu', 'Thổ Tú', 'Thủy Diệu', 'Thái Bạch', 'Thái Dương', 'Vân Hán', 'Kế Đô', 'Thái Âm', 'Mộc Đức'];
   var SAO_NU = ['Kế Đô', 'Vân Hán', 'Thái Dương', 'Thái Bạch', 'Thủy Diệu', 'Thổ Tú', 'La Hầu', 'Mộc Đức', 'Thái Âm'];
   var HAN_OFF = { 'Nam': { 'Thiên La': 13, 'Toán Tận': 14, 'Tam Kheo': 15, 'Ngũ Mộ': 16, 'Thiên Tinh': 17, 'Huỳnh Tuyền': 18, 'Địa Võng': 19, 'Diêm Vương': 20 }, 'Nữ': { 'Diêm Vương': 13, 'Địa Võng': 14, 'Huỳnh Tuyền': 15, 'Thiên Tinh': 16, 'Ngũ Mộ': 17, 'Tam Kheo': 18, 'Toán Tận': 19, 'Thiên La': 20 } };
+  window.PTV_SAO_TABLES = { nam: SAO_NAM, nu: SAO_NU, hanOff: HAN_OFF };
   function cungSao(container) {
     container.innerHTML = formWrap('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1940, 2015, 1990))) + L.field('Giới tính', L.genderSelect('g')) + L.field('Năm muốn xem', L.select('vy', L.yearOptions(2025, 2035, 2026))) + '</div>', 'Xem sao hạn');
     container.querySelector('form').addEventListener('submit', function (ev) {

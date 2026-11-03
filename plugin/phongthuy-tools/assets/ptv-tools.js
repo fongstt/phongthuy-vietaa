@@ -1020,6 +1020,7 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   var SAO_NAM = ['La Hầu', 'Thổ Tú', 'Thủy Diệu', 'Thái Bạch', 'Thái Dương', 'Vân Hán', 'Kế Đô', 'Thái Âm', 'Mộc Đức'];
   var SAO_NU = ['Kế Đô', 'Vân Hán', 'Thái Dương', 'Thái Bạch', 'Thủy Diệu', 'Thổ Tú', 'La Hầu', 'Mộc Đức', 'Thái Âm'];
   var HAN_OFF = { 'Nam': { 'Thiên La': 13, 'Toán Tận': 14, 'Tam Kheo': 15, 'Ngũ Mộ': 16, 'Thiên Tinh': 17, 'Huỳnh Tuyền': 18, 'Địa Võng': 19, 'Diêm Vương': 20 }, 'Nữ': { 'Diêm Vương': 13, 'Địa Võng': 14, 'Huỳnh Tuyền': 15, 'Thiên Tinh': 16, 'Ngũ Mộ': 17, 'Tam Kheo': 18, 'Toán Tận': 19, 'Thiên La': 20 } };
+  window.PTV_SAO_TABLES = { nam: SAO_NAM, nu: SAO_NU, hanOff: HAN_OFF };
   function cungSao(container) {
     container.innerHTML = formWrap('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1940, 2015, 1990))) + L.field('Giới tính', L.genderSelect('g')) + L.field('Năm muốn xem', L.select('vy', L.yearOptions(2025, 2035, 2026))) + '</div>', 'Xem sao hạn');
     container.querySelector('form').addEventListener('submit', function (ev) {
@@ -4078,4 +4079,149 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
     });
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-nhap-trach': nhapTrachV2, 'xem-ngay-mo-hang': moHangV2 });
+})();
+
+/* --- Doi ngay am lich v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
+  var WD = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+  function doiNgayV2(c) {
+    var now = new Date();
+    c.innerHTML = V.tabsHTML([['dn-one', 'Đổi một ngày'], ['dn-month', 'Lịch âm của một tháng dương'], ['dn-count', 'Đếm ngày giữa hai mốc']]) +
+      '<div id="dn-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Chiều đổi', L.select('mode', '<option value="s2l">Dương lịch sang Âm lịch</option><option value="l2s">Âm lịch sang Dương lịch</option>')) + L.field('Ngày', '<input type="text" id="dd" inputmode="numeric" value="' + now.getDate() + '">') + L.field('Tháng', '<input type="text" id="mm" inputmode="numeric" value="' + (now.getMonth() + 1) + '">') + L.field('Năm', '<input type="text" id="yy" inputmode="numeric" value="' + now.getFullYear() + '">') + '</div><div class="ptv-row">' + L.field('Tháng nhuận (chỉ khi đổi Âm sang Dương)', L.select('leap', '<option value="">Tháng thường</option><option value="1">Tháng nhuận</option>')) + '</div>', 'Đổi ngày này') + '</div>' +
+      '<div id="dn-month" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Tháng dương lịch muốn xem', L.select('m', V.monthOptions2()), 'ptv-field-name') + '</div>', 'Xem lịch âm tháng này') + '</div>' +
+      '<div id="dn-count" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Từ ngày (năm-tháng-ngày)', '<input type="text" id="d1" value="2027-01-01">') + L.field('Đến ngày (năm-tháng-ngày)', '<input type="text" id="d2" value="2027-02-16">') + '</div>', 'Đếm khoảng ngày') + '</div>';
+    V.wireTabs(c, ['dn-one', 'dn-month', 'dn-count']);
+    c.querySelector('#dn-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-one');
+      var dd = parseInt(box.querySelector('#dd').value, 10), mm = parseInt(box.querySelector('#mm').value, 10), yy = parseInt(box.querySelector('#yy').value, 10), mode = box.querySelector('#mode').value;
+      if (mode === 's2l') {
+        var dt = new Date(yy, mm - 1, dd), info = D.dayInfo(dt);
+        var hours = D.goodHours ? D.goodHours(info) : null;
+        var html = '<h3>' + WD[dt.getDay()] + ', ngày ' + dd + '/' + mm + '/' + yy + ' dương lịch</h3>' +
+          '<p>Đổi sang âm lịch là ngày <strong>' + D.fmtLunar(info) + '</strong> năm ' + L.yearInfo(info.lunar.y).text + ', ngày can chi <strong>' + info.day.text + '</strong>, trực ' + D.trucOf(info) + ', thuộc ngày ' + D.satOf(info) + '.</p>' +
+          '<p>Tháng này theo âm lịch là tháng ' + info.lunar.m + ' năm ' + L.yearInfo(info.lunar.y).text + '. Các mốc được nhiều người tra nhất trong tháng âm là mùng 1 và ngày rằm (15 âm lịch), bạn xem ở tab lịch âm của tháng dương để thấy vị trí của chúng.</p>';
+        L.resultBox(box, html);
+      } else {
+        var leap = box.querySelector('#leap').value === '1';
+        var sdt = D.lunar2solar(dd, mm, yy, leap);
+        if (!sdt) { L.resultBox(box, '<p class="ptv-bad">Không tìm thấy ngày dương lịch tương ứng, bạn kiểm tra lại ngày tháng âm lịch (năm ' + yy + ' có thể không có tháng nhuận này).</p>'); return; }
+        var info2 = D.dayInfo(sdt);
+        L.resultBox(box, '<h3>Ngày ' + dd + '/' + mm + '/' + yy + ' âm lịch' + (leap ? ' (tháng nhuận)' : '') + '</h3><p>Đổi sang dương lịch là <strong>' + WD[sdt.getDay()] + ', ngày ' + sdt.getDate() + '/' + (sdt.getMonth() + 1) + '/' + sdt.getFullYear() + '</strong>, ngày can chi <strong>' + info2.day.text + '</strong>, trực ' + D.trucOf(info2) + ', thuộc ngày ' + D.satOf(info2) + '.</p>');
+      }
+    });
+    c.querySelector('#dn-month form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-month'), parts = box.querySelector('#m').value.split('-').map(Number);
+      var days = D.monthDays(parts[0], parts[1]);
+      var rows = days.map(function (i) {
+        var mark = i.lunar.d === 1 ? ' <strong>(Mùng 1 âm lịch)</strong>' : i.lunar.d === 15 ? ' <strong>(Rằm)</strong>' : '';
+        return '<tr><td>' + i.solar.d + '/' + i.solar.m + '</td><td>' + WD[new Date(i.solar.y, i.solar.m - 1, i.solar.d).getDay()] + '</td><td>' + i.lunar.d + '/' + i.lunar.m + (i.lunar.leap ? ' nhuận' : '') + '</td><td>' + i.day.text + '</td><td>' + mark + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Lịch âm tháng ' + parts[1] + '/' + parts[0] + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Ngày dương</th><th>Thứ</th><th>Ngày âm</th><th>Can chi ngày</th><th>Mốc</th></tr>' + rows + '</table></div><p class="ptv-note">Bảng do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> tính bằng cùng một bộ lịch dùng cho mọi công cụ xem ngày trên trang, múi giờ Việt Nam.</p>');
+    });
+    c.querySelector('#dn-count form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-count');
+      function parse(s) { var p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+      var a = parse(box.querySelector('#d1').value), b = parse(box.querySelector('#d2').value);
+      if (isNaN(a.getTime()) || isNaN(b.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày, ví dụ 2027-03-17.</p>'); return; }
+      var diff = Math.round((b - a) / 86400000), ia = D.dayInfo(a), ib = D.dayInfo(b);
+      L.resultBox(box, '<h3>Khoảng cách giữa hai mốc</h3><p>Từ <strong>' + a.getDate() + '/' + (a.getMonth() + 1) + '/' + a.getFullYear() + '</strong> (âm lịch ' + D.fmtLunar(ia) + ') đến <strong>' + b.getDate() + '/' + (b.getMonth() + 1) + '/' + b.getFullYear() + '</strong> (âm lịch ' + D.fmtLunar(ib) + ') là <strong>' + diff + ' ngày</strong>' + (diff >= 0 ? ', tính cả hai đầu là ' + (diff + 1) + ' ngày.' : '.') + '</p><p>Khoảng đếm này hay dùng để tính ngày cúng tuần, 49 ngày và 100 ngày cho người đã khuất, đếm ngược tới ngày cưới, ngày dự sinh theo tuần thai quy đổi, hoặc tính số ngày còn lại trước một hạn chót. Lưu ý lệ cúng tuần thường tính đủ ngày theo lịch âm, bạn đối chiếu thêm cột âm lịch của hai mốc ở trên.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'doi-ngay-am-lich': doiNgayV2 });
+})();
+
+/* --- Cung sao giai han + Chon tuoi xong dat v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function saoOf(age, g, T) { return (g === 'Nam' ? T.nam : T.nu)[((age - 10) % 9 + 9) % 9]; }
+  function hanOf(age, g, T) {
+    var off = T.hanOff[g], found = null;
+    Object.keys(off).forEach(function (k) { if (((age - off[k]) % 9 + 9) % 9 === 0 && age >= off[k]) found = k; });
+    return found;
+  }
+  function cungSaoV2(c) {
+    var DATA = (window.PTV_TOOLS_DATA || {}).saoHan || { sao: {}, han: {} };
+    var saoNames = Object.keys(DATA.sao || {});
+    c.innerHTML = V.tabsHTML([['cs-one', 'Sao hạn của một năm'], ['cs-scan', 'Quét sao hạn 10 năm'], ['cs-lookup', 'Tra cứu 9 sao chiếu mệnh']]) +
+      '<div id="cs-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1940, 2015, 1990))) + L.field('Giới tính', L.genderSelect('g')) + L.field('Năm muốn xem', L.select('vy', L.yearOptions(2025, 2035, 2027))) + '</div>', 'Xem sao hạn năm này') + '</div>' +
+      '<div id="cs-scan" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1940, 2015, 1990))) + L.field('Giới tính', L.genderSelect('g')) + L.field('Từ năm', L.select('fy', L.yearOptions(2025, 2035, 2026))) + '</div>', 'Quét 10 năm từ năm này') + '</div>' +
+      '<div id="cs-lookup" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn sao muốn tra', L.select('s', saoNames.map(function (n) { return '<option>' + n + '</option>'; }).join('')), 'ptv-field-name') + '</div>', 'Tra sao này') + '</div>';
+    V.wireTabs(c, ['cs-one', 'cs-scan', 'cs-lookup']);
+    function T() { return window.PTV_SAO_TABLES; }
+    c.querySelector('#cs-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cs-one'), y = parseInt(box.querySelector('#y').value, 10), g = box.querySelector('#g').value, vy = parseInt(box.querySelector('#vy').value, 10);
+      var age = vy - y + 1, saoName = saoOf(age, g, T()), sao = DATA.sao[saoName] || { type: '', desc: '', offering: '' };
+      var hanName = hanOf(age, g, T()), han = hanName ? (DATA.han[hanName] || { desc: '' }) : null;
+      var html = '<div class="ptv-facts"><span>Sinh năm <strong>' + y + '</strong>, ' + g.toLowerCase() + '</span><span>Năm xem: <strong>' + vy + '</strong></span><span>Tuổi âm lịch: <strong>' + age + '</strong></span></div>' +
+        '<h3>Sao chiếu mệnh năm ' + vy + ': ' + saoName + (sao.type ? ' <span class="' + (sao.type === 'tốt' ? 'ptv-good' : sao.type === 'xấu' ? 'ptv-bad' : 'ptv-mid') + '">(' + sao.type + ')</span>' : '') + '</h3><p>' + esc(sao.desc) + '</p>' +
+        (sao.offering ? '<p><strong>Cách cúng dâng sao theo lệ phổ biến:</strong> ' + esc(sao.offering) + '</p>' : '') +
+        (han ? '<h3>Hạn năm ' + vy + ': ' + hanName + '</h3><p>' + esc(han.desc) + '</p>' : '<h3>Hạn năm ' + vy + '</h3><p>Năm nay tuổi của bạn không rơi vào một hạn lớn nào trong 8 hạn thường xem, đây là điểm thuận lợi. Vẫn nên giữ gìn sức khỏe và cẩn trọng chi tiêu như thường lệ.</p>') +
+        '<p class="ptv-note">Sao và hạn tính theo bảng dân gian dựa trên tuổi âm lịch và giới tính. Cúng sao giải hạn là nét văn hóa tâm linh; phần quan trọng nhất vẫn là sống cẩn trọng, giữ sức khỏe và làm việc thiện.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#cs-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cs-scan'), y = parseInt(box.querySelector('#y').value, 10), g = box.querySelector('#g').value, fy = parseInt(box.querySelector('#fy').value, 10);
+      var rows = '', badYears = [];
+      for (var vy = fy; vy < fy + 10; vy++) {
+        var age = vy - y + 1, sn = saoOf(age, g, T()), s = DATA.sao[sn] || {}, hn = hanOf(age, g, T());
+        if (s.type === 'xấu' || hn) badYears.push(vy + ' (' + sn + (hn ? ' + hạn ' + hn : '') + ')');
+        rows += '<tr><td><strong>' + vy + '</strong></td><td>' + age + '</td><td>' + sn + (s.type ? ' (' + s.type + ')' : '') + '</td><td>' + (hn || 'Không có hạn lớn') + '</td></tr>';
+      }
+      L.resultBox(box, '<h3>Sao hạn 10 năm của người sinh năm ' + y + ' (' + g.toLowerCase() + ')</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm</th><th>Tuổi âm</th><th>Sao chiếu mệnh</th><th>Hạn</th></tr>' + rows + '</table></div>' +
+        (badYears.length ? '<p><strong>Các năm cần chú ý nhất trong giai đoạn này:</strong> ' + badYears.join('; ') + '. Biết trước để giữ gìn sức khỏe, tránh đầu tư mạo hiểm và làm lễ cúng sao đầu năm nếu gia đình bạn có lệ đó.</p>' : '<p>Giai đoạn này không có năm nào gặp sao xấu kèm hạn lớn, là một chặng khá êm theo bảng sao hạn.</p>'));
+    });
+    c.querySelector('#cs-lookup form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cs-lookup'), name = box.querySelector('#s').value, s = DATA.sao[name] || {};
+      L.resultBox(box, '<h3>Sao ' + name + (s.type ? ' <span class="' + (s.type === 'tốt' ? 'ptv-good' : s.type === 'xấu' ? 'ptv-bad' : 'ptv-mid') + '">(' + s.type + ')</span>' : '') + '</h3><p>' + esc(s.desc || '') + '</p>' + (s.offering ? '<p><strong>Cách cúng dâng sao theo lệ phổ biến:</strong> ' + esc(s.offering) + '</p>' : '') + '<p class="ptv-note">Sao chiếu mệnh luân phiên theo chu kỳ 9 năm tính trên tuổi âm và có bảng riêng cho nam và nữ; bạn xem sao của mình theo từng năm ở tab đầu tiên.</p>');
+    });
+  }
+
+  function xongDatV2(c) {
+    c.innerHTML = V.tabsHTML([['xd-top', '10 tuổi xông đất hợp nhất'], ['xd-one', 'Kiểm tra một người xông đất cụ thể']]) +
+      '<div id="xd-top">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + '</div>', 'Tìm tuổi xông đất') + '</div>' +
+      '<div id="xd-one" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của khách xông đất', L.select('gy', L.yearOptions(1940, 2010, 1986))) + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027))) + '</div>', 'Kiểm tra người này') + '</div>';
+    V.wireTabs(c, ['xd-top', 'xd-one']);
+    function scoreGuest(host, tet, o) {
+      var s = 0, reasons = [];
+      var r1 = L.chiRelation(host.chi, o.chi); s += r1.score; if (r1.score >= 2) reasons.push(r1.label + ' với gia chủ'); if (r1.score < 0) reasons.push(r1.label + ' với gia chủ');
+      var r2 = L.chiRelation(tet.chi, o.chi); s += r2.score * 0.8; if (r2.score <= -2) reasons.push('xung với năm ' + tet.text); if (r2.score >= 2) reasons.push(r2.label + ' với năm mới');
+      if (L.GENERATES[o.el] === host.el) { s += 1; reasons.push('mệnh sinh cho gia chủ'); }
+      else if (L.CONTROLS[o.el] === host.el) { s -= 1; reasons.push('mệnh khắc gia chủ'); }
+      return { s: s, reasons: reasons };
+    }
+    c.querySelector('#xd-top form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xd-top'), y = parseInt(box.querySelector('#y').value, 10), ty = parseInt(box.querySelector('#ty').value, 10);
+      var host = L.yearInfo(y), tet = L.yearInfo(ty), scored = [];
+      for (var cy = ty - 68; cy <= ty - 18; cy++) {
+        var o = L.yearInfo(cy), r = scoreGuest(host, tet, o);
+        scored.push({ cy: cy, o: o, s: r.s, reasons: r.reasons, age: ty - cy + 1 });
+      }
+      scored.sort(function (a, b) { return b.s - a.s; });
+      var html = '<div class="ptv-facts"><span>Gia chủ sinh năm <strong>' + y + '</strong> (' + host.text + ', mệnh ' + esc(host.napAm) + ')</span><span>Tết năm <strong>' + ty + '</strong> (' + tet.text + ')</span></div><h3>10 tuổi xông đất hợp nhất Tết ' + ty + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm sinh</th><th>Tuổi</th><th>Mệnh</th><th>Tuổi âm dịp Tết</th><th>Điểm hợp</th><th>Lý do</th></tr>' +
+        scored.slice(0, 10).map(function (t) { return '<tr><td><strong>' + t.cy + '</strong></td><td>' + t.o.text + '</td><td>' + esc(t.o.napAm) + '</td><td>' + t.age + '</td><td>' + String(Math.round(t.s * 10) / 10).replace('.', ',') + '</td><td>' + (t.reasons.join(', ') || 'Bình hòa') + '</td></tr>'; }).join('') + '</table></div><p class="ptv-note">Ngoài hợp tuổi, người xông đất nên là người khỏe mạnh, tính tình vui vẻ, làm ăn ổn định và không đang chịu tang. Nếu không tìm được khách, gia chủ có thể tự xông đất cho nhà mình: ra khỏi nhà trước giao thừa và bước vào lại sau thời khắc chuyển giao.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#xd-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xd-one'), y = parseInt(box.querySelector('#y').value, 10), gy = parseInt(box.querySelector('#gy').value, 10), ty = parseInt(box.querySelector('#ty').value, 10);
+      var host = L.yearInfo(y), tet = L.yearInfo(ty), o = L.yearInfo(gy), r = scoreGuest(host, tet, o);
+      var guestTamTai = L.tamTai(o.chi, ty);
+      var verdict = r.s >= 3 ? 'Rất hợp để mời xông đất' : r.s >= 1 ? 'Hợp, mời được' : r.s >= -1 ? 'Mức bình hòa, mời vẫn được nếu người đó vui vẻ khỏe mạnh' : 'Chưa hợp, nên cân nhắc người khác';
+      L.resultBox(box, '<h3>Khách sinh năm ' + gy + ' (' + o.text + ', mệnh ' + esc(o.napAm) + ') xông đất Tết ' + ty + ' cho gia chủ ' + host.text + ': ' + verdict + '</h3>' +
+        '<p><strong>Điểm hợp:</strong> ' + String(Math.round(r.s * 10) / 10).replace('.', ',') + '. ' + (r.reasons.length ? 'Lý do: ' + r.reasons.join(', ') + '.' : 'Hai tuổi không có điểm hợp xung nổi bật.') + '</p>' +
+        '<p>' + (guestTamTai ? 'Lưu ý: năm ' + ty + ' khách đang trong hạn Tam Tai của tuổi ' + o.chi + '. Theo lệ khắt khe, người đang Tam Tai không nên đi xông đất cho nhà khác; theo cách nhìn nhẹ nhàng hơn, đây chỉ là một điểm trừ phụ và quyết định thuộc về gia chủ.' : 'Năm ' + ty + ' khách không phạm Tam Tai, một điều kiện phụ thuận lợi theo lệ xông đất.') + '</p>' +
+        '<p class="ptv-note">Tuổi hợp là điều kiện cần, người xông đất còn cần khỏe mạnh, vui vẻ, làm ăn ổn và đến đúng sau giao thừa với lời chúc tốt.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'cung-sao-giai-han': cungSaoV2, 'chon-tuoi-xong-dat': xongDatV2 });
 })();
