@@ -178,3 +178,6 @@ a.ptv-app-card:hover{border-color:#166534;transform:translateY(-2px);transition:
 .ptv-home-sections h3{color:#14532d;font-size:17.5px;margin:18px 0 6px}
 .ptv-home-sections ul,.ptv-home-sections ol{margin:6px 0 10px 20px}
 .ptv-home-sections li{margin:5px 0}
+
+.ptv-home-group{scroll-margin-top:96px}
+.header-nav .nav-dropdown{max-height:82vh;overflow-y:auto}

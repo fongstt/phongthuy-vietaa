@@ -2,20 +2,20 @@
 /**
  * Plugin Name: PhongThuy VietAA Tools
  * Description: Bộ công cụ phong thủy cho phongthuy.vietaa.com: Đặt tên con, Bói Kiều và danh mục ứng dụng ở trang chủ. Khi kích hoạt, plugin tự tạo hoặc đồng bộ các Page ứng dụng và trang chủ.
- * Version: 1.11.1
+ * Version: 1.11.2
  * Author: PhongThuy VietAA
  */
 
 if (!defined('ABSPATH')) exit;
 
 function ptv_enqueue_css() {
-    wp_enqueue_style('ptv-custom', plugins_url('assets/ptv-custom.css', __FILE__), array(), '1.11.1');
+    wp_enqueue_style('ptv-custom', plugins_url('assets/ptv-custom.css', __FILE__), array(), '1.11.2');
 }
 
 /* ---------------- Dat ten con ---------------- */
 function ptv_dat_ten_con_shortcode() {
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-dat-ten', plugins_url('assets/ptv-dat-ten.js', __FILE__), array(), '1.11.1', true);
+    wp_enqueue_script('ptv-dat-ten', plugins_url('assets/ptv-dat-ten.js', __FILE__), array(), '1.11.2', true);
     ob_start();
     ?>
     <div class="ptv-tool">
@@ -76,7 +76,7 @@ add_shortcode('ptv_dat_ten_con', 'ptv_dat_ten_con_shortcode');
 /* ---------------- Boi Kieu ---------------- */
 function ptv_boi_kieu_shortcode() {
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-boi-kieu', plugins_url('assets/ptv-boi-kieu.js', __FILE__), array(), '1.11.1', true);
+    wp_enqueue_script('ptv-boi-kieu', plugins_url('assets/ptv-boi-kieu.js', __FILE__), array(), '1.11.2', true);
     $topics = array('tổng quan', 'tình duyên', 'công danh', 'tài lộc', 'gia đạo', 'sức khỏe');
     ob_start();
     ?>
@@ -122,7 +122,7 @@ function ptv_tool_shortcode($atts) {
     $slug = sanitize_title($atts['slug']);
     if (!$slug) return '';
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-tools', plugins_url('assets/ptv-tools.js', __FILE__), array(), '1.11.1', true);
+    wp_enqueue_script('ptv-tools', plugins_url('assets/ptv-tools.js', __FILE__), array(), '1.11.2', true);
     return '<div class="ptv-tool" data-ptv-tool="' . esc_attr($slug) . '"></div>';
 }
 add_shortcode('ptv_tool', 'ptv_tool_shortcode');
@@ -136,7 +136,7 @@ function ptv_directory_data() {
 }
 function ptv_directory_render() {
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-home', plugins_url('assets/ptv-home.js', __FILE__), array(), '1.11.1', true);
+    wp_enqueue_script('ptv-home', plugins_url('assets/ptv-home.js', __FILE__), array(), '1.11.2', true);
     $data = ptv_directory_data();
     if (!$data) return '';
     $built = array('dat-ten-con' => true, 'boi-kieu' => true);
@@ -182,7 +182,7 @@ function ptv_directory_render() {
         <?php endforeach; ?>
       </div>
       <?php foreach ($data['groups'] as $g) : ?>
-      <div class="ptv-home-group">
+      <div class="ptv-home-group" id="nhom-<?php echo esc_attr(sanitize_title($g['name'])); ?>">
         <h2 class="ptv-home-h2"><?php echo esc_html($g['name']); ?> <small><?php echo esc_html($g['subtitle']); ?></small></h2>
         <?php if (!empty($g['intro'])) : ?><p class="ptv-home-intro"><?php echo esc_html($g['intro']); ?></p><?php endif; ?>
         <div class="ptv-apps">
@@ -267,6 +267,47 @@ function ptv_on_activate() {
         wp_update_post(array('ID' => $front_id, 'post_content' => '[ptv_trang_chu_tools]'));
         update_post_meta($front_id, '_yoast_wpseo_title', 'Phong Thủy VietAA, toàn bộ 59 ứng dụng phong thủy miễn phí');
         update_post_meta($front_id, '_yoast_wpseo_metadesc', 'Phong Thủy VietAA chia sẻ miễn phí 59 ứng dụng phong thủy trực tuyến: đặt tên con, bói Kiều, sim phong thủy, xem hướng nhà, chọn ngày tốt, giải đoán mệnh lý và nhân tướng.');
+      }
+    ptv_ensure_menu();
+}
+/* ---------------- Menu chinh gom nhom theo danh muc ---------------- */
+function ptv_ensure_menu() {
+    if (!function_exists('wp_create_nav_menu')) return;
+    $data = ptv_directory_data();
+    if (!$data || empty($data['groups'])) return;
+    $menu_name = 'Menu Phong Thủy VietAA';
+    $menu = wp_get_nav_menu_object($menu_name);
+    $menu_id = $menu ? (int) $menu->term_id : wp_create_nav_menu($menu_name);
+    if (!$menu_id || is_wp_error($menu_id)) return;
+    $old = wp_get_nav_menu_items($menu_id);
+    if ($old) foreach ($old as $it) wp_delete_post($it->ID, true);
+    $pos = 0;
+    $add = function ($title, $url, $parent) use ($menu_id, &$pos) {
+        $pos++;
+        $r = wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' => $title,
+            'menu-item-url' => $url,
+            'menu-item-status' => 'publish',
+            'menu-item-type' => 'custom',
+            'menu-item-parent-id' => $parent,
+            'menu-item-position' => $pos,
+        ));
+        return is_wp_error($r) ? 0 : (int) $r;
+    };
+    $add('Trang chủ', home_url('/'), 0);
+    foreach ($data['groups'] as $g) {
+        $pid = $add($g['name'], home_url('/#nhom-' . sanitize_title($g['name'])), 0);
+        foreach ($g['apps'] as $a) $add($a['name'], home_url('/' . $a['slug'] . '/'), $pid);
     }
+    $extra = array('gioi-thieu' => 'Giới thiệu', 'lien-he' => 'Liên hệ');
+    foreach ($extra as $slug => $label) {
+        $pg = get_page_by_path($slug);
+        if ($pg) $add($label, get_permalink($pg), 0);
+    }
+    $locs = get_theme_mod('nav_menu_locations', array());
+    if (!is_array($locs)) $locs = array();
+    $locs['primary'] = $menu_id;
+    $locs['primary_mobile'] = $menu_id;
+    set_theme_mod('nav_menu_locations', $locs);
 }
 register_activation_hook(__FILE__, 'ptv_on_activate');
