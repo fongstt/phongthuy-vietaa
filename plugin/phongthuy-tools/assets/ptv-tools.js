@@ -4017,3 +4017,65 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-cuoi-hoi': cuoiHoiV2, 'xem-ngay-xuat-hanh': xuatHanhV2 });
 })();
+
+/* --- Xem ngay nhap trach + Xem ngay mo hang v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function nhapTrachV2(c) {
+    c.innerHTML = V.tabsHTML([['nt-scan', 'Quét ngày nhập trạch theo tháng'], ['nt-day', 'Kiểm tra một ngày cụ thể'], ['nt-quarter', 'Top ngày nhập trạch 3 tháng tới']]) +
+      '<div id="nt-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn nhập trạch', L.select('m', V.monthOptions2())) + '</div><div class="ptv-row">' + L.field('Hình thức chuyển vào', L.select('mode', '<option value="o-chinh">Vào ở chính thức ngay</option><option value="chuyen-do">Chuyển đồ trước, ở sau (lấy ngày)</option>'), 'ptv-field-name') + '</div>', 'Xem ngày nhập trạch tốt') + '</div>' +
+      '<div id="nt-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Ngày dự kiến nhập trạch (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="nt-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990)), 'ptv-field-name') + '</div>', 'Tìm ngày nhập trạch tốt nhất 3 tháng tới') + '</div>';
+    V.wireTabs(c, ['nt-scan', 'nt-day', 'nt-quarter']);
+    c.querySelector('#nt-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#nt-scan'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number), mode = box.querySelector('#mode').value;
+      var note = mode === 'o-chinh'
+        ? '<p class="ptv-note">Bạn chọn hình thức <strong>vào ở chính thức</strong>: ngày nhập trạch là ngày làm lễ và ngủ lại đêm đầu tiên, nên điểm ngày được đọc nghiêm hơn và bạn nên chọn thêm giờ hoàng đạo trong ngày để bưng mâm lễ vào nhà.</p>'
+        : '<p class="ptv-note">Bạn chọn hình thức <strong>chuyển đồ trước, ở sau</strong> (lấy ngày): ngày này bạn chuyển những vật tượng trưng và làm lễ nhỏ xin vào nhà, việc dọn ở chính thức có thể làm sau vào ngày thường. Đây là cách dân gian dùng khi ngày đẹp đến trước ngày dọn xong nhà.</p>';
+      L.resultBox(box, '<h3>Ngày nhập trạch tốt tháng ' + parts[1] + '/' + parts[0] + ' cho gia chủ ' + me.text + '</h3>' + note + V.scanHTML('nhap-trach', me.chi, parts[0], parts[1], 'nhập trạch'));
+    });
+    c.querySelector('#nt-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#nt-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, V.checkDayHTML('nhap-trach', me.chi, box.querySelector('#dt').value, 'nhập trạch') +
+        '<h3>Việc cần làm trong ngày nhập trạch</h3><ol><li>Gia chủ tự tay mang vật tượng trưng vào nhà trước: bếp lửa hoặc nồi cơm, chiếu, gạo và nước, tượng trưng cho lửa, chỗ nằm và cái ăn.</li><li>Làm lễ cúng gia tiên và thổ công, đọc văn khấn nhập trạch và xin phép an cư.</li><li>Mở hết cửa sổ, bật đèn và đun một ấm nước sôi trong bếp, tượng trưng cho nhà có sinh khí và tài lộc lưu thông.</li><li>Mọi người trong nhà đều vào nhà trong ngày này, tránh để ai vắng mặt khó chịu; đêm đầu nên ngủ lại nếu là nhập trạch chính thức.</li><li>Trong ngày nhập trạch tránh cãi vã, tránh cho người ngoài mượn đồ và tránh làm vỡ đồ thủy tinh, gốm sứ.</li></ol>');
+    });
+    c.querySelector('#nt-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#nt-quarter'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, '<h3>Ngày nhập trạch tốt nhất trong 3 tháng tới cho tuổi ' + me.text + '</h3>' + V.quarterHTML('nhap-trach', me.chi, 'nhập trạch'));
+    });
+  }
+  function moHangV2(c) {
+    c.innerHTML = V.tabsHTML([['mh-scan', 'Quét ngày mở hàng theo tháng'], ['mh-day', 'Kiểm tra một ngày cụ thể'], ['mh-quarter', 'Top ngày mở hàng 3 tháng tới']]) +
+      '<div id="mh-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ hàng', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn mở hàng, khai trương', L.select('m', V.monthOptions2())) + '</div><div class="ptv-row">' + L.field('Loại việc mở hàng', L.select('mode', '<option value="moi">Khai trương cửa hàng mới</option><option value="mo-lai">Mở hàng lại sau kỳ nghỉ dài</option><option value="chi-nhanh">Mở thêm chi nhánh, điểm bán mới</option>'), 'ptv-field-name') + '</div>', 'Xem ngày mở hàng tốt') + '</div>' +
+      '<div id="mh-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ hàng', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Ngày dự kiến (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="mh-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chủ hàng', L.select('y', L.yearOptions(1940, 2010, 1990)), 'ptv-field-name') + '</div>', 'Tìm ngày mở hàng tốt nhất 3 tháng tới') + '</div>';
+    V.wireTabs(c, ['mh-scan', 'mh-day', 'mh-quarter']);
+    var NOTES = {
+      moi: 'Khai trương cửa hàng mới là việc lớn nhất trong ba loại: ngoài ngày đẹp theo tuổi chủ, bạn nên chọn ngày trong tuần có đông khách tự nhiên của ngành mình và dành ngân sách cho tuần đầu vận hành thử.',
+      'mo-lai': 'Mở hàng lại sau kỳ nghỉ dài mang tính khởi động: ngày đẹp vừa phải là đủ, điều quan trọng là mở đúng giờ đã thông báo, có sẵn hàng và nhân sự trực đầy đủ ngày đầu.',
+      'chi-nhanh': 'Mở thêm chi nhánh: tuổi dùng để chấm ngày là tuổi của chủ doanh nghiệp, không phải tuổi người quản lý chi nhánh. Ngày khai trương chi nhánh đẹp cộng với mặt bằng tốt mới là cặp quyết định doanh số.'
+    };
+    c.querySelector('#mh-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mh-scan'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number), mode = box.querySelector('#mode').value;
+      L.resultBox(box, '<h3>Ngày mở hàng tốt tháng ' + parts[1] + '/' + parts[0] + ' cho chủ hàng tuổi ' + me.text + '</h3><p class="ptv-note">' + NOTES[mode] + '</p>' + V.scanHTML('mo-hang', me.chi, parts[0], parts[1], 'mở hàng, khai trương'));
+    });
+    c.querySelector('#mh-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mh-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, V.checkDayHTML('mo-hang', me.chi, box.querySelector('#dt').value, 'mở hàng, khai trương'));
+    });
+    c.querySelector('#mh-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mh-quarter'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, '<h3>Ngày mở hàng tốt nhất trong 3 tháng tới cho tuổi ' + me.text + '</h3>' + V.quarterHTML('mo-hang', me.chi, 'mở hàng, khai trương'));
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-nhap-trach': nhapTrachV2, 'xem-ngay-mo-hang': moHangV2 });
+})();

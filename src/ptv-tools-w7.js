@@ -1711,3 +1711,57 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-nhap-trach': nhapTrachV2, 'xem-ngay-mo-hang': moHangV2 });
 })();
+
+/* --- Doi ngay am lich v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
+  var WD = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
+  function doiNgayV2(c) {
+    var now = new Date();
+    c.innerHTML = V.tabsHTML([['dn-one', 'Đổi một ngày'], ['dn-month', 'Lịch âm của một tháng dương'], ['dn-count', 'Đếm ngày giữa hai mốc']]) +
+      '<div id="dn-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Chiều đổi', L.select('mode', '<option value="s2l">Dương lịch sang Âm lịch</option><option value="l2s">Âm lịch sang Dương lịch</option>')) + L.field('Ngày', '<input type="text" id="dd" inputmode="numeric" value="' + now.getDate() + '">') + L.field('Tháng', '<input type="text" id="mm" inputmode="numeric" value="' + (now.getMonth() + 1) + '">') + L.field('Năm', '<input type="text" id="yy" inputmode="numeric" value="' + now.getFullYear() + '">') + '</div><div class="ptv-row">' + L.field('Tháng nhuận (chỉ khi đổi Âm sang Dương)', L.select('leap', '<option value="">Tháng thường</option><option value="1">Tháng nhuận</option>')) + '</div>', 'Đổi ngày này') + '</div>' +
+      '<div id="dn-month" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Tháng dương lịch muốn xem', L.select('m', V.monthOptions2()), 'ptv-field-name') + '</div>', 'Xem lịch âm tháng này') + '</div>' +
+      '<div id="dn-count" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Từ ngày (năm-tháng-ngày)', '<input type="text" id="d1" value="2027-01-01">') + L.field('Đến ngày (năm-tháng-ngày)', '<input type="text" id="d2" value="2027-02-16">') + '</div>', 'Đếm khoảng ngày') + '</div>';
+    V.wireTabs(c, ['dn-one', 'dn-month', 'dn-count']);
+    c.querySelector('#dn-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-one');
+      var dd = parseInt(box.querySelector('#dd').value, 10), mm = parseInt(box.querySelector('#mm').value, 10), yy = parseInt(box.querySelector('#yy').value, 10), mode = box.querySelector('#mode').value;
+      if (mode === 's2l') {
+        var dt = new Date(yy, mm - 1, dd), info = D.dayInfo(dt);
+        var hours = D.goodHours ? D.goodHours(info) : null;
+        var html = '<h3>' + WD[dt.getDay()] + ', ngày ' + dd + '/' + mm + '/' + yy + ' dương lịch</h3>' +
+          '<p>Đổi sang âm lịch là ngày <strong>' + D.fmtLunar(info) + '</strong> năm ' + L.yearInfo(info.lunar.y).text + ', ngày can chi <strong>' + info.day.text + '</strong>, trực ' + D.trucOf(info) + ', thuộc ngày ' + D.satOf(info) + '.</p>' +
+          '<p>Tháng này theo âm lịch là tháng ' + info.lunar.m + ' năm ' + L.yearInfo(info.lunar.y).text + '. Các mốc được nhiều người tra nhất trong tháng âm là mùng 1 và ngày rằm (15 âm lịch), bạn xem ở tab lịch âm của tháng dương để thấy vị trí của chúng.</p>';
+        L.resultBox(box, html);
+      } else {
+        var leap = box.querySelector('#leap').value === '1';
+        var sdt = D.lunar2solar(dd, mm, yy, leap);
+        if (!sdt) { L.resultBox(box, '<p class="ptv-bad">Không tìm thấy ngày dương lịch tương ứng, bạn kiểm tra lại ngày tháng âm lịch (năm ' + yy + ' có thể không có tháng nhuận này).</p>'); return; }
+        var info2 = D.dayInfo(sdt);
+        L.resultBox(box, '<h3>Ngày ' + dd + '/' + mm + '/' + yy + ' âm lịch' + (leap ? ' (tháng nhuận)' : '') + '</h3><p>Đổi sang dương lịch là <strong>' + WD[sdt.getDay()] + ', ngày ' + sdt.getDate() + '/' + (sdt.getMonth() + 1) + '/' + sdt.getFullYear() + '</strong>, ngày can chi <strong>' + info2.day.text + '</strong>, trực ' + D.trucOf(info2) + ', thuộc ngày ' + D.satOf(info2) + '.</p>');
+      }
+    });
+    c.querySelector('#dn-month form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-month'), parts = box.querySelector('#m').value.split('-').map(Number);
+      var days = D.monthDays(parts[0], parts[1]);
+      var rows = days.map(function (i) {
+        var mark = i.lunar.d === 1 ? ' <strong>(Mùng 1 âm lịch)</strong>' : i.lunar.d === 15 ? ' <strong>(Rằm)</strong>' : '';
+        return '<tr><td>' + i.solar.d + '/' + i.solar.m + '</td><td>' + WD[new Date(i.solar.y, i.solar.m - 1, i.solar.d).getDay()] + '</td><td>' + i.lunar.d + '/' + i.lunar.m + (i.lunar.leap ? ' nhuận' : '') + '</td><td>' + i.day.text + '</td><td>' + mark + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Lịch âm tháng ' + parts[1] + '/' + parts[0] + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Ngày dương</th><th>Thứ</th><th>Ngày âm</th><th>Can chi ngày</th><th>Mốc</th></tr>' + rows + '</table></div><p class="ptv-note">Bảng do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> tính bằng cùng một bộ lịch dùng cho mọi công cụ xem ngày trên trang, múi giờ Việt Nam.</p>');
+    });
+    c.querySelector('#dn-count form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dn-count');
+      function parse(s) { var p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+      var a = parse(box.querySelector('#d1').value), b = parse(box.querySelector('#d2').value);
+      if (isNaN(a.getTime()) || isNaN(b.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày, ví dụ 2027-03-17.</p>'); return; }
+      var diff = Math.round((b - a) / 86400000), ia = D.dayInfo(a), ib = D.dayInfo(b);
+      L.resultBox(box, '<h3>Khoảng cách giữa hai mốc</h3><p>Từ <strong>' + a.getDate() + '/' + (a.getMonth() + 1) + '/' + a.getFullYear() + '</strong> (âm lịch ' + D.fmtLunar(ia) + ') đến <strong>' + b.getDate() + '/' + (b.getMonth() + 1) + '/' + b.getFullYear() + '</strong> (âm lịch ' + D.fmtLunar(ib) + ') là <strong>' + diff + ' ngày</strong>' + (diff >= 0 ? ', tính cả hai đầu là ' + (diff + 1) + ' ngày.' : '.') + '</p><p>Khoảng đếm này hay dùng để tính ngày cúng tuần, 49 ngày và 100 ngày cho người đã khuất, đếm ngược tới ngày cưới, ngày dự sinh theo tuần thai quy đổi, hoặc tính số ngày còn lại trước một hạn chót. Lưu ý lệ cúng tuần thường tính đủ ngày theo lịch âm, bạn đối chiếu thêm cột âm lịch của hai mốc ở trên.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'doi-ngay-am-lich': doiNgayV2 });
+})();
