@@ -3455,3 +3455,238 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'tim-nien-menh': nienMenhV2, 'giai-ma-diem-bao': diemBaoV2 });
 })();
+
+/* --- La so tu tru + Sim phong thuy v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, E = window.PTVEngine, esc = L.esc, V = window.PTVDayToolsV2;
+  var CAN_POL = { 'Giáp': 1, 'Bính': 1, 'Mậu': 1, 'Canh': 1, 'Nhâm': 1, 'Ất': 0, 'Đinh': 0, 'Kỷ': 0, 'Tân': 0, 'Quý': 0 };
+  var CAN_ELX = { 'Giáp': 'Mộc', 'Ất': 'Mộc', 'Bính': 'Hỏa', 'Đinh': 'Hỏa', 'Mậu': 'Thổ', 'Kỷ': 'Thổ', 'Canh': 'Kim', 'Tân': 'Kim', 'Nhâm': 'Thủy', 'Quý': 'Thủy' };
+  var TG_TXT = {
+    'Tỷ Kiên': 'Ngôi sao của bản thân và bạn bè đồng trang lứa: chủ về tự lập, cạnh tranh lành mạnh và cái tôi rõ ràng.',
+    'Kiếp Tài': 'Ngôi sao của sự mạnh mẽ và tranh đoạt: dám giành cơ hội, hợp cạnh tranh, nhưng cần giữ chừng mực trong tiền bạc chung.',
+    'Thực Thần': 'Ngôi sao của tài hoa và hưởng thụ: có duyên với sáng tạo, ẩm thực, nghệ thuật và cách kiếm sống nhẹ nhàng bền bỉ.',
+    'Thương Quan': 'Ngôi sao của sự phá cách và tài năng nổi bật: thông minh, dám khác biệt, nhưng cần tiết chế lời nói với cấp trên.',
+    'Thiên Tài': 'Ngôi sao của tài lộc bất ngờ và cơ hội ngoài dự tính: nhạy với tiền bạc, hợp đầu tư phụ và các khoản thu không đều.',
+    'Chính Tài': 'Ngôi sao của tài lộc chính đáng và ổn định: tiền đến từ công việc chính, tích lũy đều, là ngôi sao tài được coi trọng nhất.',
+    'Thất Sát': 'Ngôi sao của áp lực và quyền uy khắc chế: đời có những giai đoạn bị thử thách mạnh, rèn được thì thành người có bản lĩnh và vị thế.',
+    'Chính Quan': 'Ngôi sao của danh vị và kỷ luật: hợp đường quan lộ, tổ chức và các nghề cần uy tín, giấy tờ, pháp lý.',
+    'Thiên Ấn': 'Ngôi sao của học vấn lệch và trực giác: học sâu một ngành hẹp, có duyên với nghiên cứu, tâm linh và nghề tự do chuyên môn.',
+    'Chính Ấn': 'Ngôi sao của học vấn chính quy và sự đỡ đầu: được thầy cô, cấp trên và gia đình nâng đỡ, hợp đường học hành thi cử.'
+  };
+  function tenGod(dayCan, otherCan) {
+    var dEl = CAN_ELX[dayCan], oEl = CAN_ELX[otherCan], same = CAN_POL[dayCan] === CAN_POL[otherCan];
+    if (oEl === dEl) return same ? 'Tỷ Kiên' : 'Kiếp Tài';
+    if (L.GENERATES[dEl] === oEl) return same ? 'Thực Thần' : 'Thương Quan';
+    if (L.CONTROLS[dEl] === oEl) return same ? 'Thiên Tài' : 'Chính Tài';
+    if (L.CONTROLS[oEl] === dEl) return same ? 'Thất Sát' : 'Chính Quan';
+    return same ? 'Thiên Ấn' : 'Chính Ấn';
+  }
+  function tuTruV2(c) {
+    c.innerHTML = V.tabsHTML([['tt-main', 'Lập lá số tứ trụ'], ['tt-gods', 'Thập thần trong lá số của bạn']]) +
+      '<div id="tt-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="by" inputmode="numeric" value="1995">') + '</div><div class="ptv-row">' + L.field('Giờ sinh', L.select('h', E.CHI.map(function (x) { return '<option value="' + x + '">' + x + ' (' + E.HOUR_LABEL[x] + ')</option>'; }).join(''))) + L.field('Giới tính', L.genderSelect('g')) + '</div>', 'Lập lá số tứ trụ') + '</div>' +
+      '<div id="tt-gods" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="by" inputmode="numeric" value="1995">') + '</div><div class="ptv-row">' + L.field('Giờ sinh', L.select('h', E.CHI.map(function (x) { return '<option value="' + x + '">' + x + ' (' + E.HOUR_LABEL[x] + ')</option>'; }).join(''))) + '</div>', 'Xem thập thần của tôi') + '</div>';
+    V.wireTabs(c, ['tt-main', 'tt-gods']);
+    function pillars(box) {
+      var dt = { d: parseInt(box.querySelector('#bd').value, 10), m: parseInt(box.querySelector('#bm').value, 10), y: parseInt(box.querySelector('#by').value, 10) };
+      var yP = E.yearPillar(dt.d, dt.m, dt.y), mP = E.monthPillar(dt.d, dt.m, E.CAN.indexOf(yP.pillar.can)), dP = E.dayPillar(dt.d, dt.m, dt.y), hP = E.hourPillar(box.querySelector('#h').value, E.CAN.indexOf(dP.can));
+      return { dt: dt, yP: yP.pillar, mP: mP, dP: dP, hP: hP };
+    }
+    c.querySelector('#tt-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt-main'), P = pillars(box);
+      var counts = E.countElements([P.hP, P.dP, P.mP, P.yP]);
+      function cell(p, label) { var na = E.napAmOf(p); return '<td><strong>' + label + '</strong><br>' + p.text + '<br><span class="ptv-note">' + na.name + '</span></td>'; }
+      var total = Object.keys(counts).reduce(function (a, k) { return a + counts[k]; }, 0);
+      var maxEl = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+      var minEl = Object.keys(counts).sort(function (a, b) { return counts[a] - counts[b]; })[0];
+      var dayEl = P.dP.canEl;
+      var genIn = Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === dayEl; })[0];
+      var strength = (counts[dayEl] || 0) + (counts[genIn] || 0);
+      var bars = Object.keys(counts).map(function (e) { return '<div class="ptv-bar-row"><span class="ptv-bar-label">' + e + '</span><span class="ptv-bar-track"><span class="ptv-bar-fill" style="width:' + (total ? counts[e] / total * 100 : 0) + '%;background:' + ({ 'Kim': '#8a6d1c', 'Mộc': '#2e7d32', 'Thủy': '#1565c0', 'Hỏa': '#c62828', 'Thổ': '#8d5a2b' }[e]) + '"></span></span><span class="ptv-bar-num">' + counts[e] + '</span></div>'; }).join('');
+      var html = '<h3>Lá số tứ trụ của bạn</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr>' + cell(P.yP, 'Trụ năm') + cell(P.mP, 'Trụ tháng') + cell(P.dP, 'Trụ ngày') + cell(P.hP, 'Trụ giờ') + '</tr></table></div>' +
+        '<p>Nhật chủ (bản mệnh ngày sinh) là <strong>' + P.dP.can + '</strong> thuộc hành ' + L.badge(dayEl) + '. Mệnh năm: <strong>' + esc(E.napAmOf(P.yP).name) + '</strong>.</p>' +
+        '<h3>Cân bằng ngũ hành trong tứ trụ</h3>' + bars +
+        '<p>Hành mạnh nhất là <strong>' + maxEl + '</strong>, hành yếu hoặc thiếu là <strong>' + minEl + '</strong>. Nhật chủ được ' + strength + ' điểm tựa từ hành bản mệnh và hành sinh cho mình trong tổng ' + total + ' điểm ngũ hành, ' + (strength >= total / 2 ? 'thuộc nhóm nhật chủ vượng, nên tiết chế bằng hành khắc và hành được sinh.' : 'thuộc nhóm nhật chủ nhược hoặc trung hòa, nên bổ trợ bằng hành sinh cho nhật chủ và hành bản mệnh.') + '</p>' +
+        '<p><strong>Gợi ý bổ trợ:</strong> ưu tiên màu sắc, nghề nghiệp và môi trường thuộc hành <strong>' + (strength >= total / 2 ? L.GENERATES[dayEl] + ' và ' + L.CONTROLS[dayEl] : minEl + ' và ' + dayEl) + '</strong>. Sang tab thập thần bên cạnh để đọc tiếp lớp luận về các mối quan hệ trong lá số của bạn.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#tt-gods form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt-gods'), P = pillars(box);
+      var rows = [['Trụ năm', P.yP], ['Trụ tháng', P.mP], ['Trụ giờ', P.hP]].map(function (r) {
+        var g = tenGod(P.dP.can, r[1].can);
+        return '<tr><td><strong>' + r[0] + '</strong> (' + r[1].text + ')</td><td>' + g + '</td><td>' + TG_TXT[g] + '</td></tr>';
+      }).join('');
+      var html = '<h3>Thập thần theo nhật chủ ' + P.dP.can + ' (hành ' + P.dP.canEl + ')</h3>' +
+        '<p>Thập thần là tên gọi của mười mối quan hệ giữa thiên can của các trụ với nhật chủ (can ngày, đại diện cho chính bạn). Trụ ngày là chính bạn nên không tính thập thần cho trụ này.</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Trụ</th><th>Thập thần</th><th>Ý nghĩa</th></tr>' + rows + '</table></div>' +
+        '<p class="ptv-note">Đây là lớp thập thần của thiên can nổi (phần nhìn thấy trực tiếp của lá số). Luận tứ trụ chuyên sâu còn xét thập thần của địa chi tàng can, đại vận và lưu niên, do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> công bố rõ phạm vi cơ bản này.</p>';
+      L.resultBox(box, html);
+    });
+  }
+
+  var DIGIT_EL = { '0': 'Thủy', '1': 'Thủy', '2': 'Thổ', '3': 'Mộc', '4': 'Mộc', '5': 'Thổ', '6': 'Kim', '7': 'Kim', '8': 'Thổ', '9': 'Hỏa' };
+  function nutSo(digits) { var s = digits.split('').reduce(function (a, ch) { return a + parseInt(ch, 10); }, 0); var n = s % 10; return n === 0 ? 10 : n; }
+  function hoachOf(n) { var r = n % 80; if (r === 0) r = 80; return { num: r, entry: ((window.PTV_DATA || {}).hoach81 || {})[String(r)] || { rating: 'Bình', text: '' } }; }
+  function ratingPts(r) { return { 'Đại cát': 4, 'Cát': 3.4, 'Bình': 2, 'Hung': 1, 'Đại hung': 0.4 }[r] || 2; }
+  function simScore(digits, yv) {
+    var last4 = digits.slice(-4), h = hoachOf(parseInt(last4, 10)), nut = nutSo(digits);
+    var counts = {}; digits.split('').forEach(function (d) { var e = DIGIT_EL[d]; counts[e] = (counts[e] || 0) + 1; });
+    var dom = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+    var score = nut / 10 * 3 + ratingPts(h.entry.rating), rel = '';
+    if (yv) {
+      var yi = L.yearInfo(parseInt(yv, 10)); rel = L.relEl(dom, yi.el);
+      score += rel.indexOf('tương sinh') >= 0 && rel.indexOf('được') < 0 ? 1.5 : rel.indexOf('được tương sinh') >= 0 ? 2 : rel.indexOf('Cùng hành') >= 0 ? 1.5 : rel.indexOf('khắc') >= 0 ? 0 : 1;
+    } else score += 1.2;
+    score = Math.max(0.5, Math.min(10, Math.round(score * 2) / 2));
+    return { score: score, nut: nut, h: h, dom: dom, counts: counts, rel: rel, last4: last4 };
+  }
+  function simPatterns(digits) {
+    var out = [], tail = digits.slice(-4);
+    if (/(\d)\1{3}$/.test(digits)) out.push('Tứ quý ' + tail[0] + ': bốn số cuối giống hệt nhau, thuộc nhóm đuôi hiếm và dễ nhớ bậc nhất trong giới sim.');
+    else if (/(\d)\1{2}$/.test(digits)) out.push('Tam hoa: ba số cuối giống nhau, đuôi gọn và dễ nhớ.');
+    var inc = true; for (var i = 1; i < tail.length; i++) { if (parseInt(tail[i], 10) !== parseInt(tail[i - 1], 10) + 1) inc = false; }
+    if (inc && !/(\d)\1{3}/.test(tail)) out.push('Số tiến ' + tail + ': bốn số cuối tăng dần liên tiếp, được chuộng vì tượng trưng sự thăng tiến.');
+    var pair = digits.slice(-2);
+    var named = { '39': 'đuôi Thần Tài nhỏ', '79': 'đuôi Thần Tài lớn', '38': 'đuôi Ông Địa nhỏ', '78': 'đuôi Ông Địa lớn', '68': 'đuôi Lộc Phát', '86': 'đuôi Phát Lộc', '99': 'đuôi Trường Cửu', '19': 'đuôi Nhất Cửu' };
+    if (named[pair]) out.push('Đuôi ' + pair + ' là ' + named[pair] + ', thuộc nhóm đuôi được săn nhiều nhất trên thị trường sim số đẹp.');
+    return out;
+  }
+  function simV2(c) {
+    c.innerHTML = V.tabsHTML([['sim-one', 'Luận một sim'], ['sim-many', 'So sánh nhiều sim']]) +
+      '<div id="sim-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Số điện thoại', '<input type="text" id="phone" inputmode="numeric" value="">', 'ptv-field-name') + '</div><div class="ptv-row">' + L.field('Năm sinh của bạn (không bắt buộc, để đối chiếu mệnh)', L.select('y', '<option value="">Không nhập</option>' + L.yearOptions(1940, 2015, 1990))) + '</div>', 'Xem sim này') + '</div>' +
+      '<div id="sim-many" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Danh sách số điện thoại, mỗi dòng một số', '<textarea id="list" rows="5">0901234568\n0912345679\n0987654321</textarea>', 'ptv-field-name') + '</div><div class="ptv-row">' + L.field('Năm sinh của bạn (không bắt buộc)', L.select('y', '<option value="">Không nhập</option>' + L.yearOptions(1940, 2015, 1990))) + '</div>', 'So sánh và xếp hạng') + '</div>';
+    V.wireTabs(c, ['sim-one', 'sim-many']);
+    c.querySelector('#sim-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#sim-one'), digits = box.querySelector('#phone').value.replace(/\D/g, '');
+      if (digits.length < 9) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập số điện thoại đầy đủ, ít nhất 9 chữ số nhé.</p>'); return; }
+      var yv = box.querySelector('#y').value, r = simScore(digits, yv);
+      var pats = simPatterns(digits);
+      var html = '<h3>Luận sim ' + esc(digits) + '</h3>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>Số nút của dãy số</span><span class="ptv-block-score">' + r.nut + ' nút</span></div><p>' + (r.nut >= 8 ? 'Số nút cao, theo quan niệm sim số đây là dãy số đẹp, dễ nhớ và mang khí vượng.' : r.nut >= 5 ? 'Số nút ở mức khá, dãy số cân bằng.' : 'Số nút thấp, dãy số thiên về trầm, hợp người thích sự điềm tĩnh hơn là cầu tài.') + '</p></div>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>4 số cuối ' + r.last4 + ' theo quẻ số ' + r.h.num + '</span><span class="ptv-block-score">' + r.h.entry.rating + '</span></div><p>' + esc(r.h.entry.text) + '</p></div>' +
+        '<div class="ptv-block"><div class="ptv-block-head"><span>Ngũ hành chủ đạo của dãy số</span><span class="ptv-block-score">Hành ' + r.dom + '</span></div><p>Các chữ số trong sim nghiêng về hành ' + r.dom + ' (' + r.counts[r.dom] + '/' + digits.length + ' số).</p></div>' +
+        (pats.length ? '<div class="ptv-block"><div class="ptv-block-head"><span>Dạng số đẹp nhận diện được</span></div>' + pats.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</div>' : '') +
+        (yv ? '<div class="ptv-block"><div class="ptv-block-head"><span>Đối chiếu với mệnh của bạn</span></div><p>Bạn sinh năm ' + yv + ', mệnh ' + esc(L.yearInfo(parseInt(yv, 10)).napAm) + '. Hành chủ đạo của sim so với mệnh của bạn: ' + r.rel + '.</p></div>' : '') +
+        '<div class="ptv-score-wrap"><div class="ptv-score-circle" style="border-color:' + (r.score >= 7 ? '#2e7d32' : r.score >= 5 ? '#b8860b' : '#c62828') + '">' + String(r.score).replace('.', ',') + '<span>/ 10</span></div><div><p class="ptv-verdict">' + (r.score >= 8 ? 'Sim rất hợp, khí số vượng' : r.score >= 6.5 ? 'Sim khá tốt' : r.score >= 5 ? 'Sim ở mức trung bình khá' : 'Sim thiên về trầm, nên cân nhắc') + '</p><p class="ptv-note">Điểm gồm số nút, quẻ của 4 số cuối theo bảng 81 số và độ hợp hành giữa dãy số với mệnh người dùng. Đây là luận giải tham khảo theo sim phong thủy dân gian.</p></div></div>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#sim-many form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#sim-many'), yv = box.querySelector('#y').value;
+      var nums = box.querySelector('#list').value.split(/\n+/).map(function (s) { return s.replace(/\D/g, ''); }).filter(function (s) { return s.length >= 9; });
+      if (!nums.length) { L.resultBox(box, '<p class="ptv-bad">Chưa có số hợp lệ nào trong danh sách.</p>'); return; }
+      var rows = nums.map(function (n) { var r = simScore(n, yv); return { n: n, r: r }; }).sort(function (a, b) { return b.r.score - a.r.score; }).map(function (x, i) {
+        return '<tr><td>' + (i + 1) + '</td><td><strong>' + x.n + '</strong></td><td>' + String(x.r.score).replace('.', ',') + '/10</td><td>' + x.r.nut + ' nút</td><td>' + x.r.h.entry.rating + ' (quẻ ' + x.r.h.num + ')</td><td>' + x.r.dom + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Xếp hạng ' + nums.length + ' sim theo điểm phong thủy</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Hạng</th><th>Số điện thoại</th><th>Điểm</th><th>Số nút</th><th>Quẻ 4 số cuối</th><th>Hành chủ đạo</th></tr>' + rows + '</table></div><p class="ptv-note">Điểm cao nhất chưa chắc là sim nên mua: hãy cân thêm giá, nhà mạng và độ dễ nhớ với khách hàng của bạn. Điểm tại <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> chỉ là một tiêu chí tham khảo.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-la-so-tu-tru': tuTruV2, 'sim-phong-thuy': simV2 });
+})();
+
+/* --- Boi 4 so cuoi + Xem tuoi vo chong v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var DIGIT_EL = { '0': 'Thủy', '1': 'Thủy', '2': 'Thổ', '3': 'Mộc', '4': 'Mộc', '5': 'Thổ', '6': 'Kim', '7': 'Kim', '8': 'Thổ', '9': 'Hỏa' };
+  function nut4(v) { var s = v.split('').reduce(function (a, ch) { return a + parseInt(ch, 10); }, 0); var n = s % 10; return n === 0 ? 10 : n; }
+  function hoachOf(n) { var r = n % 80; if (r === 0) r = 80; return { num: r, entry: ((window.PTV_DATA || {}).hoach81 || {})[String(r)] || { rating: 'Bình', text: '' } }; }
+  function boi4V2(c) {
+    var qopts = ''; for (var i = 1; i <= 81; i++) qopts += '<option value="' + i + '">Quẻ số ' + i + '</option>';
+    c.innerHTML = V.tabsHTML([['b4-one', 'Luận 4 số cuối của bạn'], ['b4-lookup', 'Tra quẻ trong bảng 81 số']]) +
+      '<div id="b4-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Nhập 4 số cuối điện thoại', '<input type="text" id="n4" inputmode="numeric" maxlength="4" value="">', 'ptv-field-name') + L.field('Năm sinh của bạn (không bắt buộc)', L.select('y', '<option value="">Không nhập</option>' + L.yearOptions(1940, 2015, 1990))) + '</div>', 'Xem 4 số cuối') + '</div>' +
+      '<div id="b4-lookup" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn quẻ số muốn tra', L.select('q', qopts), 'ptv-field-name') + '</div>', 'Tra quẻ số này') + '</div>';
+    V.wireTabs(c, ['b4-one', 'b4-lookup']);
+    c.querySelector('#b4-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#b4-one'), v = box.querySelector('#n4').value.replace(/\D/g, '');
+      if (v.length !== 4) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập đúng 4 chữ số cuối nhé.</p>'); return; }
+      var h = hoachOf(parseInt(v, 10)), nut = nut4(v);
+      var els = v.split('').map(function (d) { return d + ' thuộc ' + DIGIT_EL[d]; }).join(', ');
+      var counts = {}; v.split('').forEach(function (d) { var e = DIGIT_EL[d]; counts[e] = (counts[e] || 0) + 1; });
+      var dom = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+      var pats = [];
+      if (/^(\d)\1{3}$/.test(v)) pats.push('Bốn số là TỨ QUÝ ' + v[0] + ', dạng đuôi hiếm nhất trong các dạng số đẹp.');
+      else if (/(\d)\1{2}/.test(v.slice(1))) pats.push('Ba số cuối giống nhau tạo thành đuôi TAM HOA.');
+      var named = { '39': 'Thần Tài nhỏ', '79': 'Thần Tài lớn', '38': 'Ông Địa nhỏ', '78': 'Ông Địa lớn', '68': 'Lộc Phát', '86': 'Phát Lộc', '99': 'Trường Cửu' };
+      if (named[v.slice(2)]) pats.push('Cặp cuối ' + v.slice(2) + ' là đuôi ' + named[v.slice(2)] + ' được thị trường sim chuộng.');
+      var yv = box.querySelector('#y').value, yhtml = '';
+      if (yv) { var yi = L.yearInfo(parseInt(yv, 10)); yhtml = '<p><strong>Đối chiếu với mệnh của bạn:</strong> bạn sinh năm ' + yv + ' mệnh ' + esc(yi.napAm) + ' ' + L.badge(yi.el) + '. Hành chủ đạo của 4 số cuối là ' + dom + ': ' + L.relEl(dom, yi.el) + '.</p>'; }
+      var html = '<h3>Luận 4 số cuối ' + v + '</h3><p>Theo cách luận phổ biến, lấy 4 số cuối chia cho 80, phần dư ứng với quẻ số <strong>' + h.num + '</strong>, được đánh giá là <strong>' + h.entry.rating + '</strong>.</p><div class="ptv-card" style="margin:10px 0"><p>' + esc(h.entry.text) + '</p></div>' +
+        '<p><strong>Số nút của 4 số:</strong> ' + nut + ' nút. <strong>Hành chủ đạo:</strong> ' + dom + '. <strong>Ngũ hành từng chữ số:</strong> ' + els + '.</p>' +
+        (pats.length ? '<p><strong>Dạng đuôi đẹp:</strong> ' + pats.join(' ') + '</p>' : '') + yhtml +
+        '<p class="ptv-note">Cách xem này chỉ dựa trên 4 số cuối. Muốn luận đầy đủ cả dãy số, bạn dùng thêm công cụ Sim phong thủy của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#b4-lookup form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#b4-lookup'), q = parseInt(box.querySelector('#q').value, 10);
+      var e = ((window.PTV_DATA || {}).hoach81 || {})[String(q)] || { rating: 'Bình', text: '' };
+      L.resultBox(box, '<h3>Quẻ số ' + q + ' · ' + e.rating + '</h3><div class="ptv-card" style="margin:10px 0"><p>' + esc(e.text) + '</p></div><p>Mọi 4 số cuối khi chia cho 80 cho phần dư ' + (q === 80 ? '0 (tức quẻ 80)' : q) + ' đều luận theo quẻ này. Trong dải đuôi 0000 đến 9999 có đúng 125 đuôi cho ra quẻ số ' + q + '.</p><p class="ptv-note">Bảng 81 số này cũng là bảng dùng trong đặt tên con và luận sim, mỗi quẻ là một hoạch số với đẳng riêng.</p>');
+    });
+  }
+
+  function voChongV2(c) {
+    c.innerHTML = V.tabsHTML([['vc-main', 'Chấm điểm tuổi vợ chồng'], ['vc-year', 'Năm cưới nào hợp cho hai bạn']]) +
+      '<div id="vc-main">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chồng', L.select('hy', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của vợ', L.select('wy', L.yearOptions(1940, 2010, 1992))) + '</div>', 'Xem tuổi vợ chồng') + '</div>' +
+      '<div id="vc-year" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của chồng', L.select('hy', L.yearOptions(1940, 2010, 1990))) + L.field('Năm sinh của vợ', L.select('wy', L.yearOptions(1940, 2010, 1992))) + '</div>', 'Quét các năm cưới sắp tới') + '</div>';
+    V.wireTabs(c, ['vc-main', 'vc-year']);
+    function couple(box) {
+      var hy = parseInt(box.querySelector('#hy').value, 10), wy = parseInt(box.querySelector('#wy').value, 10);
+      return { hy: hy, wy: wy, H: L.yearInfo(hy), W: L.yearInfo(wy) };
+    }
+    c.querySelector('#vc-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#vc-main'), cp = couple(box), H = cp.H, W = cp.W;
+      var chi = L.chiRelation(H.chi, W.chi), canHop = L.CAN_HOP[H.can] === W.can, naRel = L.relEl(H.el, W.el);
+      var hCung = L.cungPhi(cp.hy, 'Nam').cung, wCung = L.cungPhi(cp.wy, 'Nữ').cung, star = L.coupleStar(hCung, wCung);
+      var parts = { chi: chi.score, can: canHop ? 1 : 0, na: naRel.indexOf('tương sinh') >= 0 ? 1.2 : naRel.indexOf('Cùng hành') >= 0 ? 0.5 : naRel.indexOf('khắc') >= 0 ? -1.2 : 0, star: { 'Sinh Khí': 2, 'Diên Niên': 2, 'Thiên Y': 1.5, 'Phục Vị': 1, 'Họa Hại': -0.5, 'Lục Sát': -1, 'Ngũ Quỷ': -1.5, 'Tuyệt Mệnh': -2 }[star] || 0 };
+      var score = 5 + parts.chi + parts.can + parts.na + parts.star;
+      score = Math.max(0.5, Math.min(10, Math.round(score * 2) / 2));
+      function row(a, b, cc) { return '<tr><td><strong>' + a + '</strong></td><td>' + b + '</td><td>' + cc + '</td></tr>'; }
+      var weakest = Object.keys(parts).sort(function (a, b) { return parts[a] - parts[b]; })[0];
+      var advice = {
+        chi: 'Điểm cần chú ý nhất của hai bạn nằm ở địa chi: tính khí và nhịp sống có chỗ vênh nhau. Cách bù thực tế là phân chia rõ việc nhà và tiền bạc ngay từ đầu, tránh để mâu thuẫn nhỏ dồn thành chuyện lớn.',
+        can: 'Hai bạn không có điểm cộng thiên can hợp, nghĩa là sự đồng lòng phải đến từ thỏa thuận chứ không tự nhiên mà có. Hãy đặt quy tắc chung cho các việc lớn: mua nhà, đầu tư, phụng dưỡng hai bên.',
+        na: 'Hành nạp âm của hai mệnh có chỗ khắc hoặc chưa sinh được cho nhau. Cách bù là chọn năm sinh con có hành sinh được cho cả cha lẫn mẹ, và chọn màu sắc, hướng nhà theo mệnh của người yếu thế hơn trong hai người.',
+        star: 'Sao cung phi của hai bạn rơi vào nhóm sao cần chú ý của Bát Trạch. Cách hóa giải truyền thống là chọn hướng nhà và hướng giường thuộc bộ hướng tốt của chủ hộ, đồng thời chọn ngày cưới và giờ rước dâu vào ngày giờ hợp tuổi hai người.'
+      }[weakest];
+      var html = '<div class="ptv-facts"><span>Chồng: <strong>' + cp.hy + '</strong> (' + H.text + ', ' + esc(H.napAm) + ', cung ' + hCung + ')</span><span>Vợ: <strong>' + cp.wy + '</strong> (' + W.text + ', ' + esc(W.napAm) + ', cung ' + wCung + ')</span></div>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Yếu tố</th><th>Kết quả</th><th>Nhận xét</th></tr>' +
+        row('Địa chi', chi.label, chi.score >= 2 ? 'Hai tuổi thuộc nhóm rất hợp nhau về tính khí và đường đời.' : chi.score < 0 ? 'Hai tuổi có điểm xung khắc, cần nhường nhịn và phân chia việc rõ ràng.' : 'Hai tuổi không xung không hợp đặc biệt, êm đềm do cách sống.') +
+        row('Thiên can', canHop ? 'Can hợp (' + H.can + ' hợp ' + W.can + ')' : 'Không thuộc cặp can hợp', canHop ? 'Can hợp là điểm cộng lớn, vợ chồng dễ đồng lòng làm ăn.' : 'Không có điểm cộng cũng không trừ điểm ở yếu tố này.') +
+        row('Nạp âm ngũ hành', naRel, 'Xét theo hành của mệnh nạp âm hai vợ chồng.') +
+        row('Cung phi bát trạch', 'Sao ' + star, L.STAR_INFO[star].d) +
+        '</table></div>' +
+        '<div class="ptv-score-wrap"><div class="ptv-score-circle" style="border-color:' + (score >= 7 ? '#2e7d32' : score >= 5 ? '#b8860b' : '#c62828') + '">' + String(score).replace('.', ',') + '<span>/ 10</span></div><div><p class="ptv-verdict">' + (score >= 8 ? 'Rất hợp, thuộc nhóm vợ chồng đồng lòng' : score >= 6.5 ? 'Hợp nhau ở mức tốt' : score >= 5 ? 'Ở mức trung bình, sống chung hòa hợp do nhường nhịn' : 'Có nhiều điểm xung, cần chú ý cách hóa giải') + '</p><p class="ptv-note">Điểm tổng hợp 4 yếu tố trên thang 10. Tuổi xung không có nghĩa là không nên duyên, phong thủy chỉ gợi ý những điểm cần chú ý để hai người bù trừ cho nhau.</p></div></div>' +
+        '<p><strong>Lời khuyên theo điểm yếu nhất:</strong> ' + advice + '</p>' +
+        '<p>Sang tab năm cưới bên cạnh để xem những năm sắp tới năm nào cưới là nhẹ nhàng nhất cho hai bạn.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#vc-year form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#vc-year'), cp = couple(box);
+      var nowY = new Date().getFullYear(), rows = [], good = [];
+      for (var y = nowY; y <= nowY + 8; y++) {
+        var wAge = y - cp.wy + 1, hAge = y - cp.hy + 1;
+        var kl = L.kimLau(wAge), ho = L.hoangOc(hAge);
+        var ttW = L.tamTai(cp.W.chi, y), ttH = L.tamTai(cp.H.chi, y);
+        var flags = [];
+        if (kl.bad) flags.push('vợ phạm Kim Lâu' + (kl.kind ? ' (' + kl.kind + ')' : ''));
+        if (ho.bad) flags.push('chồng phạm Hoàng Ốc (' + ho.name + ')');
+        if (ttW) flags.push('vợ phạm Tam Tai');
+        if (ttH) flags.push('chồng phạm Tam Tai');
+        var verdict = flags.length === 0 ? 'Năm nhẹ nhàng cho cả hai' : flags.length === 1 ? 'Cưới được, lưu ý: ' + flags[0] : 'Nên cân nhắc, vì ' + flags.join('; ');
+        if (!flags.length) good.push(y);
+        rows.push('<tr><td><strong>' + y + '</strong></td><td>' + verdict + '</td></tr>');
+      }
+      L.resultBox(box, '<h3>Năm cưới cho chồng ' + cp.hy + ' và vợ ' + cp.wy + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm</th><th>Đánh giá</th></tr>' + rows.join('') + '</table></div>' +
+        (good.length ? '<p><strong>Các năm không phạm cả ba hạn Kim Lâu, Hoàng Ốc và Tam Tai:</strong> ' + good.join(', ') + '. Trong các năm này, bạn chọn tiếp ngày cưới cụ thể bằng công cụ Xem ngày cưới hỏi.</p>' : '<p>Chín năm tới luôn có ít nhất một hạn chen vào; trường hợp này dân gian thường cưới vào năm chỉ phạm một hạn nhẹ nhất và hóa giải bằng việc chọn ngày giờ tốt.</p>') +
+        '<p class="ptv-note">Kim Lâu tính theo tuổi âm của vợ, Hoàng Ốc theo tuổi âm của chồng, Tam Tai theo tuổi của từng người. Bảng này do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> tính theo đúng các bảng hạn đang dùng trên toàn trang.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'boi-4-so-cuoi-dien-thoai': boi4V2, 'xem-tuoi-vo-chong': voChongV2 });
+})();
