@@ -840,3 +840,93 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'gieo-que-quan-thanh': quanThanhV2, 'giai-ma-giac-mo': giacMoV2 });
 })();
+
+/* --- Luc thap tu quai + Luan con so trong mo v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2, W3 = window.PTVToolsW3a || {};
+  var queLookup = W3._queLookup, QUE_TEXT = W3._QUE_TEXT || {};
+  var TRI8 = ['Càn', 'Đoài', 'Ly', 'Chấn', 'Tốn', 'Khảm', 'Cấn', 'Khôn'];
+  var RATING_ADVICE = {
+    'Cát': { 'Tài lộc': 'Quẻ Cát về tài lộc: hợp mở rộng có tính toán, ký kết và thu hồi vốn; vẫn giữ nguyên tắc không đặt hết trứng vào một giỏ.', 'Công việc': 'Quẻ Cát về công việc: nên chủ động nhận việc khó và đề xuất ý tưởng, đây là lúc tiếng nói của bạn có trọng lượng.', 'Tình cảm': 'Quẻ Cát về tình cảm: hợp bày tỏ rõ ràng và tính chuyện lâu dài, sự chân thành lúc này được đáp lại xứng đáng.', 'Gia đạo': 'Quẻ Cát về gia đạo: nhà có việc vui hoặc cơ hội sum họp, nên tranh thủ gắn kết các thế hệ trong nhà.' },
+    'Bình': { 'Tài lộc': 'Quẻ Bình về tài lộc: giữ nhịp hiện tại, ưu tiên an toàn vốn, tránh quyết định theo cảm xúc trong ngày.', 'Công việc': 'Quẻ Bình về công việc: làm tốt phần việc của mình và tích lũy thêm kỹ năng, cơ hội lớn chưa tới nhưng đang được chuẩn bị.', 'Tình cảm': 'Quẻ Bình về tình cảm: quan hệ cần thêm sự quan tâm đều đặn hơn là biến động lớn, đừng để sự quen thuộc thành thờ ơ.', 'Gia đạo': 'Quẻ Bình về gia đạo: nhà yên ổn, nên dành thời gian cho người lớn tuổi và sắp xếp lại những việc nhà tồn đọng.' },
+    'Hung': { 'Tài lộc': 'Quẻ chưa thuận về tài lộc: hoãn đầu tư và cho vay, giữ tiền mặt và rà soát lại các cam kết đang dang dở.', 'Công việc': 'Quẻ chưa thuận về công việc: tránh tranh cãi và đổi việc bốc đồng, làm chắc phần việc hiện tại chờ qua giai đoạn này.', 'Tình cảm': 'Quẻ chưa thuận về tình cảm: chậm lại để hiểu nhau, tránh quyết định chia tay hay kết hôn trong lúc cảm xúc đang nóng.', 'Gia đạo': 'Quẻ chưa thuận về gia đạo: nhường nhịn và tránh bàn việc lớn khi mọi người đang căng thẳng, sức khỏe người già trong nhà cần được để ý.' }
+  };
+  function queFullHTML(q) {
+    if (!q) return '<p>Chưa tra được quẻ này.</p>';
+    var adv = RATING_ADVICE[q.rating] || {};
+    var topics = Object.keys(adv).map(function (t) { return '<p><strong>' + t + ':</strong> ' + adv[t] + '</p>'; }).join('');
+    return '<h3>Quẻ ' + esc(q.name) + ' <span class="' + (q.rating === 'Cát' ? 'ptv-good' : q.rating === 'Bình' ? 'ptv-mid' : 'ptv-bad') + '">(' + q.rating + ')</span></h3>' +
+      '<p>Quẻ thượng ' + q.upper + ', quẻ hạ ' + q.lower + '. ' + (QUE_TEXT[q.name] || '') + '</p>' +
+      '<h3>Đọc quẻ này theo từng việc</h3>' + topics +
+      '<p class="ptv-note">Phần đọc theo việc là lớp luận ứng dụng theo đẳng quẻ Cát, Bình, Hung do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> biên soạn để bạn đối chiếu với hoàn cảnh của mình.</p>';
+  }
+  function lucThapV2(c) {
+    var list = (window.PTV_DATA || {}).que64 || [];
+    var triOpts = TRI8.map(function (t) { return '<option>' + t + '</option>'; }).join('');
+    var nameOpts = list.map(function (q) { return '<option value="' + q.name + '">' + q.name + '</option>'; }).join('');
+    c.innerHTML = V.tabsHTML([['lt-tri', 'Tra theo quẻ thượng, quẻ hạ'], ['lt-name', 'Tra theo tên quẻ'], ['lt-all', 'Bảng 64 quẻ']]) +
+      '<div id="lt-tri">' + V.formWrap2('<div class="ptv-row">' + L.field('Quẻ thượng', L.select('up', triOpts)) + L.field('Quẻ hạ', L.select('lo', triOpts)) + '</div>', 'Tra quẻ này') + '</div>' +
+      '<div id="lt-name" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Tên quẻ', L.select('nm', nameOpts), 'ptv-field-name') + '</div>', 'Tra theo tên') + '</div>' +
+      '<div id="lt-all" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['lt-tri', 'lt-name', 'lt-all']);
+    c.querySelector('#lt-tri form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lt-tri');
+      L.resultBox(box, queFullHTML(queLookup(box.querySelector('#up').value, box.querySelector('#lo').value)));
+    });
+    c.querySelector('#lt-name form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lt-name'), nm = box.querySelector('#nm').value;
+      var q = list.filter(function (x) { return x.name === nm; })[0];
+      L.resultBox(box, queFullHTML(q));
+    });
+    var rendered = false;
+    c.querySelector('[data-t="lt-all"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var rows = list.map(function (q, i) { return '<tr><td>' + (i + 1) + '</td><td><strong>' + q.name + '</strong></td><td>' + q.upper + ' / ' + q.lower + '</td><td class="' + (q.rating === 'Cát' ? 'ptv-good' : q.rating === 'Bình' ? 'ptv-mid' : 'ptv-bad') + '">' + q.rating + '</td></tr>'; }).join('');
+      c.querySelector('#lt-all .ptv-out').innerHTML = '<h3>Bảng 64 quẻ Kinh Dịch theo cặp quẻ thượng, quẻ hạ</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>STT</th><th>Tên quẻ</th><th>Thượng / Hạ</th><th>Đẳng</th></tr>' + rows + '</table></div>';
+    });
+  }
+
+  function conSoMoV2(c) {
+    var dict = (window.PTV_TOOLS_DATA || {}).dreamDict || [];
+    var subjOpts = dict.map(function (e, i) { return '<option value="' + i + '">' + esc(e.subject) + '</option>'; }).join('');
+    c.innerHTML = V.tabsHTML([['cs-tell', 'Kể giấc mơ, luận con số'], ['cs-pick', 'Ghép bộ số từ nhiều hình ảnh']]) +
+      '<div id="cs-tell">' + V.formWrap2('<div class="ptv-row">' + L.field('Kể lại giấc mơ của bạn', '<input type="text" id="q" value="" placeholder="Ví dụ: mơ thấy rắn bò vào nhà">', 'ptv-field-name') + '</div>', 'Luận con số từ giấc mơ') + '</div>' +
+      '<div id="cs-pick" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn các hình ảnh có trong mơ (giữ Ctrl hoặc Cmd để chọn nhiều)', '<select id="multi" multiple size="8">' + subjOpts + '</select>', 'ptv-field-name') + '</div>', 'Ghép bộ số của tôi') + '</div>';
+    V.wireTabs(c, ['cs-tell', 'cs-pick']);
+    c.querySelector('#cs-tell form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cs-tell'), q = (box.querySelector('#q').value || '').toLowerCase();
+      var matched = [];
+      dict.forEach(function (e) {
+        var bestK = 0;
+        (e.keywords || []).forEach(function (k) { if (q.indexOf(k.toLowerCase()) >= 0 && k.length > bestK) bestK = k.length; });
+        if (bestK) matched.push({ e: e, score: bestK });
+      });
+      matched.sort(function (a, b) { return b.score - a.score; });
+      if (!matched.length) { L.resultBox(box, '<p>Chưa tìm thấy hình ảnh khớp trong từ điển ' + dict.length + ' giấc mơ. Bạn thử kể bằng hình ảnh chính ngắn gọn, hoặc sang tab ghép bộ số để chọn trực tiếp các hình ảnh nhé.</p>'); return; }
+      var top = matched[0].e;
+      var html = '<h3>' + esc(top.subject) + ': bộ số ' + (top.numbers || []).join(' · ') + '</h3><p>' + esc(top.meaning) + '</p>';
+      if (matched.length > 1) html += '<h3>Các hình ảnh khác trong mơ và bộ số của chúng</h3>' + matched.slice(1, 4).map(function (m) { return '<p><strong>' + esc(m.e.subject) + ':</strong> ' + (m.e.numbers || []).join(' · ') + '</p>'; }).join('');
+      html += '<p class="ptv-note">Con số trong mơ theo sổ mơ dân gian là phần giải trí đi kèm giấc mơ. <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> nhắc rõ: đừng dùng những con số này vào lô đề cờ bạc, vì về lâu dài đó là con đường thua lỗ chắc chắn.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#cs-pick form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#cs-pick'), sel = box.querySelector('#multi');
+      var picked = Array.prototype.filter.call(sel.options, function (o) { return o.selected; }).map(function (o) { return dict[parseInt(o.value, 10)]; });
+      if (!picked.length) { L.resultBox(box, '<p>Bạn chọn ít nhất một hình ảnh trong danh sách nhé.</p>'); return; }
+      var all = [];
+      picked.forEach(function (e) { (e.numbers || []).forEach(function (n) { if (all.indexOf(n) < 0) all.push(n); }); });
+      all.sort(function (a, b) { return a - b; });
+      var html = '<h3>Bộ số ghép từ ' + picked.length + ' hình ảnh trong mơ của bạn</h3>' +
+        picked.map(function (e) { return '<p><strong>' + esc(e.subject) + ':</strong> ' + (e.numbers || []).join(' · ') + '</p>'; }).join('') +
+        '<p><strong>Gộp lại (không trùng):</strong> ' + all.join(' · ') + '</p>' +
+        '<p class="ptv-note">Bộ số gộp chỉ là trò chơi sổ mơ để bạn vui vẻ đối chiếu. Hình ảnh chính của giấc mơ (hình ảnh nhớ rõ và gây ấn tượng nhất) mới là bộ số nên ưu tiên nếu bạn muốn giữ danh sách ngắn.</p>';
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'luc-thap-tu-quai': lucThapV2, 'luan-con-so-trong-mo': conSoMoV2 });
+})();
