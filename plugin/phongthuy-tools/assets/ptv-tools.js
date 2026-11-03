@@ -3957,3 +3957,63 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'chon-cay-trong-hop-tuoi': cayV2, 'chon-quan-ao-hop-tuoi': quanAoV2 });
 })();
+
+/* --- Xem ngay cuoi hoi + Xem ngay xuat hanh v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function cuoiHoiV2(c) {
+    c.innerHTML = V.tabsHTML([['ch-scan', 'Quét ngày cưới tốt theo tháng'], ['ch-day', 'Kiểm tra một ngày cưới'], ['ch-quarter', 'Top ngày cưới 3 tháng tới']]) +
+      '<div id="ch-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996))) + L.field('Năm sinh của chú rể', L.select('hy', L.yearOptions(1985, 2010, 1994))) + '</div><div class="ptv-row">' + L.field('Tháng muốn cưới', L.select('m', V.monthOptions2()), 'ptv-field-name') + '</div>', 'Xem ngày cưới tốt') + '</div>' +
+      '<div id="ch-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996))) + L.field('Ngày dự kiến cưới (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="ch-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của cô dâu', L.select('wy', L.yearOptions(1985, 2010, 1996)), 'ptv-field-name') + '</div>', 'Tìm ngày cưới tốt nhất 3 tháng tới') + '</div>';
+    V.wireTabs(c, ['ch-scan', 'ch-day', 'ch-quarter']);
+    c.querySelector('#ch-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ch-scan'), bride = L.yearInfo(parseInt(box.querySelector('#wy').value, 10)), groom = L.yearInfo(parseInt(box.querySelector('#hy').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number);
+      var wAge = parts[0] - bride.year + 1, kl = L.kimLau(wAge);
+      var note = '<p class="ptv-note">Ngày cưới trên trang này chấm theo tuổi của <strong>cô dâu ' + bride.text + '</strong> (lệ truyền thống lấy tuổi cô dâu làm gốc cho ngày cưới), chú rể ' + groom.text + ' là thông tin đối chiếu. Năm ' + parts[0] + ' cô dâu ' + wAge + ' tuổi âm: ' + (kl.bad ? 'năm này cô dâu PHẠM Kim Lâu (' + kl.kind + '), nhiều gia đình sẽ cân nhắc dời năm hoặc làm lễ theo lệ địa phương; bảng ngày dưới đây vẫn chấm theo ngày tốt xấu trong tháng.' : 'năm này cô dâu không phạm Kim Lâu, điều kiện năm đã thuận.') + '</p>';
+      L.resultBox(box, '<h3>Ngày cưới tốt tháng ' + parts[1] + '/' + parts[0] + ' cho cô dâu ' + bride.text + '</h3>' + note + V.scanHTML('cuoi-hoi', bride.chi, parts[0], parts[1], 'cưới hỏi'));
+    });
+    c.querySelector('#ch-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ch-day'), bride = L.yearInfo(parseInt(box.querySelector('#wy').value, 10));
+      L.resultBox(box, V.checkDayHTML('cuoi-hoi', bride.chi, box.querySelector('#dt').value, 'cưới hỏi'));
+    });
+    c.querySelector('#ch-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ch-quarter'), bride = L.yearInfo(parseInt(box.querySelector('#wy').value, 10));
+      L.resultBox(box, '<h3>Ngày cưới tốt nhất trong 3 tháng tới cho cô dâu ' + bride.text + '</h3>' + V.quarterHTML('cuoi-hoi', bride.chi, 'cưới hỏi'));
+    });
+  }
+  function xuatHanhV2(c) {
+    c.innerHTML = V.tabsHTML([['xh-scan', 'Quét ngày xuất hành tốt theo tháng'], ['xh-day', 'Kiểm tra một ngày cụ thể'], ['xh-quarter', 'Top ngày xuất hành 3 tháng tới']]) +
+      '<div id="xh-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của người đi', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn xuất hành', L.select('m', V.monthOptions2())) + '</div><div class="ptv-row">' + L.field('Mục đích chuyến đi', L.select('mode', '<option value="chung">Đi xa, công tác, du lịch</option><option value="kinh-doanh">Đi ký kết, mở rộng làm ăn</option><option value="chuyen-nha">Chuyển nhà, nhập trạch xa</option>'), 'ptv-field-name') + '</div>', 'Xem ngày xuất hành tốt') + '</div>' +
+      '<div id="xh-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của người đi', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Ngày dự kiến đi (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="xh-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của người đi', L.select('y', L.yearOptions(1940, 2010, 1990)), 'ptv-field-name') + '</div>', 'Tìm ngày xuất hành tốt nhất 3 tháng tới') + '</div>';
+    V.wireTabs(c, ['xh-scan', 'xh-day', 'xh-quarter']);
+    c.querySelector('#xh-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xh-scan'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number), mode = box.querySelector('#mode').value;
+      var notes = {
+        chung: 'Với chuyến đi xa thông thường, ngày đẹp là đủ; hãy để giờ khởi hành tránh khung giờ cao điểm và thời tiết xấu, hai yếu tố thực tế ảnh hưởng chuyến đi nhiều hơn mọi bảng ngày.',
+        'kinh-doanh': 'Đi ký kết và mở rộng làm ăn: ngoài ngày đẹp, bạn dùng thêm trang Xem giờ xuất hành để chọn giờ hoàng đạo và hướng Quý nhân trong chính ngày đi, hai lớp này đặc biệt quan trọng với chuyến đi cầu tài.',
+        'chuyen-nha': 'Chuyển nhà đi xa là việc lớn gần với nhập trạch: ngày xuất hành chỉ là ngày rời nhà cũ, ngày vào nhà mới nên kiểm tra riêng bằng công cụ Xem ngày nhập trạch để hai đầu chuyến dời đều thuận.'
+      };
+      L.resultBox(box, '<h3>Ngày xuất hành tốt tháng ' + parts[1] + '/' + parts[0] + ' cho tuổi ' + me.text + '</h3><p class="ptv-note">' + notes[mode] + '</p>' + V.scanHTML('xuat-hanh', me.chi, parts[0], parts[1], 'xuất hành'));
+    });
+    c.querySelector('#xh-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xh-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, V.checkDayHTML('xuat-hanh', me.chi, box.querySelector('#dt').value, 'xuất hành'));
+    });
+    c.querySelector('#xh-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#xh-quarter'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, '<h3>Ngày xuất hành tốt nhất trong 3 tháng tới cho tuổi ' + me.text + '</h3>' + V.quarterHTML('xuat-hanh', me.chi, 'xuất hành'));
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-cuoi-hoi': cuoiHoiV2, 'xem-ngay-xuat-hanh': xuatHanhV2 });
+})();
