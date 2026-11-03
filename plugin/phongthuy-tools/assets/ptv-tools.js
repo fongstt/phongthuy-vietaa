@@ -4324,3 +4324,88 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'ngay-xuat-hanh-dau-nam': xuatHanhTetV2, 'huong-xuat-hanh-dau-nam': huongTetV2, 'li-xi-theo-menh': liXiV2 });
 })();
+
+/* --- Nhan tuong trio v2: not ruoi mat, not ruoi toan than, hinh xam --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function firstSent(t) { var i = t.indexOf('. '); return i > 30 ? t.slice(0, i + 1) : t; }
+  function moleV2(key, label, groups) {
+    return function (c) {
+      var DATA = window.PTV_TOOLS_DATA || {}, dict = DATA[key] || [];
+      var opts = dict.map(function (e, i) { return '<option value="' + i + '">' + esc(e.position) + '</option>'; }).join('');
+      var tabs = [['mv-one', 'Tra một vị trí'], ['mv-all', 'Tất cả vị trí ' + label]];
+      var h = '<div id="mv-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn vị trí nốt ruồi ' + label, L.select('pos', opts), 'ptv-field-name') + '</div>', 'Xem ý nghĩa') + '</div>' +
+        '<div id="mv-all" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Xem nhanh toàn bộ từ điển', L.select('dummy', '<option>Danh sách đầy đủ</option>'), 'ptv-field-name') + '</div>', 'Mở danh sách đầy đủ') + '</div>';
+      if (groups) {
+        tabs.push(['mv-group', 'Xem theo vùng cơ thể']);
+        h += '<div id="mv-group" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn vùng cơ thể', L.select('grp', groups.map(function (g, i) { return '<option value="' + i + '">' + g.name + '</option>'; }).join('')), 'ptv-field-name') + '</div>', 'Xem các vị trí trong vùng') + '</div>';
+      }
+      tabs.push(['mv-health', 'Khi nào nốt ruồi cần đi khám']);
+      h += '<div id="mv-health" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Nốt ruồi của bạn có thay đổi gần đây không', L.select('chg', '<option value="0">Không thay đổi gì</option><option value="1">To nhanh hoặc đổi hình dạng</option><option value="2">Đổi màu, loang màu</option><option value="3">Ngứa, đau, chảy máu hoặc đóng vảy không lành</option><option value="4">Mới xuất hiện sau tuổi 30 và trông khác hẳn các nốt khác</option>'), 'ptv-field-name') + '</div>', 'Nhận khuyến nghị') + '</div>';
+      c.innerHTML = V.tabsHTML(tabs) + h;
+      V.wireTabs(c, tabs.map(function (t) { return t[0]; }));
+      c.querySelector('#mv-one form').addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var box = c.querySelector('#mv-one'), e = dict[parseInt(box.querySelector('#pos').value, 10)]; if (!e) return;
+        L.resultBox(box, '<h3>Nốt ruồi ở ' + esc(e.position) + '</h3><p>' + esc(e.meaning) + '</p><p class="ptv-note">Xem nốt ruồi là một phần của nhân tướng học dân gian, mang tính tham khảo và giải trí. Về mặt sức khỏe, nếu nốt ruồi thay đổi hình dạng hoặc màu sắc bất thường bạn nên đi khám da liễu, xem thêm ở tab kiểm tra sức khỏe.</p>');
+      });
+      c.querySelector('#mv-all form').addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var box = c.querySelector('#mv-all');
+        var rows = dict.map(function (e) { return '<tr><td><strong>' + esc(e.position) + '</strong></td><td>' + esc(firstSent(e.meaning)) + '</td></tr>'; }).join('');
+        L.resultBox(box, '<h3>Tất cả vị trí nốt ruồi ' + label + ' (' + dict.length + ' vị trí)</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Vị trí</th><th>Ý nghĩa rút gọn</th></tr>' + rows + '</table></div><p class="ptv-note">Bảng rút gọn câu đầu của mỗi mục; đọc luận đầy đủ ở tab tra một vị trí.</p>');
+      });
+      if (groups) c.querySelector('#mv-group form').addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var box = c.querySelector('#mv-group'), g = groups[parseInt(box.querySelector('#grp').value, 10)];
+        var items = dict.filter(function (e) { return g.positions.indexOf(e.position) >= 0; });
+        L.resultBox(box, '<h3>Nốt ruồi vùng ' + g.name + '</h3>' + items.map(function (e) { return '<p><strong>' + esc(e.position) + ':</strong> ' + esc(e.meaning) + '</p>'; }).join(''));
+      });
+      c.querySelector('#mv-health form').addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var box = c.querySelector('#mv-health'), v = box.querySelector('#chg').value;
+        var html;
+        if (v === '0') html = '<h3>Chưa có dấu hiệu cần lo</h3><p>Nốt ruồi ổn định nhiều năm, đều màu và không gây khó chịu thì phần lớn là lành tính. Bạn chỉ cần để ý mỗi khi tắm hoặc thay đồ, và chụp ảnh lưu lại kích thước nếu muốn theo dõi lâu dài.</p>';
+        else html = '<h3>Bạn nên đi khám da liễu sớm</h3><p>Dấu hiệu bạn vừa chọn nằm trong nhóm thay đổi cần được bác sĩ xem trực tiếp: nốt ruồi bất đối xứng, bờ không đều, loang nhiều màu, đường kính lớn hơn khoảng 6mm hoặc tiến triển thay đổi theo thời gian (nhóm dấu hiệu quốc tế hay gọi là ABCDE). Khám sớm không có nghĩa là đã có bệnh: phần lớn trường hợp chỉ là nốt ruồi lành tính thay đổi theo tuổi và nội tiết, nhưng chỉ bác sĩ với thiết bị soi da mới khẳng định được.</p><p class="ptv-note">Phần này là thông tin sức khỏe phổ thông, không phải chẩn đoán. Nhân tướng học dân gian chỉ luận về nốt ruồi ổn định lâu năm; mọi thay đổi bất thường thuộc về y khoa.</p>';
+        L.resultBox(box, html);
+      });
+    };
+  }
+  function tattooV2(c) {
+    var dict = (window.PTV_TOOLS_DATA || {}).tattooDict || [];
+    var opts = dict.map(function (e, i) { return '<option value="' + i + '">' + esc(e.motif) + '</option>'; }).join('');
+    c.innerHTML = V.tabsHTML([['tt-one', 'Tra một hình xăm'], ['tt-el', 'Hình xăm hợp theo mệnh'], ['tt-all', 'Tất cả hình xăm']]) +
+      '<div id="tt-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn hình xăm bạn quan tâm', L.select('tt', opts), 'ptv-field-name') + '</div>', 'Xem ý nghĩa hình này') + '</div>' +
+      '<div id="tt-el" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Mệnh của bạn (theo năm sinh)', L.select('el', ['Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'].map(function (e) { return '<option' + (e === 'Thủy' ? ' selected' : '') + '>' + e + '</option>'; }).join('')), 'ptv-field-name') + '</div>', 'Lọc hình hợp mệnh này') + '</div>' +
+      '<div id="tt-all" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Xem nhanh toàn bộ từ điển', L.select('dummy', '<option>Danh sách đầy đủ</option>'), 'ptv-field-name') + '</div>', 'Mở danh sách đầy đủ') + '</div>';
+    V.wireTabs(c, ['tt-one', 'tt-el', 'tt-all']);
+    c.querySelector('#tt-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt-one'), e = dict[parseInt(box.querySelector('#tt').value, 10)]; if (!e) return;
+      L.resultBox(box, '<h3>Ý nghĩa hình xăm ' + esc(e.motif) + '</h3><p>' + esc(e.meaning) + '</p><p><strong>Lưu ý chọn hình và vị trí:</strong> ' + esc(e.advice) + '</p><p class="ptv-note">Hình xăm đi cùng bạn rất lâu dài; ý nghĩa phong thủy chỉ là một phần, quan trọng nhất là bạn thật sự yêu thích hình đó và chọn cơ sở xăm uy tín, an toàn vệ sinh.</p>');
+    });
+    c.querySelector('#tt-el form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt-el'), el = box.querySelector('#el').value;
+      var hits = dict.filter(function (e) { return (e.advice || '').indexOf('mệnh ' + el) >= 0 || (e.advice || '').indexOf('mọi mệnh') >= 0; });
+      L.resultBox(box, '<h3>Hình xăm hợp với người mệnh ' + el + ' (' + hits.length + ' hình)</h3>' + hits.map(function (e) { return '<p><strong>' + esc(e.motif) + ':</strong> ' + esc(firstSent(e.meaning)) + ' <em>' + esc(e.advice) + '</em></p>'; }).join('') + '<p class="ptv-note">Danh sách lọc theo phần lưu ý của từng hình trong từ điển của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>. Chưa rõ mệnh của mình thì tra năm sinh ở công cụ Tìm niên mệnh trên trang.</p>');
+    });
+    c.querySelector('#tt-all form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt-all');
+      var rows = dict.map(function (e) { return '<tr><td><strong>' + esc(e.motif) + '</strong></td><td>' + esc(firstSent(e.meaning)) + '</td></tr>'; }).join('');
+      L.resultBox(box, '<h3>Tất cả hình xăm trong từ điển (' + dict.length + ' hình)</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Hình xăm</th><th>Ý nghĩa rút gọn</th></tr>' + rows + '</table></div><p class="ptv-note">Bảng rút gọn câu đầu của mỗi mục; đọc luận và lưu ý đầy đủ ở tab tra một hình.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, {
+    'boi-not-ruoi-tren-mat': moleV2('moleFace', 'trên mặt', null),
+    'boi-not-ruoi-toan-than': moleV2('moleBody', 'trên cơ thể', [
+      { name: 'Đầu và cổ', positions: ['Cổ phía trước', 'Sau gáy'] },
+      { name: 'Thân trên', positions: ['Vai phải', 'Vai trái', 'Giữa ngực', 'Lưng', 'Eo', 'Bụng', 'Quanh rốn'] },
+      { name: 'Tay', positions: ['Cánh tay', 'Khuỷu tay', 'Mu bàn tay', 'Lòng bàn tay', 'Ngón tay'] },
+      { name: 'Chân', positions: ['Mông', 'Đùi', 'Đầu gối', 'Bắp chân', 'Mu bàn chân', 'Lòng bàn chân', 'Gót chân', 'Mắt cá chân'] }
+    ]),
+    'xem-y-nghia-hinh-xam': tattooV2
+  });
+})();
