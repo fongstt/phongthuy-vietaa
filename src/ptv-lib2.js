@@ -85,5 +85,15 @@
   }
   var QUY_NHAN = { 'Giáp': ['Sửu', 'Mùi'], 'Mậu': ['Sửu', 'Mùi'], 'Canh': ['Sửu', 'Mùi'], 'Ất': ['Tý', 'Thân'], 'Kỷ': ['Tý', 'Thân'], 'Bính': ['Hợi', 'Dậu'], 'Đinh': ['Hợi', 'Dậu'], 'Nhâm': ['Mão', 'Tỵ'], 'Quý': ['Mão', 'Tỵ'], 'Tân': ['Ngọ', 'Dần'] };
   var CHI_DIR = { 'Tý': 'Bắc', 'Sửu': 'Đông Bắc', 'Dần': 'Đông Bắc', 'Mão': 'Đông', 'Thìn': 'Đông Nam', 'Tỵ': 'Đông Nam', 'Ngọ': 'Nam', 'Mùi': 'Tây Nam', 'Thân': 'Tây Nam', 'Dậu': 'Tây', 'Tuất': 'Tây Bắc', 'Hợi': 'Tây Bắc' };
-  window.PTVDay = { dayInfo: dayInfo, fmtSolar: fmtSolar, fmtLunar: fmtLunar, trucOf: trucOf, satOf: satOf, GIO_HD: GIO_HD, scoreDay: scoreDay, monthDays: monthDays, lunar2solar: lunar2solar, QUY_NHAN: QUY_NHAN, CHI_DIR: CHI_DIR, PURPOSE_TRUC: PURPOSE_TRUC };
+  var TAI_THAN = { 'Giáp': 'Đông Nam', 'Ất': 'Đông Nam', 'Bính': 'Chính Đông', 'Đinh': 'Chính Đông', 'Mậu': 'Chính Bắc', 'Kỷ': 'Chính Nam', 'Canh': 'Tây Nam', 'Tân': 'Tây Nam', 'Nhâm': 'Chính Tây', 'Quý': 'Tây Bắc' };
+  var HY_THAN = { 'Giáp': 'Đông Bắc', 'Kỷ': 'Đông Bắc', 'Ất': 'Tây Bắc', 'Canh': 'Tây Bắc', 'Bính': 'Tây Nam', 'Tân': 'Tây Nam', 'Đinh': 'Chính Nam', 'Nhâm': 'Chính Nam', 'Mậu': 'Đông Nam', 'Quý': 'Đông Nam' };
+  var LTP_NAMES = ['Tuyệt Lộ', 'Đại An', 'Tốc Hỷ', 'Lưu Niên', 'Xích Khẩu', 'Tiểu Cát'];
+  var LTP_GOOD = { 'Đại An': 1, 'Tốc Hỷ': 1, 'Tiểu Cát': 1 };
+  var LTP_TEXT = { 'Đại An': 'Mọi việc hanh thông, nhà cửa yên lành, người xuất hành bình an, cầu tài nên đi hướng Tây hoặc Nam.', 'Tốc Hỷ': 'Tin vui sắp tới, đi việc quan và gặp gỡ đều may mắn, cầu tài nên đi hướng Nam, người đi có tin tốt về.', 'Tiểu Cát': 'May mắn chắc chắn, buôn bán có lời, mọi việc hòa hợp, có bệnh cầu chữa sẽ khỏi, người nhà mạnh khỏe.', 'Lưu Niên': 'Việc khó thành nhanh, cầu tài mờ mịt, kiện cáo nên hoãn, người đi lâu có tin về, nên làm chậm mà chắc.', 'Xích Khẩu': 'Dễ sinh cãi cọ và thị phi, nên hoãn chuyến đi nếu được, giữ lời ăn tiếng nói, đề phòng điều tiếng.', 'Tuyệt Lộ': 'Cầu tài dễ trái ý, ra đi dễ gặp trở ngại, tránh khởi sự việc lớn trong khắc này.' };
+  var CHI_KHAC = { 'Tý': 1, 'Sửu': 2, 'Dần': 3, 'Mão': 4, 'Thìn': 5, 'Tỵ': 6, 'Ngọ': 1, 'Mùi': 2, 'Thân': 3, 'Dậu': 4, 'Tuất': 5, 'Hợi': 6 };
+  function ltpOf(lunarDay, lunarMonth, hourChi) {
+    var r = ((lunarDay + lunarMonth + (CHI_KHAC[hourChi] || 1) - 2) % 6 + 6) % 6;
+    return LTP_NAMES[r];
+  }
+  window.PTVDay = { dayInfo: dayInfo, fmtSolar: fmtSolar, fmtLunar: fmtLunar, trucOf: trucOf, satOf: satOf, GIO_HD: GIO_HD, scoreDay: scoreDay, monthDays: monthDays, lunar2solar: lunar2solar, QUY_NHAN: QUY_NHAN, CHI_DIR: CHI_DIR, PURPOSE_TRUC: PURPOSE_TRUC, TAI_THAN: TAI_THAN, HY_THAN: HY_THAN, ltpOf: ltpOf, LTP_TEXT: LTP_TEXT, LTP_GOOD: LTP_GOOD };
 })();
