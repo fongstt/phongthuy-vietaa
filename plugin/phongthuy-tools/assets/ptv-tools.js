@@ -1957,3 +1957,37 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   window.PTVDayToolsV2 = { scanHTML: scanHTML, quarterHTML: quarterHTML, checkDayHTML: checkDayHTML, tabsHTML: tabsHTML, wireTabs: wireTabs, formWrap2: formWrap2, monthOptions2: monthOptions2, fmtScore: fmtScore, verdictFor: verdictFor };
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-dong-tho': dongThoV2 });
 })();
+
+/* --- Nang cap rieng Xem Ngay Mua Nha (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function muaNhaV2(c) {
+    c.innerHTML = V.tabsHTML([['mn-scan', 'Quét ngày tốt theo tháng'], ['mn-day', 'Kiểm tra một ngày cụ thể'], ['mn-quarter', 'Top ngày tốt 3 tháng tới']]) +
+      '<div id="mn-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn mua nhà', L.select('m', V.monthOptions2())) + '</div><div class="ptv-row">' + L.field('Việc chính trong ngày', L.select('mode', '<option value="ban-giao">Nhận bàn giao nhà</option><option value="ky-ket">Ký hợp đồng, đặt cọc</option>'), 'ptv-field-name') + '</div>', 'Xem ngày tốt mua nhà') + '</div>' +
+      '<div id="mn-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Ngày dự kiến (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="mn-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990)), 'ptv-field-name') + '</div>', 'Tìm ngày tốt nhất 3 tháng tới') + '</div>';
+    V.wireTabs(c, ['mn-scan', 'mn-day', 'mn-quarter']);
+    c.querySelector('#mn-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mn-scan'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number);
+      var mode = box.querySelector('#mode').value;
+      var note = mode === 'ban-giao'
+        ? '<p class="ptv-note">Bạn đang xem ngày cho việc <strong>nhận bàn giao nhà</strong>: đây là mốc bạn chính thức nhận chìa khóa và bước vào nhà mới, nên ưu tiên ngày giờ thuận tiện để kiểm tra kỹ hiện trạng nhà, đồng hồ điện nước và biên bản bàn giao. Nếu ngày ký hợp đồng khác ngày nhận nhà, bạn có thể kiểm tra riêng ngày ký ở tab Kiểm tra một ngày cụ thể.</p>'
+        : '<p class="ptv-note">Bạn đang xem ngày cho việc <strong>ký hợp đồng, đặt cọc</strong>: đây là mốc pháp lý quan trọng nhất của giao dịch, nên ưu tiên ngày đẹp và mang đủ giấy tờ, đọc kỹ điều khoản trước khi ký. Ngày nhận bàn giao sau này có thể chọn riêng ở tab Kiểm tra một ngày cụ thể.</p>';
+      L.resultBox(box, '<h3>Ngày tốt mua nhà tháng ' + parts[1] + '/' + parts[0] + ' cho gia chủ sinh năm ' + me.year + ' (tuổi ' + me.chi + ')</h3>' + note + V.scanHTML('mua-nha', me.chi, parts[0], parts[1], 'mua nhà'));
+    });
+    c.querySelector('#mn-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mn-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, V.checkDayHTML('mua-nha', me.chi, box.querySelector('#dt').value, 'ký kết và nhận nhà'));
+    });
+    c.querySelector('#mn-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mn-quarter'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, '<h3>Ngày tốt mua nhà nhất trong 3 tháng tới cho tuổi ' + me.chi + '</h3>' + V.quarterHTML('mua-nha', me.chi, 'mua nhà'));
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-mua-nha': muaNhaV2 });
+})();

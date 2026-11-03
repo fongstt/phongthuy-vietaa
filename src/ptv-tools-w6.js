@@ -288,3 +288,70 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-mua-nha': muaNhaV2 });
 })();
+
+/* --- Nang cap rieng Xem Nam Sinh Con (v2): giu nguyen cong thuc diem, them phan tich tung ben --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function relText(P, C) {
+    if (L.GENERATES[P.el] === C.el) return 'mệnh ' + P.el + ' sinh mệnh ' + C.el + ' của con (bố mẹ nâng đỡ con)';
+    if (L.GENERATES[C.el] === P.el) return 'mệnh con ' + C.el + ' sinh mệnh ' + P.el + ' (con hao cho bố mẹ, theo lệ là con mang tài khí về nhà)';
+    if (L.CONTROLS[P.el] === C.el) return 'mệnh ' + P.el + ' khắc mệnh ' + C.el + ' của con';
+    if (L.CONTROLS[C.el] === P.el) return 'mệnh con ' + C.el + ' khắc mệnh ' + P.el;
+    return 'mệnh cùng hành ' + P.el + ' hoặc bình hòa với mệnh con';
+  }
+  function scoreYear(F, M, cy) {
+    var C = L.yearInfo(cy), s = 5, notes = [];
+    [F, M].forEach(function (P, ix) {
+      var rel = L.chiRelation(P.chi, C.chi);
+      s += rel.score * 0.8;
+      if (rel.score >= 2) notes.push(rel.label + ' với ' + (ix ? 'mẹ' : 'bố'));
+      if (rel.score <= -2) notes.push('xung với ' + (ix ? 'mẹ' : 'bố'));
+      if (L.GENERATES[P.el] === C.el) { s += 0.8; notes.push('mệnh ' + (ix ? 'mẹ' : 'bố') + ' sinh con'); }
+      else if (L.CONTROLS[P.el] === C.el) { s -= 0.8; notes.push('mệnh ' + (ix ? 'mẹ' : 'bố') + ' khắc con'); }
+      else if (L.CONTROLS[C.el] === P.el) { s -= 0.5; }
+    });
+    s = Math.max(0, Math.min(10, Math.round(s * 2) / 2));
+    return { cy: cy, C: C, s: s, notes: notes };
+  }
+  function verdict(s) { return s >= 7 ? 'Rất hợp' : s >= 6 ? 'Hợp' : s >= 5 ? 'Khá hợp' : s >= 4 ? 'Bình hòa' : 'Ít hợp'; }
+
+  function namSinhConV2(c) {
+    var nowY = new Date().getFullYear();
+    c.innerHTML = V.tabsHTML([['sc-rank', 'Xếp hạng các năm sinh con'], ['sc-one', 'Kiểm tra một năm cụ thể']]) +
+      '<div id="sc-rank">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bố', L.select('fy', L.yearOptions(1955, 2010, 1992))) + L.field('Năm sinh của mẹ', L.select('my', L.yearOptions(1955, 2010, 1994))) + L.field('Xét đến năm', L.select('ey', L.yearOptions(2028, 2035, 2030))) + '</div>', 'Xem năm sinh con hợp tuổi') + '</div>' +
+      '<div id="sc-one" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bố', L.select('fy', L.yearOptions(1955, 2010, 1992))) + L.field('Năm sinh của mẹ', L.select('my', L.yearOptions(1955, 2010, 1994))) + L.field('Năm dự định sinh con', L.select('cy', L.yearOptions(2026, 2035, 2027))) + '</div>', 'Kiểm tra năm này') + '</div>';
+    V.wireTabs(c, ['sc-rank', 'sc-one']);
+    function parents(box) { return [L.yearInfo(parseInt(box.querySelector('#fy').value, 10)), L.yearInfo(parseInt(box.querySelector('#my').value, 10))]; }
+    c.querySelector('#sc-rank form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#sc-rank'), pr = parents(box), F = pr[0], M = pr[1];
+      var ey = parseInt(box.querySelector('#ey').value, 10), rows = [];
+      for (var cy = nowY; cy <= ey; cy++) rows.push(scoreYear(F, M, cy));
+      rows.sort(function (a, b) { return b.s - a.s || a.cy - b.cy; });
+      var top = rows[0];
+      var html = '<div class="ptv-facts"><span>Bố: <strong>' + F.year + '</strong> (' + F.text + ', ' + esc(F.napAm) + ')</span><span>Mẹ: <strong>' + M.year + '</strong> (' + M.text + ', ' + esc(M.napAm) + ')</span></div>' +
+        '<h3>Năm hợp nhất trong các năm đã xét: ' + top.cy + ' (' + top.C.text + '), ' + V.fmtScore(top.s) + '/10</h3>' +
+        '<p>Con sinh năm ' + top.cy + ' tuổi ' + top.C.text + ', mệnh ' + esc(top.C.napAm) + '. ' + (top.notes.length ? 'Điểm mạnh của năm này: ' + top.notes.join(', ').toLowerCase() + '.' : 'Năm này bình hòa với cả bố và mẹ, không xung khắc đáng kể.') + ' Bảng đầy đủ bên dưới xếp hạng mọi năm từ ' + nowY + ' đến ' + ey + ' để bạn đối chiếu cùng kế hoạch thực tế của gia đình.</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Năm sinh</th><th>Tuổi của con</th><th>Mệnh</th><th>Điểm hợp</th><th>Nhận định</th><th>Chi tiết quan hệ</th></tr>' +
+        rows.map(function (r) { return '<tr><td><strong>' + r.cy + '</strong></td><td>' + r.C.text + '</td><td>' + esc(r.C.napAm) + '</td><td><strong>' + V.fmtScore(r.s) + '</strong></td><td>' + verdict(r.s) + '</td><td>' + (r.notes.join(', ') || 'Bình hòa với cả bố và mẹ') + '</td></tr>'; }).join('') + '</table></div>' +
+        '<p class="ptv-note">Điểm được tính từ quan hệ địa chi (tam hợp, lục hợp, lục xung, lục hại) và quan hệ sinh khắc nạp âm giữa con với từng người bố, mẹ. Con cái là duyên trời cho, bảng này chỉ nên dùng để tham khảo khi gia đình đang có kế hoạch và còn nhiều lựa chọn, tuyệt đối không nên trì hoãn việc sinh con chỉ vì một năm điểm thấp nếu sức khỏe và điều kiện của mẹ không cho phép chờ đợi.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#sc-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#sc-one'), pr = parents(box), F = pr[0], M = pr[1];
+      var cy = parseInt(box.querySelector('#cy').value, 10), r = scoreYear(F, M, cy), C = r.C;
+      function block(P, label) {
+        var rel = L.chiRelation(P.chi, C.chi);
+        return '<p><strong>Con với ' + label + ' (' + P.text + '):</strong> tuổi ' + C.chi + ' và tuổi ' + P.chi + ' thuộc quan hệ ' + rel.label.toLowerCase() + ' theo địa chi; về mệnh, ' + relText(P, C) + '.</p>';
+      }
+      var html = '<h3>Con sinh năm ' + cy + ' (' + C.text + ', mệnh ' + esc(C.napAm) + '): điểm hợp ' + V.fmtScore(r.s) + '/10, ' + verdict(r.s) + '</h3>' +
+        block(F, 'bố') + block(M, 'mẹ') +
+        '<p><strong>Tổng kết:</strong> ' + (r.notes.length ? r.notes.join(', ') + '.' : 'Năm này bình hòa với cả bố và mẹ.') + ' ' + (r.s >= 6 ? 'Đây là mức điểm thuận theo quan niệm dân gian, gia đình có thể yên tâm lên kế hoạch.' : r.s >= 4.5 ? 'Mức điểm trung bình khá phổ biến, vì trong 12 con giáp rất hiếm năm hợp hoàn hảo với cả hai tuổi bố mẹ; đừng vì mức điểm này mà thay đổi kế hoạch lớn của gia đình.' : 'Mức điểm thấp chủ yếu do xung khắc địa chi, nhưng đây chỉ là một lớp quan niệm tham khảo; tình cảm và cách nuôi dạy con mới quyết định hòa khí gia đình.') + '</p>' +
+        '<p class="ptv-note">Khi đã chốt năm sinh, bạn có thể xem tiếp công cụ <a href="https://phongthuy.vietaa.com/dat-ten-con/">Đặt tên con theo phong thủy</a> của Phong Thủy VietAA để chuẩn bị sẵn vài cái tên hợp mệnh cho bé.</p>';
+      L.resultBox(box, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-nam-sinh-con': namSinhConV2 });
+})();
