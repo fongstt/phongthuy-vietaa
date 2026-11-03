@@ -4624,3 +4624,497 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-gio-xuat-hanh': gioXuatHanhV3, 'huong-xuat-hanh-dau-nam': huongTetV3 });
 })();
+
+/* --- La so tu vi v3: an 14 chinh tinh + Tu Hoa, cuc theo nap am cung Menh --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, E = window.PTVEngine, esc = L.esc, V = window.PTVDayToolsV2;
+  var CUNG12 = ['Mệnh', 'Phụ Mẫu', 'Phúc Đức', 'Điền Trạch', 'Quan Lộc', 'Nô Bộc', 'Thiên Di', 'Tật Ách', 'Tài Bạch', 'Tử Tức', 'Phu Thê', 'Huynh Đệ'];
+  var CUC = { 'Thủy': ['Thủy Nhị Cục', 2], 'Mộc': ['Mộc Tam Cục', 3], 'Kim': ['Kim Tứ Cục', 4], 'Thổ': ['Thổ Ngũ Cục', 5], 'Hỏa': ['Hỏa Lục Cục', 6] };
+  var HO_DON = { 'Giáp': 'Bính', 'Kỷ': 'Bính', 'Ất': 'Mậu', 'Canh': 'Mậu', 'Bính': 'Canh', 'Tân': 'Canh', 'Đinh': 'Nhâm', 'Nhâm': 'Nhâm', 'Mậu': 'Giáp', 'Quý': 'Giáp' };
+  var TV_RING = [['Tử Vi', 0], ['Thiên Cơ', -1], ['Thái Dương', -3], ['Vũ Khúc', -4], ['Thiên Đồng', -5], ['Liêm Trinh', -8]];
+  var TP_RING = [['Thiên Phủ', 0], ['Thái Âm', 1], ['Tham Lang', 2], ['Cự Môn', 3], ['Thiên Tướng', 4], ['Thiên Lương', 5], ['Thất Sát', 6], ['Phá Quân', 10]];
+  var TU_HOA = {
+    'Giáp': { 'Liêm Trinh': 'Hóa Lộc', 'Phá Quân': 'Hóa Quyền', 'Vũ Khúc': 'Hóa Khoa', 'Thái Dương': 'Hóa Kỵ' },
+    'Ất': { 'Thiên Cơ': 'Hóa Lộc', 'Thiên Lương': 'Hóa Quyền', 'Tử Vi': 'Hóa Khoa', 'Thái Âm': 'Hóa Kỵ' },
+    'Bính': { 'Thiên Đồng': 'Hóa Lộc', 'Thiên Cơ': 'Hóa Quyền', 'Liêm Trinh': 'Hóa Kỵ', 'Văn Xương': 'Hóa Khoa' },
+    'Đinh': { 'Thái Âm': 'Hóa Lộc', 'Thiên Đồng': 'Hóa Quyền', 'Thiên Cơ': 'Hóa Khoa', 'Cự Môn': 'Hóa Kỵ' },
+    'Mậu': { 'Tham Lang': 'Hóa Lộc', 'Thái Âm': 'Hóa Quyền', 'Thiên Cơ': 'Hóa Kỵ', 'Hữu Bật': 'Hóa Khoa' },
+    'Kỷ': { 'Vũ Khúc': 'Hóa Lộc', 'Tham Lang': 'Hóa Quyền', 'Thiên Lương': 'Hóa Khoa', 'Văn Khúc': 'Hóa Kỵ' },
+    'Canh': { 'Thái Dương': 'Hóa Lộc', 'Vũ Khúc': 'Hóa Quyền', 'Thái Âm': 'Hóa Khoa', 'Thiên Đồng': 'Hóa Kỵ' },
+    'Tân': { 'Cự Môn': 'Hóa Lộc', 'Thái Dương': 'Hóa Quyền', 'Văn Khúc': 'Hóa Khoa', 'Văn Xương': 'Hóa Kỵ' },
+    'Nhâm': { 'Thiên Lương': 'Hóa Lộc', 'Tử Vi': 'Hóa Quyền', 'Vũ Khúc': 'Hóa Kỵ', 'Tả Phù': 'Hóa Khoa' },
+    'Quý': { 'Phá Quân': 'Hóa Lộc', 'Cự Môn': 'Hóa Quyền', 'Thái Âm': 'Hóa Khoa', 'Tham Lang': 'Hóa Kỵ' }
+  };
+  var STAR_TXT = {
+    'Tử Vi': 'Sao chủ của lá số, tượng trưng cho vua, chủ về quyền uy, khả năng lãnh đạo và phúc khí tập trung.',
+    'Thiên Cơ': 'Sao trí tuệ và mưu lược, chủ về đầu óc tính toán, sự linh hoạt và duyên với nghề dùng trí óc.',
+    'Thái Dương': 'Sao ánh sáng, chủ về danh tiếng, sự quang minh chính trực và hình ảnh người cha, người chồng.',
+    'Vũ Khúc': 'Sao tài tinh kiêm võ tinh, chủ về tiền bạc, quyết đoán và tính cách cứng rắn, ít nói.',
+    'Thiên Đồng': 'Sao phúc tinh hiền hòa, chủ về sự an nhàn, lòng nhân hậu và khả năng hưởng thụ đời sống.',
+    'Liêm Trinh': 'Sao đào hoa kiêm tù tinh, chủ về tình cảm sâu, tính nguyên tắc và những mối quan hệ phức tạp.',
+    'Thiên Phủ': 'Sao kho tàng, chủ về khả năng giữ của, quản trị và sự ổn định, bao dung.',
+    'Thái Âm': 'Sao ánh trăng, chủ về sự dịu dàng, tài sản tích lũy dần và hình ảnh người mẹ, người vợ.',
+    'Tham Lang': 'Sao đào hoa và dục vọng, chủ về giao tế, ham muốn trải nghiệm và tài ăn nói.',
+    'Cự Môn': 'Sao lời nói, chủ về tranh biện, thị phi và các nghề dùng miệng như luật, giảng dạy.',
+    'Thiên Tướng': 'Sao ấn tín, chủ về sự giúp đỡ, lòng trung hậu và vai trò phò tá, cố vấn.',
+    'Thiên Lương': 'Sao thọ và che chở, chủ về phúc đức, sự điềm đạm và duyên làm việc thiện, y dược.',
+    'Thất Sát': 'Sao tướng quân, chủ về sự dũng mãnh, quyết liệt và những bước ngoặt lớn, ít khi sống yên ổn.',
+    'Phá Quân': 'Sao phá cách, chủ về thay đổi, mở đường và tính tiên phong, hao tán rồi gây dựng lại.'
+  };
+  var CUNG_TXT = {
+    'Mệnh': 'Cung Mệnh là trung tâm của lá số, nói về bản chất, khí chất và hướng đi tổng thể của một đời người.',
+    'Phụ Mẫu': 'Cung Phụ Mẫu luận về cha mẹ, nền tảng gia đình và duyên với cấp trên, người đỡ đầu thời trẻ.',
+    'Phúc Đức': 'Cung Phúc Đức nói về phúc phần dòng họ, đời sống tinh thần và khả năng hưởng an yên.',
+    'Điền Trạch': 'Cung Điền Trạch luận về nhà cửa, đất đai và khả năng tích lũy tài sản cố định.',
+    'Quan Lộc': 'Cung Quan Lộc là cung sự nghiệp: con đường công danh và nghề nghiệp hợp mệnh.',
+    'Nô Bộc': 'Cung Nô Bộc luận về bạn bè, đồng nghiệp và cấp dưới, cho thấy bạn được bạn giúp hay phải tự thân.',
+    'Thiên Di': 'Cung Thiên Di nói về phần đời khi ra ngoài xã hội: đi xa, lập nghiệp phương xa và hình ảnh với người ngoài.',
+    'Tật Ách': 'Cung Tật Ách luận về sức khỏe và những điểm yếu thể chất cần lưu ý sớm theo bản mệnh.',
+    'Tài Bạch': 'Cung Tài Bạch là cung tiền bạc: cách kiếm tiền, giữ tiền và thái độ với tài chính.',
+    'Tử Tức': 'Cung Tử Tức luận về con cái, duyên con và cách bạn nuôi dạy, truyền lại cho thế hệ sau.',
+    'Phu Thê': 'Cung Phu Thê nói về hôn nhân: kiểu người bạn đời hợp với bạn và cách hai người chung sống.',
+    'Huynh Đệ': 'Cung Huynh Đệ luận về anh chị em ruột và bạn thân như ruột thịt, mức độ hòa hợp, đỡ đần nhau.'
+  };
+  var MENH_TXT = { 'Tý': 'Mệnh tại Tý, cung của sự khởi đầu và trí tuệ. Người có mệnh cung này thường thông minh, linh hoạt, giỏi tích lũy nhưng đôi lúc lo xa.', 'Sửu': 'Mệnh tại Sửu, chủ về cần cù và bền bỉ. Đường đời đi chậm mà chắc, hậu vận thường khá hơn tiền vận.', 'Dần': 'Mệnh tại Dần, khí thế mạnh, dám nghĩ dám làm. Sự nghiệp có nhiều bước ngoặt lớn, cần tiết chế sự nóng nảy.', 'Mão': 'Mệnh tại Mão, tính tình mềm mỏng, trọng tình cảm và thẩm mỹ. Hợp các việc cần sự khéo léo và giao tiếp.', 'Thìn': 'Mệnh tại Thìn, ôm chí lớn, có duyên với quyền lực và việc lớn. Cần tránh tự tin quá mức khi thời cơ chưa tới.', 'Tỵ': 'Mệnh tại Tỵ, sâu sắc và kín đáo, trực giác mạnh. Hợp việc nghiên cứu, phân tích và các nghề cần sự tinh tế.', 'Ngọ': 'Mệnh tại Ngọ, nhiệt huyết, thích tự do và được chú ý. Sự nghiệp thăng trầm theo cảm hứng, cần người đồng hành giữ nhịp.', 'Mùi': 'Mệnh tại Mùi, hiền lành, giàu lòng trắc ẩn, có duyên nghệ thuật. Đời sống tình cảm phong phú, cần quyết đoán hơn trong việc lớn.', 'Thân': 'Mệnh tại Thân, nhanh trí, giỏi ứng biến và giao thiệp rộng. Hợp kinh doanh và các việc cần xoay xở linh hoạt.', 'Dậu': 'Mệnh tại Dậu, cầu toàn, sắc sảo và có óc tổ chức. Chú ý tránh khắt khe với người thân vì những tiểu tiết.', 'Tuất': 'Mệnh tại Tuất, trung thành, trọng nghĩa và có trách nhiệm. Được người tin cậy giao việc lớn, hậu vận an ổn.', 'Hợi': 'Mệnh tại Hợi, phúc hậu, dễ được quý nhân giúp. Tiền vận vất vả hơn hậu vận, càng về sau càng an nhàn.' };
+  function mod12(n) { return ((n % 12) + 12) % 12; }
+  function buildChart(dt, hourIdx, g) {
+    var lu = E.convertSolar2Lunar(dt.d, dt.m, dt.y, 7), yi = L.yearInfo(lu.year);
+    var menhIdx = mod12(2 + (lu.month - 1) - hourIdx);
+    var thanIdx = mod12(2 + (lu.month - 1) + hourIdx);
+    var duong = ['Giáp', 'Bính', 'Mậu', 'Canh', 'Nhâm'].indexOf(yi.can) >= 0;
+    var thuan = (duong && g === 'Nam') || (!duong && g === 'Nữ');
+    var startCanIdx = E.CAN.indexOf(HO_DON[yi.can]);
+    var palaceCanChi = [], i;
+    for (i = 0; i < 12; i++) palaceCanChi.push({ can: E.CAN[((startCanIdx + (i - 2)) % 10 + 10) % 10], chi: E.CHI[i] });
+    var menhNap = E.napAmOf(palaceCanChi[menhIdx]);
+    var cuc = CUC[menhNap.element];
+    var q = Math.ceil(lu.day / cuc[1]), r = q * cuc[1] - lu.day;
+    var tvIdx = mod12(2 + (q - 1) + (r % 2 === 0 ? r : -r));
+    var tpIdx = mod12(4 - tvIdx);
+    var starsAt = []; for (i = 0; i < 12; i++) starsAt.push([]);
+    TV_RING.forEach(function (s) { starsAt[mod12(tvIdx + s[1])].push(s[0]); });
+    TP_RING.forEach(function (s) { starsAt[mod12(tpIdx + s[1])].push(s[0]); });
+    return { lu: lu, yi: yi, menhIdx: menhIdx, thanIdx: thanIdx, thuan: thuan, amDuong: (duong ? 'Dương' : 'Âm') + ' ' + g, palaceCanChi: palaceCanChi, menhNap: menhNap, cuc: cuc, tvIdx: tvIdx, tpIdx: tpIdx, starsAt: starsAt, hoa: TU_HOA[yi.can] || {} };
+  }
+  function palaceNameAt(ch, chiIdx) { return CUNG12[mod12(ch.menhIdx - chiIdx)]; }
+  function starLabel(ch, name) {
+    var h = ch.hoa[name];
+    return h ? name + ' (' + h + ')' : name;
+  }
+  function dateRow(idPrefix) {
+    return '<div class="ptv-row">' + L.field('Ngày sinh (dương lịch)', '<input type="text" id="' + idPrefix + 'bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="' + idPrefix + 'bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="' + idPrefix + 'by" inputmode="numeric" value="1995">') + '</div><div class="ptv-row">' + L.field('Giờ sinh', L.select(idPrefix + 'h', E.CHI.map(function (x, i) { return '<option value="' + i + '"' + (i === 6 ? ' selected' : '') + '>' + x + ' (' + E.HOUR_LABEL[x] + ')</option>'; }).join(''))) + L.field('Giới tính', L.genderSelect(idPrefix + 'g')) + '</div>';
+  }
+  function readChart(box, p) {
+    var dt = { d: parseInt(box.querySelector('#' + p + 'bd').value, 10), m: parseInt(box.querySelector('#' + p + 'bm').value, 10), y: parseInt(box.querySelector('#' + p + 'by').value, 10) };
+    return buildChart(dt, parseInt(box.querySelector('#' + p + 'h').value, 10), box.querySelector('#' + p + 'g').value);
+  }
+  function tuViV3(c) {
+    c.innerHTML = V.tabsHTML([['tv3-chart', 'Lập lá số (có 14 chính tinh)'], ['tv3-palace', 'Luận từng cung']]) +
+      '<div id="tv3-chart">' + V.formWrap2(dateRow(''), 'Lập lá số tử vi của tôi') + '</div>' +
+      '<div id="tv3-palace" hidden>' + V.formWrap2(dateRow('p') + '<div class="ptv-row">' + L.field('Cung muốn xem', L.select('pc', CUNG12.map(function (n) { return '<option value="' + n + '">Cung ' + n + '</option>'; }).join(''))) + '</div>', 'Xem luận cung này') + '</div>';
+    V.wireTabs(c, ['tv3-chart', 'tv3-palace']);
+    c.querySelector('#tv3-chart form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tv3-chart'), ch = readChart(box, '');
+      var rows = CUNG12.map(function (name, i) {
+        var idx = mod12(ch.menhIdx - i);
+        var stars = ch.starsAt[idx].map(function (s) { return '<strong>' + starLabel(ch, s) + '</strong>'; }).join(', ') || 'Không có chính tinh';
+        return '<tr><td><strong>' + name + '</strong>' + (idx === ch.thanIdx ? ' (kiêm Thân)' : '') + '</td><td>' + ch.palaceCanChi[idx].can + ' ' + E.CHI[idx] + '</td><td>' + stars + '</td><td>' + CUNG_TXT[name] + '</td></tr>';
+      }).join('');
+      var hoaLines = [], hoaPhu = [];
+      Object.keys(ch.hoa).forEach(function (s) {
+        var placed = null;
+        for (var j = 0; j < 12; j++) if (ch.starsAt[j].indexOf(s) >= 0) placed = j;
+        if (placed !== null) hoaLines.push('<strong>' + s + ' ' + ch.hoa[s] + '</strong> tại cung ' + palaceNameAt(ch, placed) + ' (' + E.CHI[placed] + ')');
+        else hoaPhu.push(s + ' ' + ch.hoa[s]);
+      });
+      var limits = '';
+      for (var k = 0; k < 8; k++) {
+        var ci = mod12(ch.menhIdx + (ch.thuan ? -k : k));
+        var startAge = ch.cuc[1] + k * 10;
+        limits += '<tr><td><strong>' + startAge + ' đến ' + (startAge + 9) + ' tuổi</strong></td><td>Cung ' + palaceNameAt(ch, ci) + ' (' + E.CHI[ci] + ')' + (ch.starsAt[ci].length ? ': ' + ch.starsAt[ci].map(function (s) { return starLabel(ch, s); }).join(', ') : '') + '</td></tr>';
+      }
+      L.resultBox(box, '<div class="ptv-facts"><span>Sinh âm lịch: <strong>' + ch.lu.day + '/' + ch.lu.month + '/' + ch.lu.year + '</strong></span><span>Tuổi: <strong>' + ch.yi.text + '</strong></span><span>Cung Mệnh: <strong>' + ch.palaceCanChi[ch.menhIdx].can + ' ' + E.CHI[ch.menhIdx] + '</strong> (' + esc(ch.menhNap.name) + ')</span><span><strong>' + ch.cuc[0] + '</strong></span><span>' + ch.amDuong + '</span></div>' +
+        '<h3>Cung Mệnh tại ' + E.CHI[ch.menhIdx] + ', Cung Thân tại ' + E.CHI[ch.thanIdx] + (ch.menhIdx === ch.thanIdx ? ' (Mệnh Thân đồng cung)' : '') + ', sao Tử Vi tại ' + E.CHI[ch.tvIdx] + '</h3><p>' + MENH_TXT[E.CHI[ch.menhIdx]] + '</p>' +
+        '<h3>Mười hai cung và 14 chính tinh trên lá số của bạn</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cung</th><th>Can chi cung</th><th>Chính tinh tọa thủ</th><th>Chủ về</th></tr>' + rows + '</table></div>' +
+        '<h3>Tứ Hóa theo can ' + ch.yi.can + ' của năm sinh</h3><p>' + hoaLines.join('; ') + '. Tứ Hóa gắn vào chính các sao này nên cách biểu hiện của sao thay đổi hẳn theo hóa đi kèm, bạn xem phần luận sao trong tab Luận từng cung để đối chiếu.' + (hoaPhu.length ? ' Riêng ' + hoaPhu.join(', ') + ' thuộc về phụ tinh, công cụ chưa an phụ tinh nên chỉ ghi chú tại đây.' : '') + '</p>' +
+        '<h3>Đại hạn của bạn (mỗi hạn 10 năm, khởi từ ' + ch.cuc[1] + ' tuổi, đi ' + (ch.thuan ? 'thuận' : 'nghịch') + ' vì bạn là ' + ch.amDuong + ')</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Khoảng tuổi</th><th>Đại hạn tại</th></tr>' + limits + '</table></div>' +
+        '<p class="ptv-note">Lá số do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> lập minh bạch theo quy tắc truyền thống: an Mệnh Thân, an can 12 cung theo Ngũ Hổ Độn, định Cục theo nạp âm cung Mệnh, an đủ 14 chính tinh và Tứ Hóa. Phần chưa có là các phụ tinh (Văn Xương, Văn Khúc, Tả Hữu, Lộc Tồn...) và vòng sao theo năm xem; luận giải chuyên sâu vẫn nên đối chiếu thêm với thầy tử vi.</p>');
+    });
+    c.querySelector('#tv3-palace form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tv3-palace'), ch = readChart(box, 'p'), p = box.querySelector('#pc').value;
+      var idx = mod12(ch.menhIdx - CUNG12.indexOf(p));
+      var stars = ch.starsAt[idx];
+      var starHtml = stars.length ? stars.map(function (s) { return '<p><strong>' + starLabel(ch, s) + ':</strong> ' + STAR_TXT[s] + (ch.hoa[s] ? ' Sao này mang ' + ch.hoa[s] + ' theo can năm sinh của bạn, nên sắc thái biểu hiện nghiêng hẳn theo hóa đó khi luận vào cung ' + p + '.' : '') + '</p>'; }).join('') : '<p>Cung này không có chính tinh tọa thủ. Trong tử vi, cung vô chính tinh phải mượn sao của cung đối xung chiếu sang để luận, vì vậy khi đọc cung này bạn nên xem cùng cung đối diện là cung ' + palaceNameAt(ch, mod12(idx + 6)) + '.</p>';
+      L.resultBox(box, '<h3>Cung ' + p + ' của bạn an tại ' + ch.palaceCanChi[idx].can + ' ' + E.CHI[idx] + (idx === ch.thanIdx ? ' (đây cũng là cung Thân của bạn)' : '') + '</h3><p>' + CUNG_TXT[p] + '</p>' + starHtml + '<p class="ptv-note">Luận một cung cần xét thêm tam hợp (cung này cùng hai cung cách bốn cung) và cung đối xung; phần tóm tắt ở đây là lớp đầu tiên để bạn nắm ý chính.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-la-so-tu-vi': tuViV3 });
+})();
+
+/* --- La so tu tru v3: them Dai Van --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, E = window.PTVEngine, esc = L.esc, V = window.PTVDayToolsV2;
+  var CAN_ELX = { 'Giáp': 'Mộc', 'Ất': 'Mộc', 'Bính': 'Hỏa', 'Đinh': 'Hỏa', 'Mậu': 'Thổ', 'Kỷ': 'Thổ', 'Canh': 'Kim', 'Tân': 'Kim', 'Nhâm': 'Thủy', 'Quý': 'Thủy' };
+  var CHI_ELX = { 'Tý': 'Thủy', 'Sửu': 'Thổ', 'Dần': 'Mộc', 'Mão': 'Mộc', 'Thìn': 'Thổ', 'Tỵ': 'Hỏa', 'Ngọ': 'Hỏa', 'Mùi': 'Thổ', 'Thân': 'Kim', 'Dậu': 'Kim', 'Tuất': 'Thổ', 'Hợi': 'Thủy' };
+  var DUONG_CAN = { 'Giáp': 1, 'Bính': 1, 'Mậu': 1, 'Canh': 1, 'Nhâm': 1 };
+  var TG_TXT = {
+    'Tỷ Kiên': 'sao của tự chủ và ngang bằng: giai đoạn tự lực, cạnh tranh ngang sức, hợp làm độc lập.',
+    'Kiếp Tài': 'sao của tranh đoạt: giai đoạn dám giành cơ hội, cần giữ chừng mực trong tiền bạc chung.',
+    'Thực Thần': 'sao của tài hoa và hưởng thụ: giai đoạn sáng tạo, ăn nói và làm nghề nhẹ nhàng mà bền.',
+    'Thương Quan': 'sao của phá cách: giai đoạn tài năng nổi bật, cần tiết chế lời nói với cấp trên.',
+    'Thiên Tài': 'sao của tài lộc bất ngờ: giai đoạn nhạy với cơ hội tiền bạc ngoài dự tính.',
+    'Chính Tài': 'sao của tài lộc chính đáng: giai đoạn tiền đến từ công việc chính, tích lũy đều đặn.',
+    'Thất Sát': 'sao của áp lực và quyền uy khắc chế: giai đoạn thử thách mạnh, rèn được thì thành bản lĩnh và vị thế.',
+    'Chính Quan': 'sao của danh vị và kỷ luật: giai đoạn hợp đường tổ chức, uy tín, giấy tờ và pháp lý.',
+    'Thiên Ấn': 'sao của học vấn lệch và trực giác: giai đoạn học sâu một ngành hẹp, hợp nghiên cứu và nghề tự do chuyên môn.',
+    'Chính Ấn': 'sao của học vấn chính quy và sự đỡ đầu: giai đoạn được thầy, cấp trên và gia đình nâng đỡ.'
+  };
+  function tenGod(dayCan, otherCan) {
+    var dEl = CAN_ELX[dayCan], oEl = CAN_ELX[otherCan], same = !!DUONG_CAN[dayCan] === !!DUONG_CAN[otherCan];
+    if (oEl === dEl) return same ? 'Tỷ Kiên' : 'Kiếp Tài';
+    if (L.GENERATES[dEl] === oEl) return same ? 'Thực Thần' : 'Thương Quan';
+    if (L.CONTROLS[dEl] === oEl) return same ? 'Thiên Tài' : 'Chính Tài';
+    if (L.CONTROLS[oEl] === dEl) return same ? 'Thất Sát' : 'Chính Quan';
+    return same ? 'Thiên Ấn' : 'Chính Ấn';
+  }
+  function sexIdx(can, chi) {
+    var ci = E.CAN.indexOf(can), hi = E.CHI.indexOf(chi);
+    for (var n = 0; n < 60; n++) if (n % 10 === ci && n % 12 === hi) return n;
+    return 0;
+  }
+  function pillarAt(idx) {
+    var n = ((idx % 60) + 60) % 60, can = E.CAN[n % 10], chi = E.CHI[n % 12];
+    return { can: can, chi: chi, text: can + ' ' + chi, canEl: CAN_ELX[can], chiEl: CHI_ELX[chi] };
+  }
+  function monthChiAt(d, m, y) {
+    var yP = E.yearPillar(d, m, y);
+    return E.monthPillar(d, m, E.CAN.indexOf(yP.pillar.can)).chi;
+  }
+  function daysToTiet(dt, baseChi, dir) {
+    var base = new Date(dt.y, dt.m - 1, dt.d);
+    for (var k = 1; k <= 40; k++) {
+      var t = new Date(base.getTime() + dir * k * 86400000);
+      if (monthChiAt(t.getDate(), t.getMonth() + 1, t.getFullYear()) !== baseChi) return k;
+    }
+    return 30;
+  }
+  function birthFields(p, withHour, withGender) {
+    var s = '<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="' + p + 'bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="' + p + 'bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="' + p + 'by" inputmode="numeric" value="1995">') + '</div>';
+    if (withHour || withGender) {
+      s += '<div class="ptv-row">';
+      if (withHour) s += L.field('Giờ sinh', L.select(p + 'h', E.CHI.map(function (x) { return '<option value="' + x + '">' + x + ' (' + E.HOUR_LABEL[x] + ')</option>'; }).join('')));
+      if (withGender) s += L.field('Giới tính', L.genderSelect(p + 'g'));
+      s += '</div>';
+    }
+    return s;
+  }
+  function readPillars(box, p, needHour) {
+    var dt = { d: parseInt(box.querySelector('#' + p + 'bd').value, 10), m: parseInt(box.querySelector('#' + p + 'bm').value, 10), y: parseInt(box.querySelector('#' + p + 'by').value, 10) };
+    var yP = E.yearPillar(dt.d, dt.m, dt.y), mP = E.monthPillar(dt.d, dt.m, E.CAN.indexOf(yP.pillar.can)), dP = E.dayPillar(dt.d, dt.m, dt.y);
+    var out = { dt: dt, yP: yP.pillar, mP: mP, dP: dP };
+    if (needHour) out.hP = E.hourPillar(box.querySelector('#' + p + 'h').value, E.CAN.indexOf(dP.can));
+    return out;
+  }
+  function tuTruV3(c) {
+    c.innerHTML = V.tabsHTML([['tt3-main', 'Lập lá số tứ trụ'], ['tt3-gods', 'Thập thần trong lá số của bạn'], ['tt3-luck', 'Đại vận 10 năm']]) +
+      '<div id="tt3-main">' + V.formWrap2(birthFields('', true, true), 'Lập lá số tứ trụ') + '</div>' +
+      '<div id="tt3-gods" hidden>' + V.formWrap2(birthFields('g', true, false), 'Xem thập thần của tôi') + '</div>' +
+      '<div id="tt3-luck" hidden>' + V.formWrap2(birthFields('l', false, true), 'Xem đại vận của tôi') + '</div>';
+    V.wireTabs(c, ['tt3-main', 'tt3-gods', 'tt3-luck']);
+    c.querySelector('#tt3-main form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt3-main'), P = readPillars(box, '', true);
+      var counts = E.countElements([P.hP, P.dP, P.mP, P.yP]);
+      function cell(p, label) { var na = E.napAmOf(p); return '<td><strong>' + label + '</strong><br>' + p.text + '<br><span class="ptv-note">' + na.name + '</span></td>'; }
+      var total = Object.keys(counts).reduce(function (a, k) { return a + counts[k]; }, 0);
+      var maxEl = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+      var minEl = Object.keys(counts).sort(function (a, b) { return counts[a] - counts[b]; })[0];
+      var dayEl = P.dP.canEl;
+      var genIn = Object.keys(L.GENERATES).filter(function (k) { return L.GENERATES[k] === dayEl; })[0];
+      var strength = (counts[dayEl] || 0) + (counts[genIn] || 0);
+      var bars = Object.keys(counts).map(function (e) { return '<div class="ptv-bar-row"><span class="ptv-bar-label">' + e + '</span><span class="ptv-bar-track"><span class="ptv-bar-fill" style="width:' + (total ? counts[e] / total * 100 : 0) + '%;background:' + ({ 'Kim': '#8a6d1c', 'Mộc': '#2e7d32', 'Thủy': '#1565c0', 'Hỏa': '#c62828', 'Thổ': '#8d5a2b' }[e]) + '"></span></span><span class="ptv-bar-num">' + counts[e] + '</span></div>'; }).join('');
+      L.resultBox(box, '<h3>Lá số tứ trụ của bạn</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr>' + cell(P.yP, 'Trụ năm') + cell(P.mP, 'Trụ tháng') + cell(P.dP, 'Trụ ngày') + cell(P.hP, 'Trụ giờ') + '</tr></table></div>' +
+        '<p>Nhật chủ (bản mệnh ngày sinh) là <strong>' + P.dP.can + '</strong> thuộc hành ' + L.badge(dayEl) + '. Mệnh năm: <strong>' + esc(E.napAmOf(P.yP).name) + '</strong>.</p>' +
+        '<h3>Cân bằng ngũ hành trong tứ trụ</h3>' + bars +
+        '<p>Hành mạnh nhất là <strong>' + maxEl + '</strong>, hành yếu hoặc thiếu là <strong>' + minEl + '</strong>. Nhật chủ được ' + strength + ' điểm tựa từ hành bản mệnh và hành sinh cho mình trong tổng ' + total + ' điểm ngũ hành, ' + (strength >= total / 2 ? 'thuộc nhóm nhật chủ vượng, nên tiết chế bằng hành khắc và hành được sinh.' : 'thuộc nhóm nhật chủ nhược hoặc trung hòa, nên bổ trợ bằng hành sinh cho nhật chủ và hành bản mệnh.') + '</p>' +
+        '<p><strong>Gợi ý bổ trợ:</strong> ưu tiên màu sắc, nghề nghiệp và môi trường thuộc hành <strong>' + (strength >= total / 2 ? L.GENERATES[dayEl] + ' và ' + L.CONTROLS[dayEl] : minEl + ' và ' + dayEl) + '</strong>. Xem tiếp thập thần ở tab bên cạnh và dòng chảy mười năm ở tab Đại vận.</p>');
+    });
+    c.querySelector('#tt3-gods form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt3-gods'), P = readPillars(box, 'g', true);
+      var rows = [['Trụ năm', P.yP], ['Trụ tháng', P.mP], ['Trụ giờ', P.hP]].map(function (r) {
+        var g = tenGod(P.dP.can, r[1].can);
+        return '<tr><td><strong>' + r[0] + '</strong> (' + r[1].text + ')</td><td>' + g + '</td><td>' + TG_TXT[g] + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Thập thần theo nhật chủ ' + P.dP.can + ' (hành ' + P.dP.canEl + ')</h3>' +
+        '<p>Thập thần là tên gọi của mười mối quan hệ giữa thiên can của các trụ với nhật chủ (can ngày, đại diện cho chính bạn). Trụ ngày là chính bạn nên không tính thập thần cho trụ này.</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Trụ</th><th>Thập thần</th><th>Ý nghĩa</th></tr>' + rows + '</table></div>' +
+        '<p class="ptv-note">Đây là lớp thập thần của thiên can nổi. Đại vận mang thập thần nào vào từng giai đoạn mười năm đã có ở tab Đại vận bên cạnh.</p>');
+    });
+    c.querySelector('#tt3-luck form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tt3-luck'), P = readPillars(box, 'l', false);
+      var g = box.querySelector('#lg').value;
+      var yearCanDuong = !!DUONG_CAN[P.yP.can];
+      var thuan = (yearCanDuong && g === 'Nam') || (!yearCanDuong && g === 'Nữ');
+      var days = daysToTiet(P.dt, P.mP.chi, thuan ? 1 : -1);
+      var startAge = days / 3, startY = Math.floor(startAge), startM = Math.round((startAge - startY) * 12);
+      if (startM === 12) { startY += 1; startM = 0; }
+      var base = sexIdx(P.mP.can, P.mP.chi);
+      var nowAge = new Date().getFullYear() - P.dt.y;
+      var curIdx = nowAge >= startAge ? Math.floor((nowAge - startAge) / 10) : -1;
+      var rows = '';
+      for (var k = 1; k <= 8; k++) {
+        var vp = pillarAt(base + (thuan ? k : -k));
+        var a0 = startAge + (k - 1) * 10, a1 = a0 + 10;
+        var god = tenGod(P.dP.can, vp.can);
+        var rel = vp.canEl === P.dP.canEl ? 'cùng hành với nhật chủ, tiếp sức trực tiếp' : (L.GENERATES[vp.canEl] === P.dP.canEl ? 'sinh cho nhật chủ, là vận trợ lực' : (L.CONTROLS[vp.canEl] === P.dP.canEl ? 'khắc nhật chủ, là vận nhiều áp lực' : (L.GENERATES[P.dP.canEl] === vp.canEl ? 'được nhật chủ sinh ra, là vận hao sức để tạo thành quả' : 'bị nhật chủ khắc chế, là vận chủ động nắm nguồn lực')));
+        rows += '<tr><td><strong>Đại vận ' + k + '</strong>' + (k - 1 === curIdx ? ' (hiện tại)' : '') + '</td><td>' + a0.toFixed(1).replace('.', ',') + ' đến ' + a1.toFixed(1).replace('.', ',') + ' tuổi</td><td><strong>' + vp.text + '</strong></td><td>' + god + '</td><td>Can vận hành ' + vp.canEl + ', ' + rel + '. Đây là ' + TG_TXT[god] + '</td></tr>';
+      }
+      L.resultBox(box, '<h3>Đại vận của bạn: đi ' + (thuan ? 'THUẬN' : 'NGHỊCH') + ' từ trụ tháng ' + P.mP.text + ', khởi vận lúc khoảng ' + startY + ' tuổi' + (startM ? ' ' + startM + ' tháng' : '') + '</h3>' +
+        '<p>Chiều vận tính theo quy tắc cổ truyền: năm sinh can ' + P.yP.can + ' là can ' + (yearCanDuong ? 'dương' : 'âm') + ', bạn là ' + g + ' nên vận đi ' + (thuan ? 'thuận' : 'nghịch') + '. Tuổi khởi vận lấy số ngày từ ngày sinh tới ngày tiết khí gần nhất theo chiều đi (' + days + ' ngày) chia 3, cứ 3 ngày tính là 1 năm. ' + (curIdx >= 0 ? 'Theo năm sinh, bạn đang ở <strong>đại vận ' + (curIdx + 1) + '</strong>.' : 'Bạn chưa vào đại vận đầu tiên, giai đoạn này đọc theo trụ tháng của lá số gốc.') + '</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Đại vận</th><th>Khoảng tuổi</th><th>Can chi vận</th><th>Thập thần của vận</th><th>Luận nhanh</th></tr>' + rows + '</table></div>' +
+        '<p class="ptv-note">Ngày tiết khí ở đây dò theo ranh giới trụ tháng của chính công cụ này nên tuổi khởi vận có thể lệch vài tháng so với phần mềm dùng lịch thiên văn chính xác đến từng giờ; khi cần chốt việc hệ trọng đúng ngày, bạn nên đối chiếu thêm một nguồn chuyên nghiệp.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-la-so-tu-tru': tuTruV3 });
+})();
+
+/* --- Diem bao v3: them tab Hat xi hoi theo gio, thu va so cai ( boc renderer v2 ) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, V = window.PTVDayToolsV2;
+  var prev = (window.PTVTools || {})['giai-ma-diem-bao'];
+  if (!prev) return;
+  var SN_HOUR = {
+    'Tý': ['tốt', 'Có người đang nhớ nhung và lo lắng cho bạn; dễ có tin từ người ở xa trong ngày tới.'],
+    'Sửu': ['tốt', 'Điềm có khách quý ghé thăm hoặc tin vui bất ngờ trong ngày.'],
+    'Dần': ['tốt', 'Có người đang thầm thương trộm nhớ bạn; chuyện tình cảm có tín hiệu vui.'],
+    'Mão': ['tốt', 'Dễ được mời ăn uống, dự tiệc hoặc có cuộc gặp gỡ vui vẻ trong ngày.'],
+    'Thìn': ['tốt', 'Có lộc ăn uống và một may mắn nhỏ trong công việc buổi sáng.'],
+    'Tỵ': ['cần chú ý', 'Có người đang ghen tị hoặc nói sau lưng; giữ lời ăn tiếng nói nơi đông người.'],
+    'Ngọ': ['tốt', 'Tin vui từ xa đang đến, dễ gặp lại người quen cũ trong niềm vui.'],
+    'Mùi': ['cần chú ý', 'Dễ có khoản chi bất ngờ; cân nhắc kỹ trước khi mở ví vào buổi chiều.'],
+    'Thân': ['tốt', 'Có người sắp cần đến sự giúp đỡ của bạn; giúp được thì phúc về sau.'],
+    'Dậu': ['tốt', 'Chuyện tình cảm có biến chuyển dễ thương; người độc thân dễ được để ý.'],
+    'Tuất': ['cần chú ý', 'Phần nhiều là dấu hiệu cơ thể đang mệt và dễ cảm; nên nghỉ sớm và giữ ấm.'],
+    'Hợi': ['tốt', 'Điềm đoàn tụ và vui vẻ trong gia đình; có tin tốt từ người thân.']
+  };
+  var SN_DAY = {
+    '2': 'Đầu tuần hắt xì là điềm có tin công việc hoặc một lời mời hợp tác đang tới.',
+    '3': 'Có người đang nhắc đến tên bạn với ý tốt, dễ được giới thiệu một cơ hội hay.',
+    '4': 'Giữa tuần dễ có khách bất ngờ hoặc cuộc hẹn bị đổi lịch; giữ lịch trình linh hoạt.',
+    '5': 'Điềm tài lộc nhỏ, dễ có khoản thu ngoài dự tính hoặc được ai đó mời khao.',
+    '6': 'Chuyện tình cảm khởi sắc trước cuối tuần; hợp để tỏ bày hoặc hâm nóng.',
+    '7': 'Điềm vui chơi và gặp gỡ bạn bè; ra ngoài dễ gặp người hợp gu.',
+    '8': 'Điềm gia đình: tin vui từ người thân hoặc một bữa cơm sum họp đang chờ.'
+  };
+  var SN_COUNT = {
+    '1': 'Hắt xì một cái: có người đang nhớ hoặc vừa nhắc đến bạn.',
+    '2': 'Hắt xì hai cái liên tiếp: điềm vui nhân đôi, tin tốt thường đến ngay trong ngày.',
+    '3': 'Hắt xì ba cái liên tiếp: có việc đang cần bạn quyết định nhanh, đừng chần chừ thêm.',
+    'nhieu': 'Hắt xì liên tục nhiều cái: dân gian ít luận điềm cho trường hợp này vì phần lớn là cảm lạnh hoặc dị ứng thật; bạn nên giữ ấm và theo dõi sức khỏe.'
+  };
+  var CLOCK = { 'Tý': '23h-1h', 'Sửu': '1h-3h', 'Dần': '3h-5h', 'Mão': '5h-7h', 'Thìn': '7h-9h', 'Tỵ': '9h-11h', 'Ngọ': '11h-13h', 'Mùi': '13h-15h', 'Thân': '15h-17h', 'Dậu': '17h-19h', 'Tuất': '19h-21h', 'Hợi': '21h-23h' };
+  var CHIS = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+  function diemBaoV3(c) {
+    prev(c);
+    var bar = c.querySelector('.ptv-xtabs');
+    if (!bar) return;
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ptv-xtab'; btn.setAttribute('data-t', 'db-sneeze'); btn.textContent = 'Hắt xì hơi theo giờ và thứ';
+    bar.appendChild(btn);
+    var todayDow = new Date().getDay(); /* 0 = Chu nhat */
+    var dowVal = todayDow === 0 ? '8' : String(todayDow + 1);
+    var dowOpts = [['2', 'Thứ hai'], ['3', 'Thứ ba'], ['4', 'Thứ tư'], ['5', 'Thứ năm'], ['6', 'Thứ sáu'], ['7', 'Thứ bảy'], ['8', 'Chủ nhật']].map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === dowVal ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('');
+    var table = '<h3>Bảng luận nhanh hắt xì hơi theo 12 giờ</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Giờ</th><th>Khung giờ</th><th>Loại điềm</th><th>Luận giải</th></tr>' + CHIS.map(function (ch) { return '<tr><td><strong>Giờ ' + ch + '</strong></td><td>' + CLOCK[ch] + '</td><td>' + SN_HOUR[ch][0] + '</td><td>' + SN_HOUR[ch][1] + '</td></tr>'; }).join('') + '</table></div>';
+    var panel = document.createElement('div');
+    panel.id = 'db-sneeze'; panel.hidden = true;
+    panel.innerHTML = V.formWrap2('<div class="ptv-row">' + L.field('Bạn hắt xì vào giờ nào?', L.select('sh', CHIS.map(function (ch) { return '<option value="' + ch + '">Giờ ' + ch + ' (' + CLOCK[ch] + ')</option>'; }).join(''))) + L.field('Vào thứ mấy?', L.select('sd', dowOpts)) + L.field('Hắt xì mấy cái liên tiếp?', L.select('sc', '<option value="1">Một cái</option><option value="2">Hai cái</option><option value="3">Ba cái</option><option value="nhieu">Liên tục nhiều cái</option>')) + '</div>', 'Luận điềm hắt xì của tôi') + table;
+    c.appendChild(panel);
+    function hideMine() { panel.hidden = true; btn.classList.remove('ptv-on'); }
+    ['db-pick', 'db-search', 'db-all'].forEach(function (id) {
+      var b = c.querySelector('[data-t="' + id + '"]');
+      if (b) b.addEventListener('click', hideMine);
+    });
+    btn.addEventListener('click', function () {
+      c.querySelectorAll('.ptv-xtab').forEach(function (b) { b.classList.toggle('ptv-on', b === btn); });
+      ['db-pick', 'db-search', 'db-all'].forEach(function (id) { var el = c.querySelector('#' + id); if (el) el.hidden = true; });
+      panel.hidden = false;
+    });
+    panel.querySelector('form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var h = panel.querySelector('#sh').value, d = panel.querySelector('#sd').value, n = panel.querySelector('#sc').value;
+      var dowName = { '2': 'Thứ hai', '3': 'Thứ ba', '4': 'Thứ tư', '5': 'Thứ năm', '6': 'Thứ sáu', '7': 'Thứ bảy', '8': 'Chủ nhật' }[d];
+      L.resultBox(panel, '<h3>Hắt xì giờ ' + h + ' (' + CLOCK[h] + '), ' + dowName + ': điềm ' + SN_HOUR[h][0] + '</h3>' +
+        '<p><strong>Theo giờ:</strong> ' + SN_HOUR[h][1] + '</p>' +
+        '<p><strong>Theo thứ trong tuần:</strong> ' + SN_DAY[d] + '</p>' +
+        '<p><strong>Theo số cái:</strong> ' + SN_COUNT[n] + '</p>' +
+        '<p class="ptv-note">Ba lớp luận này là quan niệm dân gian truyền miệng về hắt xì hơi, bạn đọc để tham khảo vui vẻ. Nếu hắt xì kèm sốt, sổ mũi kéo dài thì đó là chuyện sức khỏe, nên đi khám thay vì luận điềm.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'giai-ma-diem-bao': diemBaoV3 });
+})();
+
+/* --- Tu vi Tay phuong v3 (them tu vi hom nay 12 cung) va Cung hoang dao v3 (144 cap doi + ma tran) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var zlist = (window.PTV_TOOLS_DATA || {}).zodiac || [];
+  var ZB = [[3, 21, 4, 19], [4, 20, 5, 20], [5, 21, 6, 21], [6, 22, 7, 22], [7, 23, 8, 22], [8, 23, 9, 22], [9, 23, 10, 23], [10, 24, 11, 22], [11, 23, 12, 21], [12, 22, 1, 19], [1, 20, 2, 18], [2, 19, 3, 20]];
+  function signIdxOf(d, m) { for (var i = 0; i < 12; i++) { if ((m === ZB[i][0] && d >= ZB[i][1]) || (m === ZB[i][2] && d <= ZB[i][3])) return i; } return 9; }
+  function zHTML(z) { return '<h3>' + esc(z.sign) + ' (' + esc(z.dates) + ') · Hành ' + esc(z.element) + '</h3><p>' + esc(z.traits) + '</p><p><strong>Sự nghiệp:</strong> ' + esc(z.career) + '</p><p><strong>Tình duyên:</strong> ' + esc(z.love) + '</p><p><strong>May mắn:</strong> ' + esc(z.lucky) + '</p>'; }
+  var YEAR_TXT = {
+    career: ['Năm nay cung sự nghiệp của bạn sáng dần từ giữa năm, một cơ hội đổi vai trò hoặc nhận dự án lớn xuất hiện khi bạn chủ động đề xuất thay vì chờ giao việc.', 'Đây là năm tích lũy vị thế: làm chắc việc chuyên môn, xây quan hệ với người có tiếng nói, thành quả lớn thường chốt vào cuối năm.', 'Sự nghiệp năm nay có biến động theo hướng buộc bạn nâng cấp kỹ năng; ai chịu học thêm sẽ biến biến động thành bậc thang.'],
+    money: ['Tài chính năm nay ổn định nếu giữ kỷ luật chi tiêu theo tháng; khoản bất ngờ đến từ việc phụ hoặc tài sản cũ hơn là đầu tư mạo hiểm.', 'Năm nay hợp trả nợ và gom vốn hơn là mở rộng; một quyết định tài chính vào quý ba cần đọc kỹ giấy tờ trước khi ký.', 'Tiền bạc năm nay vào đều nhưng ra cũng nhanh theo cảm xúc; đặt trần chi tiêu cho sở thích sẽ giữ được khoản tích lũy đáng kể.'],
+    love: ['Chuyện tình cảm năm nay có chuyển biến rõ: người độc thân dễ gặp nhân duyên qua công việc và bạn bè chung, người có đôi cần thêm thời gian chất lượng thay vì quà cáp.', 'Năm nay là năm của sự rõ ràng trong tình cảm: điều gì mập mờ sẽ tự lộ diện, và đó là điều tốt dù ban đầu hơi khó nghe.', 'Tình cảm năm nay ấm dần nhờ những việc nhỏ đều đặn; một chuyến đi chung hoặc kế hoạch chung sẽ gắn kết hai người hơn hẳn lời hứa lớn.'],
+    health: ['Sức khỏe năm nay cần chú ý giấc ngủ và cột sống; đừng để công việc dồn nén thành stress kéo dài, khám định kỳ đúng hẹn là việc không nên hoãn.', 'Năm nay thể lực hồi phục tốt nếu bạn giữ vận động đều; kỵ nhất là thức khuya triền miên và ăn uống thất thường theo lịch làm việc.', 'Sức khỏe năm nay nhìn chung ổn, điểm yếu nằm ở tinh thần: dành thời gian cho sở thích và người thân là liều thuốc phòng ngừa tốt nhất.']
+  };
+  var DAY_OVERALL = ['Ngày hôm nay nhịp chung khá thoáng: việc khó nên xử lý vào buổi sáng khi đầu óc còn tỉnh, buổi chiều hợp gặp gỡ và chốt những việc đã bàn xong.', 'Hôm nay là ngày của sự chậm rãi có chủ đích: đừng ép tiến độ, cứ làm chắc từng việc thì cuối ngày lại xong nhiều hơn mong đợi.', 'Năng lượng hôm nay hơi thất thường, buổi sáng dễ phân tâm, càng về chiều càng vào guồng; hãy để việc quan trọng nhất xuống nửa sau của ngày.', 'Hôm nay hợp mở đầu việc mới ở mức thử nghiệm nhỏ: một cuộc gọi, một bản nháp, một lời đề xuất vừa đủ để đo phản ứng.', 'Ngày hôm nay thiên về thu vén và hoàn thiện: dọn nốt việc tồn đọng sẽ tạo cảm giác nhẹ nhõm rõ rệt cho ngày mai.'];
+  var DAY_AREA = {
+    career: ['Một ý tưởng bạn nói ra hôm nay dễ được người có tiếng nói ghi nhận.', 'Việc nhóm đi nhanh hơn việc làm một mình trong hôm nay.', 'Có chi tiết nhỏ trong giấy tờ cần đọc lại trước khi ký.', 'Nhịp việc đều, hợp xử lý tồn đọng hơn là mở mặt trận mới.'],
+    money: ['Tiền bạc hôm nay ổn nếu giữ đúng kế hoạch chi từ đầu tuần.', 'Một khoản chi cho gia đình là đáng giá, đừng đắn đo quá lâu.', 'Tránh mua sắm theo cảm xúc vào cuối ngày, dễ hối hận.', 'Có tín hiệu tốt về một khoản thu đang chờ xác nhận.'],
+    love: ['Một câu hỏi thăm đúng lúc hôm nay có sức nặng hơn món quà lớn.', 'Người độc thân dễ có cuộc trò chuyện đáng nhớ qua bạn bè chung.', 'Đôi nào đang căng nên nói chuyện sau bữa tối, khi cả hai đã mềm lòng.', 'Tình cảm ấm lên nhờ một kế hoạch chung nhỏ cho cuối tuần.'],
+    health: ['Chú ý giấc ngủ đêm nay, tắt màn hình sớm hơn thường lệ một chút.', 'Cơ thể cần nước và vận động nhẹ hơn là cà phê thêm.', 'Tinh thần là điểm cần chăm hôm nay: ra ngoài trời mười lăm phút sẽ khác hẳn.', 'Thể lực ổn, chỉ cần tránh thức khuya là giữ được phong độ.']
+  };
+  var COLORS = ['đỏ', 'cam cháy', 'vàng nhạt', 'xanh lá', 'xanh dương', 'tím nhạt', 'hồng phấn', 'trắng kem', 'xám bạc', 'vàng đồng', 'xanh ngọc', 'nâu đất'];
+  function dayKey(dt) { return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0'); }
+  function dayScores(z, dk) {
+    function sc(area) { return 3 + (L.hashStr(z.sign + '|' + dk + '|' + area) % 8); }
+    var o = { career: sc('career'), money: sc('money'), love: sc('love'), health: sc('health') };
+    o.all = Math.round((o.career + o.money + o.love + o.health) / 4);
+    return o;
+  }
+  function dayText(z, dk, area) { var arr = DAY_AREA[area]; return arr[L.hashStr(z.sign + '|' + dk + '|t' + area) % arr.length]; }
+  function stars(n) { return '★'.repeat(Math.round(n / 2)) + '☆'.repeat(5 - Math.round(n / 2)); }
+  function signSelect(id) { return L.select(id, zlist.map(function (z, i) { return '<option value="' + i + '">' + z.sign + ' (' + z.dates + ')</option>'; }).join('')); }
+  function birthRow(p) { return '<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="' + p + 'bd" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="' + p + 'bm" inputmode="numeric" value="6">') + L.field('Năm sinh', '<input type="text" id="' + p + 'by" inputmode="numeric" value="1995">') + '</div>'; }
+  function tuViTayV3(c) {
+    var now = new Date(), dk = dayKey(now);
+    var grid = zlist.map(function (z) { var s = dayScores(z, dk); return '<tr><td><strong>' + z.sign + '</strong></td><td>' + s.all + '/10</td><td>' + stars(s.all) + '</td><td>' + DAY_OVERALL[L.hashStr(z.sign + '|' + dk + '|ov') % DAY_OVERALL.length].split(':')[0] + '.</td></tr>'; }).join('');
+    c.innerHTML = V.tabsHTML([['tvt3-today', 'Tử vi hôm nay'], ['tvt3-year', 'Tử vi năm nay theo cung'], ['tvt3-month', 'Tử vi tháng này theo cung']]) +
+      '<div id="tvt3-today">' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn cung hoàng đạo của bạn', signSelect('sg'), 'ptv-field-name') + '</div>', 'Xem tử vi hôm nay của tôi') +
+      '<h3>Tổng quan 12 cung hôm nay, ' + now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear() + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cung</th><th>Điểm ngày</th><th>Sao</th><th>Nhịp ngày</th></tr>' + grid + '</table></div></div>' +
+      '<div id="tvt3-year" hidden>' + V.formWrap2(birthRow('y'), 'Xem tử vi năm nay') + '</div>' +
+      '<div id="tvt3-month" hidden>' + V.formWrap2(birthRow('m'), 'Xem tử vi tháng này') + '</div>';
+    V.wireTabs(c, ['tvt3-today', 'tvt3-year', 'tvt3-month']);
+    c.querySelector('#tvt3-today form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tvt3-today'), z = zlist[parseInt(box.querySelector('#sg').value, 10)], s = dayScores(z, dk);
+      var luckyNum = L.hashStr(z.sign + '|' + dk + '|num') % 100, luckyColor = COLORS[L.hashStr(z.sign + '|' + dk + '|col') % COLORS.length];
+      L.resultBox(box, '<h3>Tử vi hôm nay của ' + z.sign + ': ' + s.all + '/10 ' + stars(s.all) + '</h3>' +
+        '<p>' + DAY_OVERALL[L.hashStr(z.sign + '|' + dk + '|ov') % DAY_OVERALL.length] + '</p>' +
+        '<p><strong>Công việc (' + s.career + '/10):</strong> ' + dayText(z, dk, 'career') + '</p>' +
+        '<p><strong>Tài chính (' + s.money + '/10):</strong> ' + dayText(z, dk, 'money') + '</p>' +
+        '<p><strong>Tình cảm (' + s.love + '/10):</strong> ' + dayText(z, dk, 'love') + '</p>' +
+        '<p><strong>Sức khỏe (' + s.health + '/10):</strong> ' + dayText(z, dk, 'health') + '</p>' +
+        '<p><strong>Số may mắn hôm nay:</strong> ' + luckyNum + '. <strong>Màu may mắn:</strong> ' + luckyColor + '.</p>' +
+        '<p class="ptv-note">Tử vi ngày của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> cố định theo cung và theo ngày: mọi người cùng cung xem trong cùng một ngày đều thấy một nội dung, để bạn bè có thể đối chiếu và bàn vui với nhau. Đây là luận giải trí ở mức tổng quan, không phải dự báo cá nhân.</p>');
+    });
+    function pickT(z, tag, n) { var arr = YEAR_TXT[tag]; return arr[L.hashStr(z.sign + '|' + tag + '|' + n) % arr.length]; }
+    c.querySelector('#tvt3-year form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tvt3-year');
+      var dt = { d: parseInt(box.querySelector('#ybd').value, 10), m: parseInt(box.querySelector('#ybm').value, 10) };
+      var z = zlist[signIdxOf(dt.d, dt.m)], yr = new Date().getFullYear();
+      L.resultBox(box, zHTML(z) + '<h3>Tử vi năm ' + yr + ' của ' + z.sign + '</h3>' +
+        '<p><strong>Sự nghiệp:</strong> ' + pickT(z, 'career', yr) + '</p><p><strong>Tài chính:</strong> ' + pickT(z, 'money', yr) + '</p><p><strong>Tình cảm:</strong> ' + pickT(z, 'love', yr) + '</p><p><strong>Sức khỏe:</strong> ' + pickT(z, 'health', yr) + '</p>' +
+        '<p class="ptv-note">Phần tử vi năm luận theo cung hoàng đạo ở mức tổng quan tham khảo, không phải lá số chiêm tinh cá nhân đầy đủ.</p>');
+    });
+    c.querySelector('#tvt3-month form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#tvt3-month');
+      var dt = { d: parseInt(box.querySelector('#mbd').value, 10), m: parseInt(box.querySelector('#mbm').value, 10) };
+      var z = zlist[signIdxOf(dt.d, dt.m)], mk = now.getFullYear() * 100 + (now.getMonth() + 1);
+      L.resultBox(box, '<h3>Tử vi tháng ' + (now.getMonth() + 1) + '/' + now.getFullYear() + ' của ' + z.sign + '</h3>' +
+        '<p><strong>Công việc và tiền bạc:</strong> ' + pickT(z, 'career', mk) + ' Về tiền: ' + pickT(z, 'money', mk) + '</p>' +
+        '<p><strong>Tình cảm và sức khỏe:</strong> ' + pickT(z, 'love', mk) + ' Về sức khỏe: ' + pickT(z, 'health', mk) + '</p>' +
+        '<p class="ptv-note">Luận tháng ở mức tổng quan theo cung, dùng để lên tâm thế và lịch trình là chính.</p>');
+    });
+  }
+
+  var EL_ORDER = ['Lửa', 'Đất', 'Khí', 'Nước'];
+  var PAIR_BASE = { 'Lửa|Lửa': 88, 'Đất|Đất': 87, 'Khí|Khí': 86, 'Nước|Nước': 88, 'Lửa|Khí': 86, 'Đất|Nước': 86, 'Khí|Nước': 68, 'Đất|Khí': 60, 'Lửa|Đất': 62, 'Lửa|Nước': 52 };
+  var PAIR_DYN = {
+    'Lửa|Lửa': 'Hai cung Lửa gặp nhau thì tình cảm cháy nhanh và rực rỡ, cùng thích chủ động và ghét sự nhàm chán. Điểm cần giữ là cái tôi: hai ngọn lửa cùng bùng dễ thành tranh cãi vì những chuyện rất nhỏ.',
+    'Đất|Đất': 'Hai cung Đất xây quan hệ như xây nhà: chậm, chắc và rất thực tế, cùng coi trọng cam kết và tài chính rõ ràng. Điểm cần giữ là sự lãng mạn, vì cả hai đều dễ quên nói lời ngọt khi đã yên ổn.',
+    'Khí|Khí': 'Hai cung Khí hợp nhau ở đầu óc: nói chuyện không bao giờ hết đề tài, cùng thích tự do và bạn bè. Điểm cần giữ là chiều sâu cảm xúc, vì cả hai đều có xu hướng lướt qua những lúc cần ngồi lại thật lòng.',
+    'Nước|Nước': 'Hai cung Nước hiểu nhau bằng trực giác, ít cần giải thích, tình cảm sâu và gắn bó. Điểm cần giữ là ranh giới cảm xúc: buồn vui của người này rất dễ lây sang người kia thành vòng xoáy.',
+    'Lửa|Khí': 'Khí thổi cho Lửa cháy: đây là cặp tương sinh kinh điển của chiêm tinh, một bên cho ý tưởng và cảm hứng, một bên cho nhiệt và hành động. Cặp này ít khi chán nhau, chỉ cần thống nhất ai quyết việc gì.',
+    'Đất|Nước': 'Nước tưới cho Đất: cặp tương sinh êm đềm, một bên cho sự ổn định, một bên cho sự dịu dàng, rất hợp xây tổ ấm đường dài. Điểm cần giữ là đừng để sự êm đềm thành ì trệ, thỉnh thoảng cần một kế hoạch phá lệ chung.',
+    'Khí|Nước': 'Khí sống bằng lý trí còn Nước sống bằng cảm xúc, nên cặp này vừa tò mò về nhau vừa hay hiểu lầm ý nhau. Muốn bền, bên Khí cần học nghe hết câu, bên Nước cần học nói thẳng điều mình cần thay vì chờ được đoán.',
+    'Đất|Khí': 'Đất cần kết quả cụ thể còn Khí cần không gian bay bổng, nhịp sống lệch nhau thấy rõ trong sinh hoạt hằng ngày. Cặp này bền khi chia việc rõ ràng: một người giữ nền, một người mở đường, và tôn trọng phần việc của nhau.',
+    'Lửa|Đất': 'Lửa muốn đi nhanh còn Đất muốn đi chắc; một bên thấy bên kia quá liều, một bên thấy bên kia quá chậm. Nếu biến được sự lệch nhịp thành bổ sung, đây lại là cặp làm nên chuyện lớn: dám nghĩ và dám làm đến nơi đến chốn.',
+    'Lửa|Nước': 'Nước và Lửa là cặp trái dấu mạnh nhất: sức hút ban đầu thường rất mãnh liệt, nhưng cảm xúc của Nước dễ bị nhiệt của Lửa làm bốc hơi, còn Lửa dễ nản khi Nước cứ lặng im. Cặp này cần thỏa thuận cách cãi nhau trước cả cách yêu nhau.'
+  };
+  var ANGLE_TXT = {
+    '0': 'Hai bạn trùng cung (đồng cung): hiểu nhau gần như không cần nói hết câu, ưu và nhược điểm giống nhau nên lúc hợp thì hợp sâu, lúc cọ thì cọ ở đúng điểm yếu chung.',
+    '1': 'Hai cung kề nhau: rất gần mà khác nhịp, vì mỗi cung sống bằng điều cung kề bên vừa đi qua hoặc sắp hướng tới; cặp này cần kiên nhẫn dịch ý cho nhau.',
+    '2': 'Góc lục hợp (cách hai cung): quan hệ nhẹ nhàng, dễ đỡ nhau trong việc thường ngày, là góc của sự quý mến bền lâu.',
+    '3': 'Góc vuông (cách ba cung): góc căng kinh điển, hai nhịp sống hay đâm nhau ở đúng việc quan trọng; cặp nào học được cách nhường ở điểm này thì lại bền lạ thường.',
+    '4': 'Góc tam hợp (cách bốn cung): góc đẹp nhất của vòng hoàng đạo, hai người cùng tần số, ở cạnh nhau ít phải gồng.',
+    '5': 'Góc quincunx (cách năm cung): hai cung gần như không có điểm chung có sẵn; sự khác biệt buộc cả hai phải trưởng thành nếu muốn đi đường dài.',
+    '6': 'Góc đối xung (hai cung đối diện nhau): sức hút kiểu hai cực nam châm, mê nhau nhanh và cũng dễ đối đầu; cần thỏa thuận rõ cách xử lý mâu thuẫn từ đầu.'
+  };
+  function pairKeyOf(e1, e2) {
+    var a = EL_ORDER.indexOf(e1), b = EL_ORDER.indexOf(e2);
+    return EL_ORDER[Math.min(a, b)] + '|' + EL_ORDER[Math.max(a, b)];
+  }
+  function pairScore(i, j) {
+    var d = Math.abs(i - j), dist = Math.min(d, 12 - d);
+    var base = PAIR_BASE[pairKeyOf(zlist[i].element, zlist[j].element)] || 60;
+    var adj = { '0': 4, '1': -3, '2': 5, '3': -8, '4': 7, '5': -4, '6': -2 }[String(dist)] || 0;
+    var jit = (L.hashStr(zlist[i].sign + '|' + zlist[j].sign + '|pair') % 7) - 3;
+    return Math.max(35, Math.min(98, base + adj + jit));
+  }
+  function bandOf(s) { return s >= 85 ? 'rất hợp' : s >= 70 ? 'hợp nhau' : s >= 55 ? 'khá hợp, cần nhường nhau ở vài điểm' : 'nhiều khác biệt, hợp theo kiểu bổ sung nếu đủ kiên nhẫn'; }
+  function hoangDaoV3(c) {
+    c.innerHTML = V.tabsHTML([['hd3-one', 'Cung hoàng đạo của bạn'], ['hd3-pair', 'Luận độ hợp của một cặp cung'], ['hd3-matrix', 'Ma trận hợp 12 × 12'], ['hd3-all', 'Bảng 12 cung hoàng đạo']]) +
+      '<div id="hd3-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày sinh', '<input type="text" id="od" inputmode="numeric" value="15">') + L.field('Tháng sinh', '<input type="text" id="om" inputmode="numeric" value="6">') + '</div>', 'Xem cung hoàng đạo') + '</div>' +
+      '<div id="hd3-pair" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Cung của người thứ nhất', signSelect('s1')) + L.field('Cung của người thứ hai', signSelect('s2')) + '</div>', 'Xem độ hợp của cặp này') + '</div>' +
+      '<div id="hd3-matrix" hidden><div class="ptv-out"></div></div>' +
+      '<div id="hd3-all" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['hd3-one', 'hd3-pair', 'hd3-matrix', 'hd3-all']);
+    c.querySelector('#hd3-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hd3-one'), d = parseInt(box.querySelector('#od').value, 10), m = parseInt(box.querySelector('#om').value, 10);
+      if (!d || !m) { L.resultBox(box, '<p>Bạn nhập ngày và tháng sinh nhé.</p>'); return; }
+      var idx = signIdxOf(d, m), z = zlist[idx], b = ZB[idx];
+      var cusp = '';
+      if ((m === b[0] && d - b[1] <= 1) || (m === b[2] && b[3] - d <= 1)) cusp = '<p class="ptv-note">Bạn sinh rất sát ngày chuyển cung nên thường mang thêm ít nhiều nét của cung kề bên; đọc thêm phần luận của cung kề để đối chiếu sẽ thấy rõ hơn.</p>';
+      L.resultBox(box, zHTML(z) + cusp);
+    });
+    c.querySelector('#hd3-pair form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#hd3-pair'), i = parseInt(box.querySelector('#s1').value, 10), j = parseInt(box.querySelector('#s2').value, 10);
+      var z1 = zlist[i], z2 = zlist[j], s = pairScore(i, j), d = Math.abs(i - j), dist = Math.min(d, 12 - d);
+      L.resultBox(box, '<h3>' + z1.sign + ' và ' + z2.sign + ': độ hợp ' + s + '% (' + bandOf(s) + ')</h3>' +
+        '<p><strong>Động lực của cặp:</strong> ' + PAIR_DYN[pairKeyOf(z1.element, z2.element)] + '</p>' +
+        '<p><strong>Góc giữa hai cung:</strong> ' + ANGLE_TXT[String(dist)] + '</p>' +
+        '<p><strong>' + z1.sign + ' khi yêu:</strong> ' + esc(z1.love) + '</p>' +
+        '<p><strong>' + z2.sign + ' khi yêu:</strong> ' + esc(z2.love) + '</p>' +
+        '<p><strong>Lời khuyên cho cặp này:</strong> ' + (s >= 70 ? 'Nền tảng của hai bạn vốn đã thuận, việc cần làm là giữ nhịp quan tâm đều đặn và đừng để sự dễ dàng thành chủ quan; một kế hoạch chung mỗi quý sẽ giữ lửa tốt hơn mọi lời hứa.' : s >= 55 ? 'Cặp này chạy tốt khi có thỏa thuận rõ về tiền bạc, thời gian riêng và cách xử lý lúc cãi nhau; viết ra được ba điều đó thì phần khác biệt còn lại chỉ là gia vị.' : 'Khác biệt là chất liệu chính của cặp này: hãy coi tính cách của người kia là một ngôn ngữ cần học chứ không phải lỗi cần sửa, và luôn chốt lại sau mỗi lần tranh luận xem hai người vừa học được gì về nhau.') + '</p>' +
+        '<p class="ptv-note">Điểm hợp do <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> tính riêng cho từng cặp trong 144 cặp từ quan hệ hành và góc giữa hai cung. Đây là một lớp tham khảo vui; hai cung điểm thấp vẫn có thể rất bền nếu hai người thật sự hiểu nhau, và ngược lại.</p>');
+    });
+    var renderedM = false;
+    c.querySelector('[data-t="hd3-matrix"]').addEventListener('click', function () {
+      if (renderedM) return; renderedM = true;
+      var head = '<tr><th></th>' + zlist.map(function (z) { return '<th>' + z.sign.split(' ').map(function (wd) { return wd[0]; }).join('') + '</th>'; }).join('') + '</tr>';
+      var rows = zlist.map(function (z1, i) {
+        return '<tr><td><strong>' + z1.sign + '</strong></td>' + zlist.map(function (z2, j) { var s = pairScore(i, j); return '<td class="' + (s >= 85 ? 'ptv-good' : s < 55 ? 'ptv-bad' : '') + '">' + s + '</td>'; }).join('') + '</tr>';
+      }).join('');
+      c.querySelector('#hd3-matrix .ptv-out').innerHTML = '<h3>Ma trận độ hợp của 144 cặp cung hoàng đạo</h3><p>Hàng là cung của người thứ nhất, cột là cung của người thứ hai (viết tắt hai chữ cái đầu của từng từ trong tên cung). Số càng cao càng hợp theo quan hệ hành và góc giữa hai cung. Muốn đọc luận chi tiết của một cặp, bạn sang tab luận cặp cung bên cạnh.</p><div class="ptv-table-wrap"><table class="ptv-table">' + head + rows + '</table></div>';
+    });
+    var renderedA = false;
+    c.querySelector('[data-t="hd3-all"]').addEventListener('click', function () {
+      if (renderedA) return; renderedA = true;
+      var rows = zlist.map(function (z) { return '<tr><td><strong>' + z.sign + '</strong></td><td>' + z.dates + '</td><td>' + z.element + '</td><td>' + esc(z.lucky) + '</td></tr>'; }).join('');
+      c.querySelector('#hd3-all .ptv-out').innerHTML = '<h3>Bảng tra nhanh 12 cung hoàng đạo theo ngày sinh</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Cung</th><th>Ngày sinh</th><th>Hành</th><th>May mắn</th></tr>' + rows + '</table></div>';
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-tu-vi-tay-phuong': tuViTayV3, 'xem-cung-hoang-dao': hoangDaoV3 });
+})();

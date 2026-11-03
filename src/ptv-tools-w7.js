@@ -2739,3 +2739,51 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-tu-vi-tay-phuong': tuViTayV3, 'xem-cung-hoang-dao': hoangDaoV3 });
 })();
+
+/* --- Giai ma giac mo v3: tim kiem khong dau + khop theo tu nguyen ven --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function normVN(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/\s+/g, ' ').trim();
+  }
+  function giacMoV3(c) {
+    var dict = (window.PTV_TOOLS_DATA || {}).dreamDict || [];
+    c.innerHTML = V.tabsHTML([['gm3-search', 'Kể giấc mơ của bạn'], ['gm3-dict', 'Từ điển giấc mơ phổ biến']]) +
+      '<div id="gm3-search">' + V.formWrap2('<div class="ptv-row">' + L.field('Bạn mơ thấy điều gì? (gõ có dấu hoặc không dấu đều được)', '<input type="text" id="q" value="" placeholder="Ví dụ: mơ thấy cá sấu đuổi theo">', 'ptv-field-name') + '</div>', 'Giải mã giấc mơ') + '</div>' +
+      '<div id="gm3-dict" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['gm3-search', 'gm3-dict']);
+    c.querySelector('#gm3-search form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gm3-search'), q = ' ' + normVN(box.querySelector('#q').value) + ' ';
+      var matched = [];
+      dict.forEach(function (e) {
+        var bestK = 0;
+        (e.keywords || []).forEach(function (k) {
+          var kn = normVN(k);
+          if (kn && ['mo', 'thay', 'mo thay', 'nam mo', 'giac mo'].indexOf(kn) < 0 && q.indexOf(' ' + kn + ' ') >= 0 && kn.length > bestK) bestK = kn.length;
+        });
+        if (bestK) matched.push({ e: e, score: bestK });
+      });
+      matched.sort(function (a, b) { return b.score - a.score; });
+      if (!matched.length) {
+        L.resultBox(box, '<p>Chưa tìm thấy hình ảnh khớp với mô tả của bạn trong từ điển ' + dict.length + ' giấc mơ phổ biến. Bạn thử kể ngắn gọn bằng hình ảnh chính, ví dụ "rắn", "nước", "tiền", "rụng răng", hoặc mở tab từ điển bên cạnh để tra theo danh sách nhé.</p>');
+        return;
+      }
+      var top = matched[0].e;
+      var html = '<h3>' + esc(top.subject) + '</h3><p>' + esc(top.meaning) + '</p><p><strong>Con số gợi ý từ giấc mơ:</strong> ' + (top.numbers || []).join(', ') + '.</p>';
+      if (matched.length > 1) {
+        html += '<h3>Các hình ảnh khác cũng xuất hiện trong giấc mơ của bạn</h3>' + matched.slice(1, 4).map(function (m) { return '<p><strong>' + esc(m.e.subject) + ':</strong> ' + esc(m.e.meaning.split('.')[0]) + '. Con số gợi ý: ' + (m.e.numbers || []).join(', ') + '.</p>'; }).join('');
+      }
+      html += '<p class="ptv-note">Giải mã giấc mơ là lớp luận giải dân gian kết hợp tâm lý học phổ thông, dùng để suy ngẫm về những điều đang diễn ra trong đời bạn. Con số đi kèm mang tính giải trí, <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> không khuyến khích dùng vào mục đích cờ bạc.</p>';
+      L.resultBox(box, html);
+    });
+    var rendered = false;
+    c.querySelector('[data-t="gm3-dict"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var rows = dict.map(function (e) { return '<tr><td><strong>' + esc(e.subject) + '</strong></td><td>' + (e.numbers || []).join(', ') + '</td></tr>'; }).join('');
+      c.querySelector('#gm3-dict .ptv-out').innerHTML = '<h3>Từ điển ' + dict.length + ' giấc mơ phổ biến và con số gợi ý</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Giấc mơ</th><th>Con số gợi ý</th></tr>' + rows + '</table></div><p class="ptv-note">Muốn đọc phần luận giải đầy đủ của một giấc mơ, bạn quay lại tab kể giấc mơ và gõ hình ảnh đó vào ô tìm, gõ không dấu cũng tìm được.</p>';
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'giai-ma-giac-mo': giacMoV3 });
+})();
