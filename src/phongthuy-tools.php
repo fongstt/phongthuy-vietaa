@@ -2,20 +2,20 @@
 /**
  * Plugin Name: PhongThuy VietAA Tools
  * Description: Bộ công cụ phong thủy cho phongthuy.vietaa.com: Đặt tên con, Bói Kiều và danh mục ứng dụng ở trang chủ. Khi kích hoạt, plugin tự tạo hoặc đồng bộ các Page ứng dụng và trang chủ.
- * Version: 1.45.0
+ * Version: 1.46.0
  * Author: PhongThuy VietAA
  */
 
 if (!defined('ABSPATH')) exit;
 
 function ptv_enqueue_css() {
-    wp_enqueue_style('ptv-custom', plugins_url('assets/ptv-custom.css', __FILE__), array(), '1.45.0');
+    wp_enqueue_style('ptv-custom', plugins_url('assets/ptv-custom.css', __FILE__), array(), '1.46.0');
 }
 
 /* ---------------- Dat ten con ---------------- */
 function ptv_dat_ten_con_shortcode() {
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-dat-ten', plugins_url('assets/ptv-dat-ten.js', __FILE__), array(), '1.45.0', true);
+    wp_enqueue_script('ptv-dat-ten', plugins_url('assets/ptv-dat-ten.js', __FILE__), array(), '1.46.0', true);
     ob_start();
     ?>
     <div class="ptv-tool">
@@ -76,7 +76,7 @@ add_shortcode('ptv_dat_ten_con', 'ptv_dat_ten_con_shortcode');
 /* ---------------- Boi Kieu ---------------- */
 function ptv_boi_kieu_shortcode() {
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-boi-kieu', plugins_url('assets/ptv-boi-kieu.js', __FILE__), array(), '1.45.0', true);
+    wp_enqueue_script('ptv-boi-kieu', plugins_url('assets/ptv-boi-kieu.js', __FILE__), array(), '1.46.0', true);
     $topics = array('tổng quan', 'tình duyên', 'công danh', 'tài lộc', 'gia đạo', 'sức khỏe');
     ob_start();
     ?>
@@ -122,7 +122,7 @@ function ptv_tool_shortcode($atts) {
     $slug = sanitize_title($atts['slug']);
     if (!$slug) return '';
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-tools', plugins_url('assets/ptv-tools.js', __FILE__), array(), '1.45.0', true);
+    wp_enqueue_script('ptv-tools', plugins_url('assets/ptv-tools.js', __FILE__), array(), '1.46.0', true);
     return '<div class="ptv-tool" data-ptv-tool="' . esc_attr($slug) . '"></div>';
 }
 add_shortcode('ptv_tool', 'ptv_tool_shortcode');
@@ -136,7 +136,7 @@ function ptv_directory_data() {
 }
 function ptv_directory_render() {
     ptv_enqueue_css();
-    wp_enqueue_script('ptv-home', plugins_url('assets/ptv-home.js', __FILE__), array(), '1.45.0', true);
+    wp_enqueue_script('ptv-home', plugins_url('assets/ptv-home.js', __FILE__), array(), '1.46.0', true);
     $data = ptv_directory_data();
     if (!$data) return '';
     $built = array('dat-ten-con' => true, 'boi-kieu' => true);

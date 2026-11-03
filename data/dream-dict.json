@@ -1,83 +1,3107 @@
 [
-{"keywords": ["rắn", "con rắn"], "subject": "Mơ thấy rắn", "meaning": "Giấc mơ về rắn thường gắn với những thay đổi đang âm thầm diễn ra trong cuộc sống của bạn, có thể là một cơ hội mới hoặc một mối quan hệ cần thận trọng. Nếu rắn hiền lành không tấn công, đây là dấu hiệu của sự khôn ngoan và khả năng thích nghi. Ngược lại, rắn đuổi cắn nhắc bạn đề phòng người hai mặt quanh mình.", "numbers": [32, 42, 72]},
-{"keywords": ["nước", "nước trong", "nước đục"], "subject": "Mơ thấy nước", "meaning": "Nước trong mơ tượng trưng cho cảm xúc và dòng chảy tài lộc. Nước trong xanh, êm ả báo hiệu tâm trí bình an, công việc thuận lợi. Nước đục hoặc chảy xiết cho thấy bạn đang lo lắng, cần chậm lại để xử lý từng việc một.", "numbers": [16, 61, 80]},
-{"keywords": ["cá", "con cá", "đàn cá"], "subject": "Mơ thấy cá", "meaning": "Cá là biểu tượng của sự dư dả và may mắn trong tài lộc theo quan niệm dân gian. Mơ thấy đàn cá bơi lội thường báo tin vui về tiền bạc hoặc cơ hội làm ăn đang đến gần. Cá chết hoặc cá mắc cạn lại nhắc bạn cẩn thận kẻo bỏ lỡ thời cơ.", "numbers": [79, 97, 24]},
-{"keywords": ["tiền", "tiền giấy", "nhiều tiền"], "subject": "Mơ thấy tiền", "meaning": "Mơ thấy tiền phản ánh mong muốn về sự ổn định và giá trị bản thân của bạn. Nếu trong mơ bạn vui vẻ khi có tiền, sắp tới có thể có khoản thu bất ngờ. Nếu tiền bay mất hoặc bị lấy đi, hãy chú ý chi tiêu và các cam kết tài chính.", "numbers": [19, 91, 38]},
-{"keywords": ["vàng", "thỏi vàng", "vàng bạc"], "subject": "Mơ thấy vàng", "meaning": "Vàng trong mơ tượng trưng cho giá trị, thành quả và sự ghi nhận. Mơ thấy vàng thường báo hiệu giai đoạn thu hoạch sau thời gian nỗ lực, hoặc một cơ hội nâng cao vị thế. Tuy nhiên cũng nhắc bạn đừng vì lợi trước mắt mà đánh mất uy tín lâu dài.", "numbers": [10, 49, 94]},
-{"keywords": ["chó", "con chó"], "subject": "Mơ thấy chó", "meaning": "Chó là hình ảnh của lòng trung thành và bạn bè. Mơ thấy chó thân thiện cho thấy bạn có người đáng tin cậy sẵn sàng giúp đỡ lúc khó khăn. Chó sủa dữ hoặc tấn công lại là lời nhắc nên xem lại một mối quan hệ đang có dấu hiệu rạn nứt.", "numbers": [29, 59, 95]},
-{"keywords": ["mèo", "con mèo"], "subject": "Mơ thấy mèo", "meaning": "Mèo trong mơ đại diện cho sự nhạy cảm, trực giác và phần mềm mỏng trong tính cách. Mơ thấy mèo ngoan báo hiệu cuộc sống gia đình yên ấm, có tin vui nhỏ. Mèo hoang hoặc mèo cào cắn nhắc bạn cẩn trọng với những lời ngọt ngào không thật lòng.", "numbers": [18, 58, 85]},
-{"keywords": ["gà", "con gà", "đàn gà"], "subject": "Mơ thấy gà", "meaning": "Gà gắn với sự chăm chỉ, khởi đầu mới và tin tức gần nhà. Mơ thấy gà gáy sáng thường báo một ngày mới nhiều năng lượng, công việc có tín hiệu tốt. Gà mái ấp trứng gợi ý kế hoạch của bạn đang trong giai đoạn ủ mầm, cần kiên nhẫn thêm.", "numbers": [27, 47, 74]},
-{"keywords": ["lợn", "heo", "con lợn"], "subject": "Mơ thấy lợn", "meaning": "Lợn là biểu tượng của sự no đủ và tích lũy. Mơ thấy lợn béo khỏe thường được xem là điềm lành về tài chính, làm ăn có lãi. Lợn gầy ốm hoặc bỏ ăn lại nhắc bạn kiểm tra lại dòng tiền và tránh đầu tư vội vàng.", "numbers": [7, 47, 76]},
-{"keywords": ["trâu", "con trâu"], "subject": "Mơ thấy trâu", "meaning": "Trâu tượng trưng cho sức lao động bền bỉ và nền tảng gia đình. Mơ thấy trâu ra đồng gợi ý thành quả sẽ đến từ sự chăm chỉ chứ không phải may rủi. Nếu trâu húc hoặc bỏ chạy, bạn nên chú ý sức khỏe và tránh ôm đồm quá nhiều việc.", "numbers": [13, 31, 86]},
-{"keywords": ["ngựa", "con ngựa"], "subject": "Mơ thấy ngựa", "meaning": "Ngựa trong mơ báo hiệu sự tiến lên, di chuyển và khát vọng tự do. Ngựa phi nước đại cho thấy cơ hội thăng tiến hoặc chuyến đi quan trọng đang tới. Ngựa bị thương nhắc bạn đừng nóng vội, hãy giữ sức cho chặng đường dài.", "numbers": [12, 52, 72]},
-{"keywords": ["chim", "con chim", "đàn chim"], "subject": "Mơ thấy chim", "meaning": "Chim là sứ giả của tin tức và hy vọng. Mơ thấy chim bay cao, hót vang thường báo tin vui từ xa hoặc một cơ hội mở ra trước mắt. Chim bị nhốt trong lồng cho thấy bạn đang cảm thấy bị bó buộc, cần tìm cách giải phóng bản thân.", "numbers": [23, 56, 87]},
-{"keywords": ["bay", "bay lên", "biết bay"], "subject": "Mơ thấy mình bay", "meaning": "Bay trong mơ là cảm giác vượt qua giới hạn và trút bỏ áp lực. Nếu bạn bay nhẹ nhàng, thoải mái, đây là dấu hiệu tinh thần đang thăng hoa, công việc có bước tiến. Bay trong sợ hãi hoặc mất kiểm soát nhắc bạn đang đặt mục tiêu quá cao so với thực lực hiện tại.", "numbers": [3, 30, 83]},
-{"keywords": ["rơi", "rơi xuống", "té ngã"], "subject": "Mơ thấy bị rơi", "meaning": "Cảm giác rơi thường xuất hiện khi bạn lo lắng mất kiểm soát trong một việc quan trọng. Giấc mơ nhắc bạn rà soát lại kế hoạch, đừng để mọi thứ phụ thuộc vào một yếu tố duy nhất. Nếu rơi rồi chạm đất an toàn, khó khăn hiện tại sẽ sớm qua.", "numbers": [4, 40, 84]},
-{"keywords": ["răng rụng", "rụng răng", "gãy răng"], "subject": "Mơ thấy răng rụng", "meaning": "Răng rụng trong mơ thường liên quan đến sự lo lắng về hình ảnh bản thân hoặc sức khỏe người thân. Dân gian cũng coi đây là điềm nhắc gia đình cần quan tâm nhau nhiều hơn. Nếu rụng răng mà không đau, một giai đoạn cũ sắp khép lại để nhường chỗ cho điều mới.", "numbers": [5, 50, 85]}
-,
-{"keywords": ["người chết", "người đã khuất", "ông bà đã mất"], "subject": "Mơ thấy người chết", "meaning": "Mơ thấy người đã khuất thường xuất phát từ nỗi nhớ và tình cảm chưa nguôi của bạn dành cho họ. Theo quan niệm dân gian, đây cũng là điềm nhắc nên chăm lo bàn thờ, mộ phần chu đáo. Nếu người đó mỉm cười nói chuyện, bạn có thể sắp nhận được sự phù trợ về tinh thần.", "numbers": [14, 41, 74]},
-{"keywords": ["đám cưới", "cưới", "lễ cưới"], "subject": "Mơ thấy đám cưới", "meaning": "Đám cưới trong mơ tượng trưng cho sự gắn kết và những cam kết mới. Nếu mơ thấy đám cưới của chính mình, bạn đang đứng trước một quyết định quan trọng cần sự chắc chắn. Đám cưới vui vẻ rộn ràng cũng báo tin hỷ trong gia đình hoặc bạn bè thân thiết.", "numbers": [27, 72, 90]},
-{"keywords": ["đám ma", "đám tang", "tang lễ"], "subject": "Mơ thấy đám ma", "meaning": "Trái với nỗi sợ thông thường, mơ thấy đám tang thường được hiểu là sự kết thúc của một giai đoạn khó khăn. Giấc mơ cho thấy bạn sẵn sàng buông bỏ chuyện cũ để bắt đầu lại nhẹ nhàng hơn. Nếu trong mơ bạn khóc nhiều, cảm xúc dồn nén lâu ngày cần được giải tỏa.", "numbers": [7, 70, 87]},
-{"keywords": ["em bé", "trẻ sơ sinh", "con nít"], "subject": "Mơ thấy em bé", "meaning": "Em bé là biểu tượng của sự khởi đầu trong sáng và những dự định mới ấp ủ. Mơ thấy em bé khỏe mạnh, tươi cười báo hiệu kế hoạch của bạn đang đi đúng hướng. Bé khóc hoặc ốm yếu nhắc bạn dành thêm sự chăm sóc cho một việc còn non trẻ.", "numbers": [1, 10, 99]},
-{"keywords": ["lửa cháy", "lửa", "cháy"], "subject": "Mơ thấy lửa cháy", "meaning": "Lửa trong mơ mang hai mặt: nhiệt huyết, tài lộc rực rỡ hoặc sự nóng nảy mất kiểm soát. Lửa cháy sáng ổn định trong bếp là điềm ấm no, gia đạo thuận hòa. Lửa cháy lan dữ dội nhắc bạn kiềm chế cảm xúc và cẩn thận giấy tờ, điện đóm trong nhà.", "numbers": [27, 72, 99]},
-{"keywords": ["nhà cháy", "cháy nhà"], "subject": "Mơ thấy nhà cháy", "meaning": "Mơ thấy nhà cháy thường khiến người mơ hoảng sợ, nhưng dân gian lại cho rằng đây là dấu hiệu biến động lớn sắp xảy ra với gia đình. Có thể là chuyện chuyển nhà, sửa sang hoặc thay đổi trong công việc của người thân. Hãy chủ động kiểm tra an toàn cháy nổ để yên tâm hơn.", "numbers": [5, 43, 67]},
-{"keywords": ["mưa", "trời mưa", "mưa to"], "subject": "Mơ thấy mưa", "meaning": "Mưa trong mơ tượng trưng cho sự gột rửa và nguồn tài lộc trời ban. Mưa rào nhẹ, mát mẻ báo hiệu tâm trạng được giải tỏa, công việc hanh thông. Mưa dầm dề gây ngập úng lại cho thấy bạn đang chịu áp lực kéo dài cần tìm người chia sẻ.", "numbers": [7, 47, 67]},
-{"keywords": ["sấm", "sấm sét", "tiếng sấm"], "subject": "Mơ thấy sấm sét", "meaning": "Sấm sét là điềm của những biến cố bất ngờ và tiếng nói quyền uy. Mơ nghe tiếng sấm xa cho thấy sắp có tin quan trọng liên quan đến công việc hoặc người có vai vế. Sét đánh gần mình nhắc bạn thận trọng trong lời nói, tránh tranh cãi không đáng có.", "numbers": [6, 60, 66]},
-{"keywords": ["cây", "cây xanh", "cây cổ thụ"], "subject": "Mơ thấy cây xanh", "meaning": "Cây xanh tượng trưng cho sự phát triển bền vững và sức khỏe của cả gia đình. Cây tươi tốt, đâm chồi nảy lộc báo hiệu vận khí đang lên, con cháu có tin vui. Cây khô héo nhắc bạn chú ý nghỉ ngơi và chăm sóc người lớn tuổi trong nhà.", "numbers": [8, 48, 84]},
-{"keywords": ["hoa", "hoa nở", "bông hoa"], "subject": "Mơ thấy hoa nở", "meaning": "Hoa nở trong mơ là hình ảnh của niềm vui, tình cảm và sự được yêu mến. Người độc thân mơ thấy hoa nở rộ có thể sắp gặp nhân duyên tốt. Hoa nhanh tàn nhắc bạn trân trọng những mối quan hệ hiện tại, đừng để lỡ vì vô tâm.", "numbers": [9, 39, 93]},
-{"keywords": ["quả", "trái cây", "hoa quả"], "subject": "Mơ thấy quả chín", "meaning": "Quả chín trong mơ báo hiệu mùa thu hoạch, công sức bỏ ra sắp được đền đáp. Hái được quả ngọt là điềm tốt về tiền bạc lẫn tình cảm. Quả còn xanh hoặc chua cho thấy thời điểm chưa chín muồi, bạn cần chờ thêm thay vì ép tiến độ.", "numbers": [19, 29, 92]},
-{"keywords": ["núi", "leo núi", "ngọn núi"], "subject": "Mơ thấy núi", "meaning": "Núi tượng trưng cho thử thách lớn và mục tiêu dài hạn trong đời bạn. Leo lên được đỉnh núi là dấu hiệu bạn đủ bản lĩnh vượt qua khó khăn để đạt thành tựu. Dừng giữa chừng nhắc bạn xem lại chiến lược, có thể cần đồng đội thay vì đi một mình.", "numbers": [17, 71, 86]},
-{"keywords": ["biển", "biển lớn", "sóng biển"], "subject": "Mơ thấy biển", "meaning": "Biển trong mơ phản ánh thế giới nội tâm rộng lớn và những khát vọng chưa nói thành lời. Biển lặng, nước trong xanh báo hiệu tương lai rộng mở, có cơ hội đi xa làm ăn. Sóng to gió lớn cảnh báo giai đoạn nhiều biến động, cần giữ vững tay lái.", "numbers": [27, 72, 97]},
-{"keywords": ["sông", "dòng sông", "qua sông"], "subject": "Mơ thấy sông", "meaning": "Dòng sông là hình ảnh của dòng đời và sự trôi chảy của thời gian. Nước sông trong, chảy êm cho thấy cuộc sống đang đúng nhịp, tài lộc đều đặn. Qua sông vất vả nhắc bạn sắp phải vượt một cửa ải, nhưng bờ bên kia là điều tốt đẹp.", "numbers": [16, 61, 86]},
-{"keywords": ["thuyền", "con thuyền", "đi thuyền"], "subject": "Mơ thấy thuyền", "meaning": "Thuyền tượng trưng cho hành trình và khả năng chèo lái cuộc đời của bạn. Thuyền ra khơi thuận gió báo hiệu kế hoạch xuất hành, khai trương có phần may mắn. Thuyền chòng chành nhắc bạn kiểm tra lại đối tác và chuẩn bị phương án dự phòng.", "numbers": [15, 51, 85]}
-,
-{"keywords": ["xe", "xe máy", "ô tô", "đi xe"], "subject": "Mơ thấy xe cộ", "meaning": "Xe trong mơ đại diện cho hướng đi và tốc độ tiến về phía trước của bạn. Lái xe êm ái, làm chủ tay lái cho thấy bạn đang kiểm soát tốt công việc. Xe hỏng, mất phanh là lời nhắc nên giảm tốc, rà soát lại những quyết định vội vàng gần đây.", "numbers": [14, 41, 79]},
-{"keywords": ["tai nạn", "tai nạn xe", "đâm xe"], "subject": "Mơ thấy tai nạn", "meaning": "Mơ thấy tai nạn thường phản ánh nỗi lo tiềm ẩn hơn là điềm báo thật, cho thấy bạn đang căng thẳng với một kế hoạch có nhiều rủi ro. Giấc mơ nhắc bạn cẩn trọng khi di chuyển và đừng quyết định việc lớn lúc mệt mỏi. Nếu trong mơ mọi người đều an toàn, trở ngại sẽ được hóa giải.", "numbers": [4, 40, 88]},
-{"keywords": ["máu", "chảy máu", "thấy máu"], "subject": "Mơ thấy máu", "meaning": "Máu trong mơ gắn với sinh lực, gia đình ruột thịt và cả tài lộc theo cách hiểu dân gian. Thấy máu đỏ tươi đôi khi được xem là điềm có lộc bất ngờ. Tuy nhiên nếu mơ chảy máu nhiều, bạn nên chú ý sức khỏe và đi kiểm tra khi cơ thể có dấu hiệu lạ.", "numbers": [19, 69, 96]},
-{"keywords": ["khóc", "khóc lóc", "nước mắt"], "subject": "Mơ thấy mình khóc", "meaning": "Khóc trong mơ là cách tâm trí giải phóng những cảm xúc bị nén chặt ban ngày. Dân gian có câu cười trong mơ, khóc ngoài đời và ngược lại, nên khóc trong mơ thường được xem là sắp có niềm vui bù đắp. Sau giấc mơ này, bạn nên cho phép mình nghỉ ngơi và chia sẻ nhiều hơn.", "numbers": [11, 21, 71]},
-{"keywords": ["cười", "cười lớn", "vui cười"], "subject": "Mơ thấy cười", "meaning": "Tiếng cười trong mơ phản ánh nhu cầu được vui vẻ và kết nối của bạn. Cười cùng người thân báo hiệu gia đạo hòa thuận, có dịp sum họp. Cười một mình hoặc cười gượng nhắc bạn đang che giấu nỗi buồn, đừng ngại tìm sự giúp đỡ khi cần.", "numbers": [21, 42, 84]},
-{"keywords": ["đánh nhau", "đánh lộn", "xô xát"], "subject": "Mơ thấy đánh nhau", "meaning": "Đánh nhau trong mơ thường là biểu hiện của mâu thuẫn nội tâm hoặc xung đột chưa được giải quyết ngoài đời. Nếu bạn thắng trong mơ, bạn đang dần lấy lại thế chủ động trong một việc khó. Nếu bị thua, hãy tránh đối đầu trực diện và chọn cách thương lượng mềm mỏng.", "numbers": [3, 33, 83]},
-{"keywords": ["thi cử", "đi thi", "bài thi"], "subject": "Mơ thấy thi cử", "meaning": "Mơ đi thi dù đã ra trường từ lâu là giấc mơ rất phổ biến khi bạn cảm thấy bị đánh giá, soi xét. Nó cho thấy bạn đang chịu áp lực phải chứng tỏ bản thân trong công việc. Thi đỗ trong mơ là tín hiệu tốt, báo nỗ lực của bạn sắp được ghi nhận.", "numbers": [17, 27, 77]},
-{"keywords": ["trúng số", "trúng thưởng", "trúng vé số"], "subject": "Mơ thấy trúng số", "meaning": "Mơ trúng số phản ánh khát vọng đổi đời và mong chờ một bước ngoặt may mắn. Giấc mơ nhắc rằng cơ hội thật sự thường đến từ sự chuẩn bị chứ không chỉ vận may. Dù vậy, đây cũng là điềm tinh thần tốt, cho thấy bạn đang lạc quan về tương lai.", "numbers": [8, 18, 88]},
-{"keywords": ["mất đồ", "mất của", "bị trộm"], "subject": "Mơ thấy mất đồ", "meaning": "Mất đồ trong mơ thường liên quan đến cảm giác bất an, sợ đánh mất điều quý giá trong đời thực. Có thể bạn đang lo về một mối quan hệ, vị trí công việc hoặc bí mật nào đó. Tìm lại được đồ trong mơ là tín hiệu mọi chuyện sẽ dần ổn định trở lại.", "numbers": [6, 60, 86]},
-{"keywords": ["nhà mới", "chuyển nhà", "mua nhà"], "subject": "Mơ thấy nhà mới", "meaning": "Nhà mới trong mơ là biểu tượng của giai đoạn sống mới và sự nâng cấp về mọi mặt. Mơ dọn vào nhà khang trang báo hiệu vận khí gia đình đang đi lên, có thể có tin vui về chỗ ở thật. Nhà mới còn trống trải nhắc bạn cần thời gian để thích nghi với thay đổi.", "numbers": [25, 52, 89]},
-{"keywords": ["cầu", "cây cầu", "qua cầu"], "subject": "Mơ thấy cầu", "meaning": "Cầu trong mơ tượng trưng cho sự nối kết và bước chuyển quan trọng. Qua cầu suôn sẻ là điềm bạn sắp vượt qua trở ngại để đến bờ thành công. Cầu gãy hoặc rung lắc nhắc bạn thận trọng với một cam kết đang dang dở, cần gia cố lại niềm tin.", "numbers": [26, 62, 86]},
-{"keywords": ["thang", "leo thang", "bậc thang"], "subject": "Mơ thấy leo thang", "meaning": "Leo thang lên cao trong mơ là hình ảnh quen thuộc của sự thăng tiến từng bước. Mỗi bậc thang vững chắc cho thấy con đường sự nghiệp của bạn đang đúng hướng dù chậm. Xuống thang hoặc trượt chân nhắc bạn đừng chủ quan khi đang ở vị trí thuận lợi.", "numbers": [17, 71, 83]},
-{"keywords": ["gương", "soi gương", "gương vỡ"], "subject": "Mơ thấy gương", "meaning": "Gương trong mơ là biểu tượng của sự tự nhìn nhận và hình ảnh bản thân. Soi gương thấy mặt tươi tắn cho thấy bạn đang hài hòa với chính mình. Gương vỡ hoặc mờ đục nhắc bạn cẩn trọng với những mối quan hệ thiếu trung thực quanh mình.", "numbers": [13, 31, 81]},
-{"keywords": ["tóc", "cắt tóc", "tóc dài"], "subject": "Mơ thấy tóc", "meaning": "Tóc gắn với sức sống, hình ảnh cá nhân và những mối bận tâm thường ngày. Mơ cắt tóc thường là mong muốn rũ bỏ chuyện cũ, làm mới bản thân. Tóc rối bù, rụng nhiều phản ánh bạn đang mệt mỏi, cần sắp xếp lại ưu tiên và nghỉ ngơi hợp lý.", "numbers": [7, 37, 73]},
-{"keywords": ["sâu", "con sâu", "sâu bọ"], "subject": "Mơ thấy sâu", "meaning": "Sâu trong mơ thường tượng trưng cho những phiền toái nhỏ nhưng dai dẳng mà bạn đang né tránh. Giấc mơ nhắc bạn xử lý dứt điểm từng việc vụn vặt trước khi chúng lớn dần. Sâu hóa bướm lại là điềm đẹp, báo sự lột xác và trưởng thành sau khó khăn.", "numbers": [5, 35, 53]}
-,
-{"keywords": ["chuột", "con chuột"], "subject": "Mơ thấy chuột", "meaning": "Chuột trong mơ thường gắn với những lo toan vụn vặt và người tiểu nhân quanh bạn. Chuột chạy vào nhà nhắc bạn kiểm tra lại đồ đạc, giấy tờ và cẩn trọng trong chuyện tiền nong. Bắt được chuột là dấu hiệu bạn sắp hóa giải được một rắc rối kéo dài.", "numbers": [2, 20, 55]},
-{"keywords": ["voi", "con voi"], "subject": "Mơ thấy voi", "meaning": "Voi là biểu tượng của sức mạnh điềm tĩnh, trí tuệ và sự bảo trợ của bề trên. Mơ thấy voi thường báo bạn có quý nhân hoặc người lớn tuổi sẵn sàng nâng đỡ. Voi hiền lành đi qua làng còn được dân gian xem là điềm lành cho cả gia đình.", "numbers": [13, 43, 93]},
-{"keywords": ["hổ", "con hổ", "cọp"], "subject": "Mơ thấy hổ", "meaning": "Hổ trong mơ đại diện cho quyền lực, thử thách lớn và cả nỗi sợ bị lấn át. Đối mặt hổ mà không hoảng loạn cho thấy bạn đủ bản lĩnh xử lý việc khó. Hổ rượt đuổi nhắc bạn đang tránh né một quyết định quan trọng cần đối diện sớm.", "numbers": [6, 60, 78]},
-{"keywords": ["rồng", "con rồng"], "subject": "Mơ thấy rồng", "meaning": "Rồng là linh vật đứng đầu trong tứ linh, mơ thấy rồng được xem là điềm đại cát về công danh và vận hội. Rồng bay lên trời báo hiệu cơ hội thăng hoa hiếm có đang mở ra. Tuy vậy, rồng cũng nhắc bạn giữ tâm khiêm nhường để phúc bền lâu.", "numbers": [10, 29, 92]},
-{"keywords": ["phượng", "phượng hoàng", "chim phượng"], "subject": "Mơ thấy phượng hoàng", "meaning": "Phượng hoàng tượng trưng cho sự tái sinh, vẻ đẹp và đức hạnh. Mơ thấy phượng hoàng thường báo một giai đoạn mới rực rỡ sau thời gian nhiều trắc trở, đặc biệt tốt cho phụ nữ và chuyện gia đạo. Hình ảnh này cũng gợi nhân duyên xứng đôi vừa lứa.", "numbers": [9, 39, 90]},
-{"keywords": ["tiền rơi", "rơi tiền", "mất tiền"], "subject": "Mơ thấy tiền rơi", "meaning": "Mơ thấy tiền rơi thường phản ánh nỗi lo hao hụt hoặc cảm giác công sức chưa được đền đáp xứng đáng. Giấc mơ nhắc bạn rà soát chi tiêu và các khoản cho vay mượn. Nếu trong mơ nhặt lại được tiền, khó khăn tài chính chỉ là tạm thời.", "numbers": [14, 41, 88]},
-{"keywords": ["nhặt tiền", "nhặt được tiền"], "subject": "Mơ thấy nhặt được tiền", "meaning": "Nhặt được tiền trong mơ là điềm được nhiều người yêu thích, báo hiệu lộc nhỏ bất ngờ hoặc cơ hội đến từ nơi không ngờ tới. Song giấc mơ cũng nhắc bạn tỉnh táo: của trời cho kèm theo trách nhiệm, đừng vì lợi nhỏ mà đánh mất điều lớn hơn.", "numbers": [19, 38, 83]},
-{"keywords": ["cho tiền", "được cho tiền", "biếu tiền"], "subject": "Mơ thấy được cho tiền", "meaning": "Được cho tiền trong mơ cho thấy bạn đang nhận được sự quan tâm, giúp đỡ từ người xung quanh mà đôi khi chưa nhận ra. Đây cũng là điềm báo công việc có người nâng đỡ, việc khó có người chung tay. Hãy biết ơn và đáp lại bằng sự tử tế khi có dịp.", "numbers": [28, 68, 86]},
-{"keywords": ["mưa bão", "bão", "giông bão"], "subject": "Mơ thấy mưa bão", "meaning": "Mưa bão trong mơ phản ánh giai đoạn nhiều sóng gió, cảm xúc trong bạn đang cuộn trào. Bão đến rồi tan cho thấy biến cố dù lớn cũng sẽ qua, quan trọng là giữ nhà cửa và các mối quan hệ nền tảng cho vững. Đang lúc này bạn nên tránh các quyết định đầu tư mạo hiểm.", "numbers": [7, 47, 77]},
-{"keywords": ["cầu vồng", "cầu vồng sau mưa"], "subject": "Mơ thấy cầu vồng", "meaning": "Cầu vồng là hình ảnh của hy vọng sau cơn mưa, điềm lành được nhiều người yêu thích. Mơ thấy cầu vồng báo hiệu giai đoạn khó khăn sắp khép lại, niềm vui và cơ hội mới đang ở phía trước. Đây cũng là giấc mơ đẹp cho chuyện tình cảm và lời hứa được thực hiện.", "numbers": [7, 17, 77]},
-{"keywords": ["mặt trời", "mặt trời mọc", "ánh nắng"], "subject": "Mơ thấy mặt trời", "meaning": "Mặt trời trong mơ tượng trưng cho năng lượng, danh vọng và sự khởi đầu đầy sinh khí. Mặt trời mọc rực rỡ báo hiệu vận trình đang lên, thích hợp bắt đầu dự định mới. Mặt trời bị mây che nhắc bạn kiên nhẫn, thời cơ tốt cần thêm chút thời gian để lộ rõ.", "numbers": [1, 11, 81]},
-{"keywords": ["mặt trăng", "trăng", "trăng sáng"], "subject": "Mơ thấy mặt trăng", "meaning": "Mặt trăng gắn với sự dịu dàng, trực giác và chuyện tình cảm. Trăng tròn sáng trong mơ thường báo gia đình đoàn viên, tình cảm viên mãn. Trăng khuyết hoặc bị che khuất gợi ý có điều còn dang dở trong lòng cần được nói ra và tháo gỡ.", "numbers": [2, 22, 82]},
-{"keywords": ["sao", "ngôi sao", "sao băng"], "subject": "Mơ thấy sao", "meaning": "Ngôi sao trong mơ là biểu tượng của ước mơ, định hướng và niềm tin vào tương lai. Thấy sao băng là lúc dân gian khuyên nên ước nguyện, vì cơ hội tốt có thể vụt đến bất ngờ. Bầu trời đầy sao cho thấy bạn đang có nhiều lựa chọn, hãy chọn con đường khiến mình bình an nhất.", "numbers": [3, 13, 93]},
-{"keywords": ["chùa", "đi chùa", "ngôi chùa"], "subject": "Mơ thấy chùa", "meaning": "Mơ thấy chùa cho thấy tâm bạn đang tìm về sự bình an và hướng thiện sau những xô bồ. Đây là điềm tốt về mặt tinh thần, nhắc bạn sống chậm lại, làm việc phúc đức để tích lũy may mắn lâu dài. Nếu mơ thắp hương lễ Phật, một tâm nguyện chân thành có thể sớm thành.", "numbers": [1, 31, 91]},
-{"keywords": ["phật", "tượng phật", "đức phật"], "subject": "Mơ thấy Phật", "meaning": "Mơ thấy Phật là giấc mơ được xem là rất lành, biểu tượng của sự che chở và tỉnh thức. Giấc mơ nhắc bạn giữ tâm trong sáng, tránh xa thị phi thì vận may tự nhiên tìm đến. Người đang gặp khó khăn mơ thấy Phật thường có thêm niềm tin để vượt qua.", "numbers": [1, 51, 95]}
-,
-{"keywords": ["ma quỷ", "ma", "bóng ma"], "subject": "Mơ thấy ma quỷ", "meaning": "Mơ thấy ma thường phản ánh nỗi sợ, ám ảnh hoặc chuyện cũ chưa giải quyết trong lòng bạn, không hẳn là điềm xấu. Nếu bạn không sợ hãi trong mơ, bạn đang dần làm chủ được cảm xúc của mình. Giấc mơ lặp lại nhiều lần nhắc bạn nên nghỉ ngơi, giảm căng thẳng và chia sẻ với người tin cậy.", "numbers": [13, 33, 79]},
-{"keywords": ["người yêu cũ", "tình cũ"], "subject": "Mơ thấy người yêu cũ", "meaning": "Mơ về người yêu cũ thường không có nghĩa là còn yêu, mà là tâm trí đang gợi lại một bài học hoặc cảm xúc cũ. Có thể hiện tại của bạn có điểm tương đồng khiến ký ức trỗi dậy. Giấc mơ nhắc bạn trân trọng người hiện tại và khép lại quá khứ một cách nhẹ nhàng.", "numbers": [12, 21, 47]},
-{"keywords": ["mang thai", "có bầu", "bầu"], "subject": "Mơ thấy mang thai", "meaning": "Mang thai trong mơ thường tượng trưng cho một ý tưởng, dự án hoặc giai đoạn mới đang hình thành trong cuộc sống của bạn. Đây là điềm của sự thai nghén sáng tạo, cần thời gian nuôi dưỡng mới thành quả. Với người đang mong con, giấc mơ đơn giản phản ánh niềm khao khát chân thành.", "numbers": [9, 49, 94]},
-{"keywords": ["sinh con", "đẻ con", "sinh em bé"], "subject": "Mơ thấy sinh con", "meaning": "Mơ sinh con là điềm của thành quả ra đời sau bao ngày chờ đợi, có thể là dự án hoàn thành hoặc tin vui trong gia đình. Sinh nở thuận lợi trong mơ báo mọi việc sẽ hanh thông hơn dự tính. Giấc mơ cũng nhắc bạn chuẩn bị tinh thần cho trách nhiệm mới sắp đến.", "numbers": [10, 20, 90]},
-{"keywords": ["bệnh", "ốm", "bị bệnh"], "subject": "Mơ thấy bị bệnh", "meaning": "Mơ thấy mình bị bệnh phần lớn là tín hiệu cơ thể và tâm trí đang kêu gọi được nghỉ ngơi. Đây không phải điềm gở mà là lời nhắc chăm sóc sức khỏe, ngủ đủ và bớt ôm việc. Nếu mơ bệnh rồi khỏi, bạn sắp vượt qua một giai đoạn uể oải để lấy lại phong độ.", "numbers": [4, 44, 84]},
-{"keywords": ["bệnh viện", "đi bệnh viện", "khám bệnh"], "subject": "Mơ thấy bệnh viện", "meaning": "Bệnh viện trong mơ tượng trưng cho nhu cầu được chữa lành, cả về thể chất lẫn tinh thần. Giấc mơ xuất hiện khi bạn đang cần sự hỗ trợ chuyên nghiệp hoặc một lời khuyên đáng tin. Ra viện khỏe mạnh trong mơ là dấu hiệu tốt, báo vấn đề đang dần được giải quyết.", "numbers": [14, 34, 74]},
-{"keywords": ["trường học", "lớp học", "đi học"], "subject": "Mơ thấy trường học", "meaning": "Trường học trong mơ gắn với bài học cuộc đời và cảm giác được thử thách. Người trưởng thành mơ quay lại lớp thường đang đứng trước một kỹ năng mới cần học hoặc một kỳ đánh giá trong công việc. Học vui vẻ trong mơ cho thấy bạn sẵn sàng tiếp thu và tiến bộ.", "numbers": [17, 37, 57]},
-{"keywords": ["công việc", "đi làm", "văn phòng"], "subject": "Mơ thấy công việc", "meaning": "Mơ thấy công việc phản ánh trực tiếp mức độ bận tâm của bạn dành cho sự nghiệp lúc này. Công việc suôn sẻ trong mơ cho thấy bạn đang đi đúng nhịp và được đồng nghiệp hỗ trợ. Nếu mơ bị dồn việc, trễ hạn, hãy xem lại cách sắp xếp và đừng ngại đề xuất chia sẻ khối lượng.", "numbers": [18, 28, 68]},
-{"keywords": ["sếp", "ông chủ", "cấp trên"], "subject": "Mơ thấy sếp", "meaning": "Mơ thấy sếp thường liên quan đến áp lực về đánh giá, thành tích hoặc một quyết định cần người phê duyệt. Sếp vui vẻ, khen ngợi trong mơ là tín hiệu nỗ lực của bạn đang được chú ý. Sếp quở trách nhắc bạn rà soát kỹ công việc trước khi trình bày, tránh sai sót nhỏ.", "numbers": [19, 29, 79]},
-{"keywords": ["bạn cũ", "bạn học cũ", "gặp bạn cũ"], "subject": "Mơ thấy bạn cũ", "meaning": "Gặp lại bạn cũ trong mơ cho thấy bạn đang nhớ về một thời vô tư hoặc một phần tính cách của chính mình ngày trước. Có thể sắp có dịp kết nối lại với người quen cũ mang theo cơ hội mới. Giấc mơ cũng nhắc bạn dành thời gian cho bạn bè hiện tại.", "numbers": [16, 36, 63]},
-{"keywords": ["người lạ", "người lạ mặt"], "subject": "Mơ thấy người lạ", "meaning": "Người lạ trong mơ thường là hình ảnh của những khía cạnh chưa biết trong chính bạn hoặc cơ hội chưa từng thử. Người lạ thân thiện báo hiệu mối quan hệ, đối tác mới đáng để tìm hiểu. Người lạ gây khó chịu nhắc bạn giữ khoảng cách an toàn trong các giao dịch mới.", "numbers": [15, 25, 75]},
-{"keywords": ["ăn uống", "ăn cơm", "bữa ăn"], "subject": "Mơ thấy ăn uống", "meaning": "Ăn uống trong mơ tượng trưng cho sự hưởng thụ, nhu cầu được nuôi dưỡng cả thân lẫn tâm. Bữa ăn ngon, sum vầy là điềm gia đình hòa thuận, tài lộc đủ đầy. Ăn một mình hoặc ăn không ngon miệng cho thấy bạn đang thiếu sự sẻ chia trong cuộc sống.", "numbers": [28, 48, 84]},
-{"keywords": ["nấu ăn", "nấu cơm", "vào bếp"], "subject": "Mơ thấy nấu ăn", "meaning": "Nấu ăn trong mơ là hình ảnh của sự chăm sóc và khả năng vun vén cho gia đình. Nấu được món ngon được mọi người khen báo hiệu bạn sắp mang niềm vui đến cho người thân. Bếp núc lộn xộn nhắc bạn sắp xếp lại việc nhà và công việc cho khoa học hơn.", "numbers": [24, 42, 84]},
-{"keywords": ["bắt cá", "bắt được cá"], "subject": "Mơ thấy bắt cá", "meaning": "Bắt cá trong mơ là điềm nắm bắt cơ hội bằng chính sức mình, được dân gian xem là rất may mắn. Bắt được cá lớn báo thành quả đáng kể trong làm ăn hoặc thi cử. Cá trơn tuột khỏi tay nhắc bạn chuẩn bị kỹ hơn, thời cơ tốt cần sự sẵn sàng đi kèm.", "numbers": [29, 79, 97]},
-{"keywords": ["câu cá", "đi câu"], "subject": "Mơ thấy câu cá", "meaning": "Câu cá trong mơ tượng trưng cho sự kiên nhẫn chờ thời và thú vui tĩnh tại. Ngồi câu lâu mà cá cắn câu là dấu hiệu kế hoạch dài hơi của bạn sắp có kết quả. Giấc mơ cũng khuyên bạn đừng nóng ruột, việc tốt thường đến với người biết đợi đúng lúc.", "numbers": [39, 73, 87]},
-{"keywords": ["trồng cây", "gieo hạt", "trồng trọt"], "subject": "Mơ thấy trồng cây", "meaning": "Trồng cây trong mơ là điềm gieo nhân lành, đầu tư cho tương lai xa. Hạt nảy mầm, cây lớn nhanh báo hiệu những nỗ lực thầm lặng của bạn đang đâm chồi đúng hướng. Giấc mơ hợp với người đang khởi nghiệp, học hành hoặc vun đắp một mối quan hệ nghiêm túc.", "numbers": [8, 38, 83]},
-{"keywords": ["gặt lúa", "thu hoạch lúa", "lúa chín"], "subject": "Mơ thấy gặt lúa", "meaning": "Gặt lúa vàng trong mơ là hình ảnh đẹp của mùa màng bội thu và công sức được đền đáp. Đây là điềm tốt cho người làm nông, kinh doanh và cả người đang chờ kết quả thi cử, phỏng vấn. Lúa chín đầy đồng báo tin vui lan ra cả gia đình, dòng họ.", "numbers": [18, 48, 89]}
+{
+"keywords": [
+"rắn",
+"con rắn"
+],
+"subject": "Mơ thấy rắn",
+"meaning": "Giấc mơ về rắn thường gắn với những thay đổi đang âm thầm diễn ra trong cuộc sống của bạn, có thể là một cơ hội mới hoặc một mối quan hệ cần thận trọng. Nếu rắn hiền lành không tấn công, đây là dấu hiệu của sự khôn ngoan và khả năng thích nghi. Ngược lại, rắn đuổi cắn nhắc bạn đề phòng người hai mặt quanh mình.",
+"numbers": [
+32,
+42,
+72
+]
+},
+{
+"keywords": [
+"nước",
+"nước trong",
+"nước đục"
+],
+"subject": "Mơ thấy nước",
+"meaning": "Nước trong mơ tượng trưng cho cảm xúc và dòng chảy tài lộc. Nước trong xanh, êm ả báo hiệu tâm trí bình an, công việc thuận lợi. Nước đục hoặc chảy xiết cho thấy bạn đang lo lắng, cần chậm lại để xử lý từng việc một.",
+"numbers": [
+16,
+61,
+80
+]
+},
+{
+"keywords": [
+"cá",
+"con cá",
+"đàn cá"
+],
+"subject": "Mơ thấy cá",
+"meaning": "Cá là biểu tượng của sự dư dả và may mắn trong tài lộc theo quan niệm dân gian. Mơ thấy đàn cá bơi lội thường báo tin vui về tiền bạc hoặc cơ hội làm ăn đang đến gần. Cá chết hoặc cá mắc cạn lại nhắc bạn cẩn thận kẻo bỏ lỡ thời cơ.",
+"numbers": [
+79,
+97,
+24
+]
+},
+{
+"keywords": [
+"tiền",
+"tiền giấy",
+"nhiều tiền"
+],
+"subject": "Mơ thấy tiền",
+"meaning": "Mơ thấy tiền phản ánh mong muốn về sự ổn định và giá trị bản thân của bạn. Nếu trong mơ bạn vui vẻ khi có tiền, sắp tới có thể có khoản thu bất ngờ. Nếu tiền bay mất hoặc bị lấy đi, hãy chú ý chi tiêu và các cam kết tài chính.",
+"numbers": [
+19,
+91,
+38
+]
+},
+{
+"keywords": [
+"vàng",
+"thỏi vàng",
+"vàng bạc"
+],
+"subject": "Mơ thấy vàng",
+"meaning": "Vàng trong mơ tượng trưng cho giá trị, thành quả và sự ghi nhận. Mơ thấy vàng thường báo hiệu giai đoạn thu hoạch sau thời gian nỗ lực, hoặc một cơ hội nâng cao vị thế. Tuy nhiên cũng nhắc bạn đừng vì lợi trước mắt mà đánh mất uy tín lâu dài.",
+"numbers": [
+10,
+49,
+94
+]
+},
+{
+"keywords": [
+"chó",
+"con chó"
+],
+"subject": "Mơ thấy chó",
+"meaning": "Chó là hình ảnh của lòng trung thành và bạn bè. Mơ thấy chó thân thiện cho thấy bạn có người đáng tin cậy sẵn sàng giúp đỡ lúc khó khăn. Chó sủa dữ hoặc tấn công lại là lời nhắc nên xem lại một mối quan hệ đang có dấu hiệu rạn nứt.",
+"numbers": [
+29,
+59,
+95
+]
+},
+{
+"keywords": [
+"mèo",
+"con mèo"
+],
+"subject": "Mơ thấy mèo",
+"meaning": "Mèo trong mơ đại diện cho sự nhạy cảm, trực giác và phần mềm mỏng trong tính cách. Mơ thấy mèo ngoan báo hiệu cuộc sống gia đình yên ấm, có tin vui nhỏ. Mèo hoang hoặc mèo cào cắn nhắc bạn cẩn trọng với những lời ngọt ngào không thật lòng.",
+"numbers": [
+18,
+58,
+85
+]
+},
+{
+"keywords": [
+"gà",
+"con gà",
+"đàn gà"
+],
+"subject": "Mơ thấy gà",
+"meaning": "Gà gắn với sự chăm chỉ, khởi đầu mới và tin tức gần nhà. Mơ thấy gà gáy sáng thường báo một ngày mới nhiều năng lượng, công việc có tín hiệu tốt. Gà mái ấp trứng gợi ý kế hoạch của bạn đang trong giai đoạn ủ mầm, cần kiên nhẫn thêm.",
+"numbers": [
+27,
+47,
+74
+]
+},
+{
+"keywords": [
+"lợn",
+"heo",
+"con lợn"
+],
+"subject": "Mơ thấy lợn",
+"meaning": "Lợn là biểu tượng của sự no đủ và tích lũy. Mơ thấy lợn béo khỏe thường được xem là điềm lành về tài chính, làm ăn có lãi. Lợn gầy ốm hoặc bỏ ăn lại nhắc bạn kiểm tra lại dòng tiền và tránh đầu tư vội vàng.",
+"numbers": [
+7,
+47,
+76
+]
+},
+{
+"keywords": [
+"trâu",
+"con trâu"
+],
+"subject": "Mơ thấy trâu",
+"meaning": "Trâu tượng trưng cho sức lao động bền bỉ và nền tảng gia đình. Mơ thấy trâu ra đồng gợi ý thành quả sẽ đến từ sự chăm chỉ chứ không phải may rủi. Nếu trâu húc hoặc bỏ chạy, bạn nên chú ý sức khỏe và tránh ôm đồm quá nhiều việc.",
+"numbers": [
+13,
+31,
+86
+]
+},
+{
+"keywords": [
+"ngựa",
+"con ngựa"
+],
+"subject": "Mơ thấy ngựa",
+"meaning": "Ngựa trong mơ báo hiệu sự tiến lên, di chuyển và khát vọng tự do. Ngựa phi nước đại cho thấy cơ hội thăng tiến hoặc chuyến đi quan trọng đang tới. Ngựa bị thương nhắc bạn đừng nóng vội, hãy giữ sức cho chặng đường dài.",
+"numbers": [
+12,
+52,
+72
+]
+},
+{
+"keywords": [
+"chim",
+"con chim",
+"đàn chim"
+],
+"subject": "Mơ thấy chim",
+"meaning": "Chim là sứ giả của tin tức và hy vọng. Mơ thấy chim bay cao, hót vang thường báo tin vui từ xa hoặc một cơ hội mở ra trước mắt. Chim bị nhốt trong lồng cho thấy bạn đang cảm thấy bị bó buộc, cần tìm cách giải phóng bản thân.",
+"numbers": [
+23,
+56,
+87
+]
+},
+{
+"keywords": [
+"bay",
+"bay lên",
+"biết bay"
+],
+"subject": "Mơ thấy mình bay",
+"meaning": "Bay trong mơ là cảm giác vượt qua giới hạn và trút bỏ áp lực. Nếu bạn bay nhẹ nhàng, thoải mái, đây là dấu hiệu tinh thần đang thăng hoa, công việc có bước tiến. Bay trong sợ hãi hoặc mất kiểm soát nhắc bạn đang đặt mục tiêu quá cao so với thực lực hiện tại.",
+"numbers": [
+3,
+30,
+83
+]
+},
+{
+"keywords": [
+"rơi",
+"rơi xuống",
+"té ngã"
+],
+"subject": "Mơ thấy bị rơi",
+"meaning": "Cảm giác rơi thường xuất hiện khi bạn lo lắng mất kiểm soát trong một việc quan trọng. Giấc mơ nhắc bạn rà soát lại kế hoạch, đừng để mọi thứ phụ thuộc vào một yếu tố duy nhất. Nếu rơi rồi chạm đất an toàn, khó khăn hiện tại sẽ sớm qua.",
+"numbers": [
+4,
+40,
+84
+]
+},
+{
+"keywords": [
+"răng rụng",
+"rụng răng",
+"gãy răng"
+],
+"subject": "Mơ thấy răng rụng",
+"meaning": "Răng rụng trong mơ thường liên quan đến sự lo lắng về hình ảnh bản thân hoặc sức khỏe người thân. Dân gian cũng coi đây là điềm nhắc gia đình cần quan tâm nhau nhiều hơn. Nếu rụng răng mà không đau, một giai đoạn cũ sắp khép lại để nhường chỗ cho điều mới.",
+"numbers": [
+5,
+50,
+85
+]
+},
+{
+"keywords": [
+"người chết",
+"người đã khuất",
+"ông bà đã mất"
+],
+"subject": "Mơ thấy người chết",
+"meaning": "Mơ thấy người đã khuất thường xuất phát từ nỗi nhớ và tình cảm chưa nguôi của bạn dành cho họ. Theo quan niệm dân gian, đây cũng là điềm nhắc nên chăm lo bàn thờ, mộ phần chu đáo. Nếu người đó mỉm cười nói chuyện, bạn có thể sắp nhận được sự phù trợ về tinh thần.",
+"numbers": [
+14,
+41,
+74
+]
+},
+{
+"keywords": [
+"đám cưới",
+"cưới",
+"lễ cưới"
+],
+"subject": "Mơ thấy đám cưới",
+"meaning": "Đám cưới trong mơ tượng trưng cho sự gắn kết và những cam kết mới. Nếu mơ thấy đám cưới của chính mình, bạn đang đứng trước một quyết định quan trọng cần sự chắc chắn. Đám cưới vui vẻ rộn ràng cũng báo tin hỷ trong gia đình hoặc bạn bè thân thiết.",
+"numbers": [
+27,
+72,
+90
+]
+},
+{
+"keywords": [
+"đám ma",
+"đám tang",
+"tang lễ"
+],
+"subject": "Mơ thấy đám ma",
+"meaning": "Trái với nỗi sợ thông thường, mơ thấy đám tang thường được hiểu là sự kết thúc của một giai đoạn khó khăn. Giấc mơ cho thấy bạn sẵn sàng buông bỏ chuyện cũ để bắt đầu lại nhẹ nhàng hơn. Nếu trong mơ bạn khóc nhiều, cảm xúc dồn nén lâu ngày cần được giải tỏa.",
+"numbers": [
+7,
+70,
+87
+]
+},
+{
+"keywords": [
+"em bé",
+"trẻ sơ sinh",
+"con nít"
+],
+"subject": "Mơ thấy em bé",
+"meaning": "Em bé là biểu tượng của sự khởi đầu trong sáng và những dự định mới ấp ủ. Mơ thấy em bé khỏe mạnh, tươi cười báo hiệu kế hoạch của bạn đang đi đúng hướng. Bé khóc hoặc ốm yếu nhắc bạn dành thêm sự chăm sóc cho một việc còn non trẻ.",
+"numbers": [
+1,
+10,
+99
+]
+},
+{
+"keywords": [
+"lửa cháy",
+"lửa",
+"cháy"
+],
+"subject": "Mơ thấy lửa cháy",
+"meaning": "Lửa trong mơ mang hai mặt: nhiệt huyết, tài lộc rực rỡ hoặc sự nóng nảy mất kiểm soát. Lửa cháy sáng ổn định trong bếp là điềm ấm no, gia đạo thuận hòa. Lửa cháy lan dữ dội nhắc bạn kiềm chế cảm xúc và cẩn thận giấy tờ, điện đóm trong nhà.",
+"numbers": [
+27,
+72,
+99
+]
+},
+{
+"keywords": [
+"nhà cháy",
+"cháy nhà"
+],
+"subject": "Mơ thấy nhà cháy",
+"meaning": "Mơ thấy nhà cháy thường khiến người mơ hoảng sợ, nhưng dân gian lại cho rằng đây là dấu hiệu biến động lớn sắp xảy ra với gia đình. Có thể là chuyện chuyển nhà, sửa sang hoặc thay đổi trong công việc của người thân. Hãy chủ động kiểm tra an toàn cháy nổ để yên tâm hơn.",
+"numbers": [
+5,
+43,
+67
+]
+},
+{
+"keywords": [
+"mưa",
+"trời mưa",
+"mưa to"
+],
+"subject": "Mơ thấy mưa",
+"meaning": "Mưa trong mơ tượng trưng cho sự gột rửa và nguồn tài lộc trời ban. Mưa rào nhẹ, mát mẻ báo hiệu tâm trạng được giải tỏa, công việc hanh thông. Mưa dầm dề gây ngập úng lại cho thấy bạn đang chịu áp lực kéo dài cần tìm người chia sẻ.",
+"numbers": [
+7,
+47,
+67
+]
+},
+{
+"keywords": [
+"sấm",
+"sấm sét",
+"tiếng sấm"
+],
+"subject": "Mơ thấy sấm sét",
+"meaning": "Sấm sét là điềm của những biến cố bất ngờ và tiếng nói quyền uy. Mơ nghe tiếng sấm xa cho thấy sắp có tin quan trọng liên quan đến công việc hoặc người có vai vế. Sét đánh gần mình nhắc bạn thận trọng trong lời nói, tránh tranh cãi không đáng có.",
+"numbers": [
+6,
+60,
+66
+]
+},
+{
+"keywords": [
+"cây",
+"cây xanh",
+"cây cổ thụ"
+],
+"subject": "Mơ thấy cây xanh",
+"meaning": "Cây xanh tượng trưng cho sự phát triển bền vững và sức khỏe của cả gia đình. Cây tươi tốt, đâm chồi nảy lộc báo hiệu vận khí đang lên, con cháu có tin vui. Cây khô héo nhắc bạn chú ý nghỉ ngơi và chăm sóc người lớn tuổi trong nhà.",
+"numbers": [
+8,
+48,
+84
+]
+},
+{
+"keywords": [
+"hoa",
+"hoa nở",
+"bông hoa"
+],
+"subject": "Mơ thấy hoa nở",
+"meaning": "Hoa nở trong mơ là hình ảnh của niềm vui, tình cảm và sự được yêu mến. Người độc thân mơ thấy hoa nở rộ có thể sắp gặp nhân duyên tốt. Hoa nhanh tàn nhắc bạn trân trọng những mối quan hệ hiện tại, đừng để lỡ vì vô tâm.",
+"numbers": [
+9,
+39,
+93
+]
+},
+{
+"keywords": [
+"quả",
+"trái cây",
+"hoa quả"
+],
+"subject": "Mơ thấy quả chín",
+"meaning": "Quả chín trong mơ báo hiệu mùa thu hoạch, công sức bỏ ra sắp được đền đáp. Hái được quả ngọt là điềm tốt về tiền bạc lẫn tình cảm. Quả còn xanh hoặc chua cho thấy thời điểm chưa chín muồi, bạn cần chờ thêm thay vì ép tiến độ.",
+"numbers": [
+19,
+29,
+92
+]
+},
+{
+"keywords": [
+"núi",
+"leo núi",
+"ngọn núi"
+],
+"subject": "Mơ thấy núi",
+"meaning": "Núi tượng trưng cho thử thách lớn và mục tiêu dài hạn trong đời bạn. Leo lên được đỉnh núi là dấu hiệu bạn đủ bản lĩnh vượt qua khó khăn để đạt thành tựu. Dừng giữa chừng nhắc bạn xem lại chiến lược, có thể cần đồng đội thay vì đi một mình.",
+"numbers": [
+17,
+71,
+86
+]
+},
+{
+"keywords": [
+"biển",
+"biển lớn",
+"sóng biển"
+],
+"subject": "Mơ thấy biển",
+"meaning": "Biển trong mơ phản ánh thế giới nội tâm rộng lớn và những khát vọng chưa nói thành lời. Biển lặng, nước trong xanh báo hiệu tương lai rộng mở, có cơ hội đi xa làm ăn. Sóng to gió lớn cảnh báo giai đoạn nhiều biến động, cần giữ vững tay lái.",
+"numbers": [
+27,
+72,
+97
+]
+},
+{
+"keywords": [
+"sông",
+"dòng sông",
+"qua sông"
+],
+"subject": "Mơ thấy sông",
+"meaning": "Dòng sông là hình ảnh của dòng đời và sự trôi chảy của thời gian. Nước sông trong, chảy êm cho thấy cuộc sống đang đúng nhịp, tài lộc đều đặn. Qua sông vất vả nhắc bạn sắp phải vượt một cửa ải, nhưng bờ bên kia là điều tốt đẹp.",
+"numbers": [
+16,
+61,
+86
+]
+},
+{
+"keywords": [
+"thuyền",
+"con thuyền",
+"đi thuyền"
+],
+"subject": "Mơ thấy thuyền",
+"meaning": "Thuyền tượng trưng cho hành trình và khả năng chèo lái cuộc đời của bạn. Thuyền ra khơi thuận gió báo hiệu kế hoạch xuất hành, khai trương có phần may mắn. Thuyền chòng chành nhắc bạn kiểm tra lại đối tác và chuẩn bị phương án dự phòng.",
+"numbers": [
+15,
+51,
+85
+]
+},
+{
+"keywords": [
+"xe",
+"xe máy",
+"ô tô",
+"đi xe"
+],
+"subject": "Mơ thấy xe cộ",
+"meaning": "Xe trong mơ đại diện cho hướng đi và tốc độ tiến về phía trước của bạn. Lái xe êm ái, làm chủ tay lái cho thấy bạn đang kiểm soát tốt công việc. Xe hỏng, mất phanh là lời nhắc nên giảm tốc, rà soát lại những quyết định vội vàng gần đây.",
+"numbers": [
+14,
+41,
+79
+]
+},
+{
+"keywords": [
+"tai nạn",
+"tai nạn xe",
+"đâm xe"
+],
+"subject": "Mơ thấy tai nạn",
+"meaning": "Mơ thấy tai nạn thường phản ánh nỗi lo tiềm ẩn hơn là điềm báo thật, cho thấy bạn đang căng thẳng với một kế hoạch có nhiều rủi ro. Giấc mơ nhắc bạn cẩn trọng khi di chuyển và đừng quyết định việc lớn lúc mệt mỏi. Nếu trong mơ mọi người đều an toàn, trở ngại sẽ được hóa giải.",
+"numbers": [
+4,
+40,
+88
+]
+},
+{
+"keywords": [
+"máu",
+"chảy máu",
+"thấy máu"
+],
+"subject": "Mơ thấy máu",
+"meaning": "Máu trong mơ gắn với sinh lực, gia đình ruột thịt và cả tài lộc theo cách hiểu dân gian. Thấy máu đỏ tươi đôi khi được xem là điềm có lộc bất ngờ. Tuy nhiên nếu mơ chảy máu nhiều, bạn nên chú ý sức khỏe và đi kiểm tra khi cơ thể có dấu hiệu lạ.",
+"numbers": [
+19,
+69,
+96
+]
+},
+{
+"keywords": [
+"khóc",
+"khóc lóc",
+"nước mắt"
+],
+"subject": "Mơ thấy mình khóc",
+"meaning": "Khóc trong mơ là cách tâm trí giải phóng những cảm xúc bị nén chặt ban ngày. Dân gian có câu cười trong mơ, khóc ngoài đời và ngược lại, nên khóc trong mơ thường được xem là sắp có niềm vui bù đắp. Sau giấc mơ này, bạn nên cho phép mình nghỉ ngơi và chia sẻ nhiều hơn.",
+"numbers": [
+11,
+21,
+71
+]
+},
+{
+"keywords": [
+"cười",
+"cười lớn",
+"vui cười"
+],
+"subject": "Mơ thấy cười",
+"meaning": "Tiếng cười trong mơ phản ánh nhu cầu được vui vẻ và kết nối của bạn. Cười cùng người thân báo hiệu gia đạo hòa thuận, có dịp sum họp. Cười một mình hoặc cười gượng nhắc bạn đang che giấu nỗi buồn, đừng ngại tìm sự giúp đỡ khi cần.",
+"numbers": [
+21,
+42,
+84
+]
+},
+{
+"keywords": [
+"đánh nhau",
+"đánh lộn",
+"xô xát"
+],
+"subject": "Mơ thấy đánh nhau",
+"meaning": "Đánh nhau trong mơ thường là biểu hiện của mâu thuẫn nội tâm hoặc xung đột chưa được giải quyết ngoài đời. Nếu bạn thắng trong mơ, bạn đang dần lấy lại thế chủ động trong một việc khó. Nếu bị thua, hãy tránh đối đầu trực diện và chọn cách thương lượng mềm mỏng.",
+"numbers": [
+3,
+33,
+83
+]
+},
+{
+"keywords": [
+"thi cử",
+"đi thi",
+"bài thi"
+],
+"subject": "Mơ thấy thi cử",
+"meaning": "Mơ đi thi dù đã ra trường từ lâu là giấc mơ rất phổ biến khi bạn cảm thấy bị đánh giá, soi xét. Nó cho thấy bạn đang chịu áp lực phải chứng tỏ bản thân trong công việc. Thi đỗ trong mơ là tín hiệu tốt, báo nỗ lực của bạn sắp được ghi nhận.",
+"numbers": [
+17,
+27,
+77
+]
+},
+{
+"keywords": [
+"trúng số",
+"trúng thưởng",
+"trúng vé số"
+],
+"subject": "Mơ thấy trúng số",
+"meaning": "Mơ trúng số phản ánh khát vọng đổi đời và mong chờ một bước ngoặt may mắn. Giấc mơ nhắc rằng cơ hội thật sự thường đến từ sự chuẩn bị chứ không chỉ vận may. Dù vậy, đây cũng là điềm tinh thần tốt, cho thấy bạn đang lạc quan về tương lai.",
+"numbers": [
+8,
+18,
+88
+]
+},
+{
+"keywords": [
+"mất đồ",
+"mất của",
+"bị trộm"
+],
+"subject": "Mơ thấy mất đồ",
+"meaning": "Mất đồ trong mơ thường liên quan đến cảm giác bất an, sợ đánh mất điều quý giá trong đời thực. Có thể bạn đang lo về một mối quan hệ, vị trí công việc hoặc bí mật nào đó. Tìm lại được đồ trong mơ là tín hiệu mọi chuyện sẽ dần ổn định trở lại.",
+"numbers": [
+6,
+60,
+86
+]
+},
+{
+"keywords": [
+"nhà mới",
+"chuyển nhà",
+"mua nhà"
+],
+"subject": "Mơ thấy nhà mới",
+"meaning": "Nhà mới trong mơ là biểu tượng của giai đoạn sống mới và sự nâng cấp về mọi mặt. Mơ dọn vào nhà khang trang báo hiệu vận khí gia đình đang đi lên, có thể có tin vui về chỗ ở thật. Nhà mới còn trống trải nhắc bạn cần thời gian để thích nghi với thay đổi.",
+"numbers": [
+25,
+52,
+89
+]
+},
+{
+"keywords": [
+"cầu",
+"cây cầu",
+"qua cầu"
+],
+"subject": "Mơ thấy cầu",
+"meaning": "Cầu trong mơ tượng trưng cho sự nối kết và bước chuyển quan trọng. Qua cầu suôn sẻ là điềm bạn sắp vượt qua trở ngại để đến bờ thành công. Cầu gãy hoặc rung lắc nhắc bạn thận trọng với một cam kết đang dang dở, cần gia cố lại niềm tin.",
+"numbers": [
+26,
+62,
+86
+]
+},
+{
+"keywords": [
+"thang",
+"leo thang",
+"bậc thang"
+],
+"subject": "Mơ thấy leo thang",
+"meaning": "Leo thang lên cao trong mơ là hình ảnh quen thuộc của sự thăng tiến từng bước. Mỗi bậc thang vững chắc cho thấy con đường sự nghiệp của bạn đang đúng hướng dù chậm. Xuống thang hoặc trượt chân nhắc bạn đừng chủ quan khi đang ở vị trí thuận lợi.",
+"numbers": [
+17,
+71,
+83
+]
+},
+{
+"keywords": [
+"gương",
+"soi gương",
+"gương vỡ"
+],
+"subject": "Mơ thấy gương",
+"meaning": "Gương trong mơ là biểu tượng của sự tự nhìn nhận và hình ảnh bản thân. Soi gương thấy mặt tươi tắn cho thấy bạn đang hài hòa với chính mình. Gương vỡ hoặc mờ đục nhắc bạn cẩn trọng với những mối quan hệ thiếu trung thực quanh mình.",
+"numbers": [
+13,
+31,
+81
+]
+},
+{
+"keywords": [
+"tóc",
+"cắt tóc",
+"tóc dài"
+],
+"subject": "Mơ thấy tóc",
+"meaning": "Tóc gắn với sức sống, hình ảnh cá nhân và những mối bận tâm thường ngày. Mơ cắt tóc thường là mong muốn rũ bỏ chuyện cũ, làm mới bản thân. Tóc rối bù, rụng nhiều phản ánh bạn đang mệt mỏi, cần sắp xếp lại ưu tiên và nghỉ ngơi hợp lý.",
+"numbers": [
+7,
+37,
+73
+]
+},
+{
+"keywords": [
+"sâu",
+"con sâu",
+"sâu bọ"
+],
+"subject": "Mơ thấy sâu",
+"meaning": "Sâu trong mơ thường tượng trưng cho những phiền toái nhỏ nhưng dai dẳng mà bạn đang né tránh. Giấc mơ nhắc bạn xử lý dứt điểm từng việc vụn vặt trước khi chúng lớn dần. Sâu hóa bướm lại là điềm đẹp, báo sự lột xác và trưởng thành sau khó khăn.",
+"numbers": [
+5,
+35,
+53
+]
+},
+{
+"keywords": [
+"chuột",
+"con chuột"
+],
+"subject": "Mơ thấy chuột",
+"meaning": "Chuột trong mơ thường gắn với những lo toan vụn vặt và người tiểu nhân quanh bạn. Chuột chạy vào nhà nhắc bạn kiểm tra lại đồ đạc, giấy tờ và cẩn trọng trong chuyện tiền nong. Bắt được chuột là dấu hiệu bạn sắp hóa giải được một rắc rối kéo dài.",
+"numbers": [
+2,
+20,
+55
+]
+},
+{
+"keywords": [
+"voi",
+"con voi"
+],
+"subject": "Mơ thấy voi",
+"meaning": "Voi là biểu tượng của sức mạnh điềm tĩnh, trí tuệ và sự bảo trợ của bề trên. Mơ thấy voi thường báo bạn có quý nhân hoặc người lớn tuổi sẵn sàng nâng đỡ. Voi hiền lành đi qua làng còn được dân gian xem là điềm lành cho cả gia đình.",
+"numbers": [
+13,
+43,
+93
+]
+},
+{
+"keywords": [
+"hổ",
+"con hổ",
+"cọp"
+],
+"subject": "Mơ thấy hổ",
+"meaning": "Hổ trong mơ đại diện cho quyền lực, thử thách lớn và cả nỗi sợ bị lấn át. Đối mặt hổ mà không hoảng loạn cho thấy bạn đủ bản lĩnh xử lý việc khó. Hổ rượt đuổi nhắc bạn đang tránh né một quyết định quan trọng cần đối diện sớm.",
+"numbers": [
+6,
+60,
+78
+]
+},
+{
+"keywords": [
+"rồng",
+"con rồng"
+],
+"subject": "Mơ thấy rồng",
+"meaning": "Rồng là linh vật đứng đầu trong tứ linh, mơ thấy rồng được xem là điềm đại cát về công danh và vận hội. Rồng bay lên trời báo hiệu cơ hội thăng hoa hiếm có đang mở ra. Tuy vậy, rồng cũng nhắc bạn giữ tâm khiêm nhường để phúc bền lâu.",
+"numbers": [
+10,
+29,
+92
+]
+},
+{
+"keywords": [
+"phượng",
+"phượng hoàng",
+"chim phượng"
+],
+"subject": "Mơ thấy phượng hoàng",
+"meaning": "Phượng hoàng tượng trưng cho sự tái sinh, vẻ đẹp và đức hạnh. Mơ thấy phượng hoàng thường báo một giai đoạn mới rực rỡ sau thời gian nhiều trắc trở, đặc biệt tốt cho phụ nữ và chuyện gia đạo. Hình ảnh này cũng gợi nhân duyên xứng đôi vừa lứa.",
+"numbers": [
+9,
+39,
+90
+]
+},
+{
+"keywords": [
+"tiền rơi",
+"rơi tiền",
+"mất tiền"
+],
+"subject": "Mơ thấy tiền rơi",
+"meaning": "Mơ thấy tiền rơi thường phản ánh nỗi lo hao hụt hoặc cảm giác công sức chưa được đền đáp xứng đáng. Giấc mơ nhắc bạn rà soát chi tiêu và các khoản cho vay mượn. Nếu trong mơ nhặt lại được tiền, khó khăn tài chính chỉ là tạm thời.",
+"numbers": [
+14,
+41,
+88
+]
+},
+{
+"keywords": [
+"nhặt tiền",
+"nhặt được tiền"
+],
+"subject": "Mơ thấy nhặt được tiền",
+"meaning": "Nhặt được tiền trong mơ là điềm được nhiều người yêu thích, báo hiệu lộc nhỏ bất ngờ hoặc cơ hội đến từ nơi không ngờ tới. Song giấc mơ cũng nhắc bạn tỉnh táo: của trời cho kèm theo trách nhiệm, đừng vì lợi nhỏ mà đánh mất điều lớn hơn.",
+"numbers": [
+19,
+38,
+83
+]
+},
+{
+"keywords": [
+"cho tiền",
+"được cho tiền",
+"biếu tiền"
+],
+"subject": "Mơ thấy được cho tiền",
+"meaning": "Được cho tiền trong mơ cho thấy bạn đang nhận được sự quan tâm, giúp đỡ từ người xung quanh mà đôi khi chưa nhận ra. Đây cũng là điềm báo công việc có người nâng đỡ, việc khó có người chung tay. Hãy biết ơn và đáp lại bằng sự tử tế khi có dịp.",
+"numbers": [
+28,
+68,
+86
+]
+},
+{
+"keywords": [
+"mưa bão",
+"bão",
+"giông bão"
+],
+"subject": "Mơ thấy mưa bão",
+"meaning": "Mưa bão trong mơ phản ánh giai đoạn nhiều sóng gió, cảm xúc trong bạn đang cuộn trào. Bão đến rồi tan cho thấy biến cố dù lớn cũng sẽ qua, quan trọng là giữ nhà cửa và các mối quan hệ nền tảng cho vững. Đang lúc này bạn nên tránh các quyết định đầu tư mạo hiểm.",
+"numbers": [
+7,
+47,
+77
+]
+},
+{
+"keywords": [
+"cầu vồng",
+"cầu vồng sau mưa"
+],
+"subject": "Mơ thấy cầu vồng",
+"meaning": "Cầu vồng là hình ảnh của hy vọng sau cơn mưa, điềm lành được nhiều người yêu thích. Mơ thấy cầu vồng báo hiệu giai đoạn khó khăn sắp khép lại, niềm vui và cơ hội mới đang ở phía trước. Đây cũng là giấc mơ đẹp cho chuyện tình cảm và lời hứa được thực hiện.",
+"numbers": [
+7,
+17,
+77
+]
+},
+{
+"keywords": [
+"mặt trời",
+"mặt trời mọc",
+"ánh nắng"
+],
+"subject": "Mơ thấy mặt trời",
+"meaning": "Mặt trời trong mơ tượng trưng cho năng lượng, danh vọng và sự khởi đầu đầy sinh khí. Mặt trời mọc rực rỡ báo hiệu vận trình đang lên, thích hợp bắt đầu dự định mới. Mặt trời bị mây che nhắc bạn kiên nhẫn, thời cơ tốt cần thêm chút thời gian để lộ rõ.",
+"numbers": [
+1,
+11,
+81
+]
+},
+{
+"keywords": [
+"mặt trăng",
+"trăng",
+"trăng sáng"
+],
+"subject": "Mơ thấy mặt trăng",
+"meaning": "Mặt trăng gắn với sự dịu dàng, trực giác và chuyện tình cảm. Trăng tròn sáng trong mơ thường báo gia đình đoàn viên, tình cảm viên mãn. Trăng khuyết hoặc bị che khuất gợi ý có điều còn dang dở trong lòng cần được nói ra và tháo gỡ.",
+"numbers": [
+2,
+22,
+82
+]
+},
+{
+"keywords": [
+"sao",
+"ngôi sao",
+"sao băng"
+],
+"subject": "Mơ thấy sao",
+"meaning": "Ngôi sao trong mơ là biểu tượng của ước mơ, định hướng và niềm tin vào tương lai. Thấy sao băng là lúc dân gian khuyên nên ước nguyện, vì cơ hội tốt có thể vụt đến bất ngờ. Bầu trời đầy sao cho thấy bạn đang có nhiều lựa chọn, hãy chọn con đường khiến mình bình an nhất.",
+"numbers": [
+3,
+13,
+93
+]
+},
+{
+"keywords": [
+"chùa",
+"đi chùa",
+"ngôi chùa"
+],
+"subject": "Mơ thấy chùa",
+"meaning": "Mơ thấy chùa cho thấy tâm bạn đang tìm về sự bình an và hướng thiện sau những xô bồ. Đây là điềm tốt về mặt tinh thần, nhắc bạn sống chậm lại, làm việc phúc đức để tích lũy may mắn lâu dài. Nếu mơ thắp hương lễ Phật, một tâm nguyện chân thành có thể sớm thành.",
+"numbers": [
+1,
+31,
+91
+]
+},
+{
+"keywords": [
+"phật",
+"tượng phật",
+"đức phật"
+],
+"subject": "Mơ thấy Phật",
+"meaning": "Mơ thấy Phật là giấc mơ được xem là rất lành, biểu tượng của sự che chở và tỉnh thức. Giấc mơ nhắc bạn giữ tâm trong sáng, tránh xa thị phi thì vận may tự nhiên tìm đến. Người đang gặp khó khăn mơ thấy Phật thường có thêm niềm tin để vượt qua.",
+"numbers": [
+1,
+51,
+95
+]
+},
+{
+"keywords": [
+"ma quỷ",
+"ma",
+"bóng ma"
+],
+"subject": "Mơ thấy ma quỷ",
+"meaning": "Mơ thấy ma thường phản ánh nỗi sợ, ám ảnh hoặc chuyện cũ chưa giải quyết trong lòng bạn, không hẳn là điềm xấu. Nếu bạn không sợ hãi trong mơ, bạn đang dần làm chủ được cảm xúc của mình. Giấc mơ lặp lại nhiều lần nhắc bạn nên nghỉ ngơi, giảm căng thẳng và chia sẻ với người tin cậy.",
+"numbers": [
+13,
+33,
+79
+]
+},
+{
+"keywords": [
+"người yêu cũ",
+"tình cũ"
+],
+"subject": "Mơ thấy người yêu cũ",
+"meaning": "Mơ về người yêu cũ thường không có nghĩa là còn yêu, mà là tâm trí đang gợi lại một bài học hoặc cảm xúc cũ. Có thể hiện tại của bạn có điểm tương đồng khiến ký ức trỗi dậy. Giấc mơ nhắc bạn trân trọng người hiện tại và khép lại quá khứ một cách nhẹ nhàng.",
+"numbers": [
+12,
+21,
+47
+]
+},
+{
+"keywords": [
+"mang thai",
+"có bầu",
+"bầu"
+],
+"subject": "Mơ thấy mang thai",
+"meaning": "Mang thai trong mơ thường tượng trưng cho một ý tưởng, dự án hoặc giai đoạn mới đang hình thành trong cuộc sống của bạn. Đây là điềm của sự thai nghén sáng tạo, cần thời gian nuôi dưỡng mới thành quả. Với người đang mong con, giấc mơ đơn giản phản ánh niềm khao khát chân thành.",
+"numbers": [
+9,
+49,
+94
+]
+},
+{
+"keywords": [
+"sinh con",
+"đẻ con",
+"sinh em bé"
+],
+"subject": "Mơ thấy sinh con",
+"meaning": "Mơ sinh con là điềm của thành quả ra đời sau bao ngày chờ đợi, có thể là dự án hoàn thành hoặc tin vui trong gia đình. Sinh nở thuận lợi trong mơ báo mọi việc sẽ hanh thông hơn dự tính. Giấc mơ cũng nhắc bạn chuẩn bị tinh thần cho trách nhiệm mới sắp đến.",
+"numbers": [
+10,
+20,
+90
+]
+},
+{
+"keywords": [
+"bệnh",
+"ốm",
+"bị bệnh"
+],
+"subject": "Mơ thấy bị bệnh",
+"meaning": "Mơ thấy mình bị bệnh phần lớn là tín hiệu cơ thể và tâm trí đang kêu gọi được nghỉ ngơi. Đây không phải điềm gở mà là lời nhắc chăm sóc sức khỏe, ngủ đủ và bớt ôm việc. Nếu mơ bệnh rồi khỏi, bạn sắp vượt qua một giai đoạn uể oải để lấy lại phong độ.",
+"numbers": [
+4,
+44,
+84
+]
+},
+{
+"keywords": [
+"bệnh viện",
+"đi bệnh viện",
+"khám bệnh"
+],
+"subject": "Mơ thấy bệnh viện",
+"meaning": "Bệnh viện trong mơ tượng trưng cho nhu cầu được chữa lành, cả về thể chất lẫn tinh thần. Giấc mơ xuất hiện khi bạn đang cần sự hỗ trợ chuyên nghiệp hoặc một lời khuyên đáng tin. Ra viện khỏe mạnh trong mơ là dấu hiệu tốt, báo vấn đề đang dần được giải quyết.",
+"numbers": [
+14,
+34,
+74
+]
+},
+{
+"keywords": [
+"trường học",
+"lớp học",
+"đi học"
+],
+"subject": "Mơ thấy trường học",
+"meaning": "Trường học trong mơ gắn với bài học cuộc đời và cảm giác được thử thách. Người trưởng thành mơ quay lại lớp thường đang đứng trước một kỹ năng mới cần học hoặc một kỳ đánh giá trong công việc. Học vui vẻ trong mơ cho thấy bạn sẵn sàng tiếp thu và tiến bộ.",
+"numbers": [
+17,
+37,
+57
+]
+},
+{
+"keywords": [
+"công việc",
+"đi làm",
+"văn phòng"
+],
+"subject": "Mơ thấy công việc",
+"meaning": "Mơ thấy công việc phản ánh trực tiếp mức độ bận tâm của bạn dành cho sự nghiệp lúc này. Công việc suôn sẻ trong mơ cho thấy bạn đang đi đúng nhịp và được đồng nghiệp hỗ trợ. Nếu mơ bị dồn việc, trễ hạn, hãy xem lại cách sắp xếp và đừng ngại đề xuất chia sẻ khối lượng.",
+"numbers": [
+18,
+28,
+68
+]
+},
+{
+"keywords": [
+"sếp",
+"ông chủ",
+"cấp trên"
+],
+"subject": "Mơ thấy sếp",
+"meaning": "Mơ thấy sếp thường liên quan đến áp lực về đánh giá, thành tích hoặc một quyết định cần người phê duyệt. Sếp vui vẻ, khen ngợi trong mơ là tín hiệu nỗ lực của bạn đang được chú ý. Sếp quở trách nhắc bạn rà soát kỹ công việc trước khi trình bày, tránh sai sót nhỏ.",
+"numbers": [
+19,
+29,
+79
+]
+},
+{
+"keywords": [
+"bạn cũ",
+"bạn học cũ",
+"gặp bạn cũ"
+],
+"subject": "Mơ thấy bạn cũ",
+"meaning": "Gặp lại bạn cũ trong mơ cho thấy bạn đang nhớ về một thời vô tư hoặc một phần tính cách của chính mình ngày trước. Có thể sắp có dịp kết nối lại với người quen cũ mang theo cơ hội mới. Giấc mơ cũng nhắc bạn dành thời gian cho bạn bè hiện tại.",
+"numbers": [
+16,
+36,
+63
+]
+},
+{
+"keywords": [
+"người lạ",
+"người lạ mặt"
+],
+"subject": "Mơ thấy người lạ",
+"meaning": "Người lạ trong mơ thường là hình ảnh của những khía cạnh chưa biết trong chính bạn hoặc cơ hội chưa từng thử. Người lạ thân thiện báo hiệu mối quan hệ, đối tác mới đáng để tìm hiểu. Người lạ gây khó chịu nhắc bạn giữ khoảng cách an toàn trong các giao dịch mới.",
+"numbers": [
+15,
+25,
+75
+]
+},
+{
+"keywords": [
+"ăn uống",
+"ăn cơm",
+"bữa ăn"
+],
+"subject": "Mơ thấy ăn uống",
+"meaning": "Ăn uống trong mơ tượng trưng cho sự hưởng thụ, nhu cầu được nuôi dưỡng cả thân lẫn tâm. Bữa ăn ngon, sum vầy là điềm gia đình hòa thuận, tài lộc đủ đầy. Ăn một mình hoặc ăn không ngon miệng cho thấy bạn đang thiếu sự sẻ chia trong cuộc sống.",
+"numbers": [
+28,
+48,
+84
+]
+},
+{
+"keywords": [
+"nấu ăn",
+"nấu cơm",
+"vào bếp"
+],
+"subject": "Mơ thấy nấu ăn",
+"meaning": "Nấu ăn trong mơ là hình ảnh của sự chăm sóc và khả năng vun vén cho gia đình. Nấu được món ngon được mọi người khen báo hiệu bạn sắp mang niềm vui đến cho người thân. Bếp núc lộn xộn nhắc bạn sắp xếp lại việc nhà và công việc cho khoa học hơn.",
+"numbers": [
+24,
+42,
+84
+]
+},
+{
+"keywords": [
+"bắt cá",
+"bắt được cá"
+],
+"subject": "Mơ thấy bắt cá",
+"meaning": "Bắt cá trong mơ là điềm nắm bắt cơ hội bằng chính sức mình, được dân gian xem là rất may mắn. Bắt được cá lớn báo thành quả đáng kể trong làm ăn hoặc thi cử. Cá trơn tuột khỏi tay nhắc bạn chuẩn bị kỹ hơn, thời cơ tốt cần sự sẵn sàng đi kèm.",
+"numbers": [
+29,
+79,
+97
+]
+},
+{
+"keywords": [
+"câu cá",
+"đi câu"
+],
+"subject": "Mơ thấy câu cá",
+"meaning": "Câu cá trong mơ tượng trưng cho sự kiên nhẫn chờ thời và thú vui tĩnh tại. Ngồi câu lâu mà cá cắn câu là dấu hiệu kế hoạch dài hơi của bạn sắp có kết quả. Giấc mơ cũng khuyên bạn đừng nóng ruột, việc tốt thường đến với người biết đợi đúng lúc.",
+"numbers": [
+39,
+73,
+87
+]
+},
+{
+"keywords": [
+"trồng cây",
+"gieo hạt",
+"trồng trọt"
+],
+"subject": "Mơ thấy trồng cây",
+"meaning": "Trồng cây trong mơ là điềm gieo nhân lành, đầu tư cho tương lai xa. Hạt nảy mầm, cây lớn nhanh báo hiệu những nỗ lực thầm lặng của bạn đang đâm chồi đúng hướng. Giấc mơ hợp với người đang khởi nghiệp, học hành hoặc vun đắp một mối quan hệ nghiêm túc.",
+"numbers": [
+8,
+38,
+83
+]
+},
+{
+"keywords": [
+"gặt lúa",
+"thu hoạch lúa",
+"lúa chín"
+],
+"subject": "Mơ thấy gặt lúa",
+"meaning": "Gặt lúa vàng trong mơ là hình ảnh đẹp của mùa màng bội thu và công sức được đền đáp. Đây là điềm tốt cho người làm nông, kinh doanh và cả người đang chờ kết quả thi cử, phỏng vấn. Lúa chín đầy đồng báo tin vui lan ra cả gia đình, dòng họ.",
+"numbers": [
+18,
+48,
+89
+]
+},
+{
+"keywords": [
+"rùa",
+"con rùa"
+],
+"subject": "Mơ thấy rùa",
+"meaning": "Rùa là biểu tượng của trường thọ, bền bỉ và sự che chở trong văn hóa Á Đông. Mơ thấy rùa thường là điềm lành, báo hiệu sức khỏe ổn định và những kế hoạch dài hạn đang đi đúng hướng dù tiến triển chậm. Về tâm lý, giấc mơ phản ánh mong muốn được an toàn và kiên nhẫn chờ thời của bạn.",
+"numbers": [
+21,
+31,
+56
+]
+},
+{
+"keywords": [
+"ếch",
+"con ếch",
+"nhái"
+],
+"subject": "Mơ thấy ếch",
+"meaning": "Dân gian xem tiếng ếch kêu là dấu hiệu mưa thuận và mùa màng, nên mơ thấy ếch thường gắn với tin vui về tài lộc nhỏ hoặc thay đổi môi trường sống, công việc. Ếch nhảy lung tung có thể nhắc bạn đang phân tâm giữa nhiều lựa chọn. Tâm lý học coi ếch là hình ảnh của sự chuyển hóa, từ nòng nọc thành ếch, giống giai đoạn bạn đang thay đổi.",
+"numbers": [
+28,
+48,
+68
+]
+},
+{
+"keywords": [
+"cua",
+"con cua"
+],
+"subject": "Mơ thấy cua",
+"meaning": "Cua đi ngang nên mơ thấy cua thường nói về những việc tiến triển không thẳng thắn, phải vòng vèo mới tới đích. Cua kẹp có thể là lời nhắc đề phòng tranh chấp nhỏ trong làm ăn. Ngược lại, mơ thấy ăn cua lại là điềm được hưởng thành quả sau thời gian nhẫn nại.",
+"numbers": [
+20,
+40,
+67
+]
+},
+{
+"keywords": [
+"tôm",
+"con tôm"
+],
+"subject": "Mơ thấy tôm",
+"meaning": "Tôm trong mơ thường tượng trưng cho những khoản lợi nhỏ nhưng đều đặn, hoặc niềm vui bất ngờ từ chuyện ăn uống, sum họp. Mơ thấy bắt được nhiều tôm là điềm công sức sắp được ghi nhận. Nếu tôm chết hoặc bốc mùi, hãy chú ý giữ gìn sức khỏe và kiểm tra lại giấy tờ, hóa đơn còn tồn đọng.",
+"numbers": [
+18,
+38,
+78
+]
+},
+{
+"keywords": [
+"ong",
+"con ong",
+"ong đốt"
+],
+"subject": "Mơ thấy ong",
+"meaning": "Ong là hình ảnh của sự chăm chỉ và tổ chức, mơ thấy đàn ong làm tổ thường là điềm tốt về công việc tập thể và tài lộc tích lũy dần. Bị ong đốt trong mơ có thể phản ánh một lời nói hoặc sự việc nhỏ khiến bạn khó chịu gần đây. Giấc mơ nhắc bạn giữ bình tĩnh trước những xích mích không đáng.",
+"numbers": [
+16,
+56,
+96
+]
+},
+{
+"keywords": [
+"bướm",
+"con bướm"
+],
+"subject": "Mơ thấy bướm",
+"meaning": "Bướm là biểu tượng của sự biến đổi và cái đẹp nhẹ nhàng, mơ thấy bướm bay thường gắn với tin vui trong tình cảm hoặc một khởi đầu mới mẻ. Bướm đậu vào người được dân gian xem là điềm có khách quý hoặc người thương nhớ tới. Về tâm lý, đây là dấu hiệu bạn đang muốn thoát khỏi giai đoạn cũ để lột xác.",
+"numbers": [
+26,
+59,
+89
+]
+},
+{
+"keywords": [
+"kiến",
+"đàn kiến"
+],
+"subject": "Mơ thấy kiến",
+"meaning": "Kiến tượng trưng cho sự cần cù, tiết kiệm và sức mạnh của tập thể nhỏ. Mơ thấy kiến tha mồi về tổ là điềm tài lộc tích góp từng chút một sẽ thành quả lớn. Kiến bò vào nhà đông đúc đôi khi phản ánh bạn đang bận tâm về nhiều việc vặt cùng lúc, cần sắp xếp lại thứ tự ưu tiên.",
+"numbers": [
+29,
+49,
+69
+]
+},
+{
+"keywords": [
+"khỉ",
+"con khỉ"
+],
+"subject": "Mơ thấy khỉ",
+"meaning": "Khỉ lanh lợi nhưng cũng tinh quái, mơ thấy khỉ thường liên quan đến những mối quan hệ xã giao cần sự khéo léo. Khỉ trêu chọc trong mơ có thể là nhắc nhở đề phòng người nói một đằng làm một nẻo. Mặt khác, khỉ vui đùa cũng phản ánh phần tính cách hồn nhiên, thích đùa vui của chính bạn.",
+"numbers": [
+27,
+57,
+87
+]
+},
+{
+"keywords": [
+"dê",
+"con dê"
+],
+"subject": "Mơ thấy dê",
+"meaning": "Dê trong mơ thường gắn với sự hiền lành, nhẫn nại và đời sống gia đình ấm êm. Mơ thấy đàn dê ăn cỏ yên bình là điềm cuộc sống đang ổn định, ít sóng gió. Dê húc nhau hoặc dê leo núi cao lại cho thấy bạn đang phải kiên trì vượt qua thử thách để đạt mục tiêu xa.",
+"numbers": [
+25,
+35,
+75
+]
+},
+{
+"keywords": [
+"bò",
+"con bò"
+],
+"subject": "Mơ thấy bò",
+"meaning": "Bò là biểu tượng của sức lao động và của cải tích lũy trong nhà nông xưa. Mơ thấy bò khỏe mạnh, béo tốt thường là điềm tài sản và công việc làm ăn đang vững vàng. Bò chạy hoặc bò dữ có thể phản ánh áp lực công việc khiến bạn cảm thấy bị dồn ép, cần nghỉ ngơi hợp lý.",
+"numbers": [
+20,
+80,
+88
+]
+},
+{
+"keywords": [
+"vịt",
+"đàn vịt"
+],
+"subject": "Mơ thấy vịt",
+"meaning": "Đàn vịt bơi trên mặt nước trong mơ là hình ảnh của sự hòa thuận và niềm vui giản dị trong gia đình. Dân gian cho rằng mơ thấy vịt thường báo tin vui từ người thân ở xa hoặc chuyện vui trong nhà. Vịt kêu ồn ào có thể là nhắc nhở tránh để chuyện nhỏ ngoài xã hội làm phiền tâm trí bạn.",
+"numbers": [
+29,
+49,
+79
+]
+},
+{
+"keywords": [
+"cá sấu",
+"con cá sấu"
+],
+"subject": "Mơ thấy cá sấu",
+"meaning": "Cá sấu là loài săn mồi ẩn mình dưới nước, mơ thấy cá sấu thường là lời nhắc thận trọng với những nguy cơ chưa lộ rõ trong công việc hoặc hợp tác làm ăn. Nếu bạn bình tĩnh quan sát cá sấu từ xa, giấc mơ cho thấy bạn đủ tỉnh táo để xử lý tình huống khó. Tâm lý học xem đây là biểu tượng của nỗi lo bị tổn thương mà bạn chưa nói ra.",
+"numbers": [
+29,
+59,
+89
+]
+},
+{
+"keywords": [
+"nhện",
+"mạng nhện"
+],
+"subject": "Mơ thấy nhện",
+"meaning": "Nhện giăng tơ trong mơ tượng trưng cho sự kiên nhẫn chờ thời và khả năng nắm bắt cơ hội đúng lúc. Mơ thấy mạng nhện giăng trong nhà đôi khi gợi ý có việc cũ bị bỏ quên cần dọn dẹp, giải quyết. Nếu bạn sợ nhện trong mơ, có thể bạn đang cảm thấy bị ràng buộc trong một mối quan hệ hoặc công việc nào đó.",
+"numbers": [
+33,
+63,
+73
+]
+},
+{
+"keywords": [
+"dơi",
+"con dơi"
+],
+"subject": "Mơ thấy dơi",
+"meaning": "Trong văn hóa Á Đông, dơi là biểu tượng của phúc lộc vì chữ dơi đồng âm với chữ phúc, nên mơ thấy dơi bay vào nhà thường được xem là điềm may mắn. Tuy nhiên dơi hoạt động ban đêm cũng gợi những chuyện chưa rõ ràng cần thời gian làm sáng tỏ. Giấc mơ khuyên bạn kiên nhẫn quan sát trước khi quyết định việc quan trọng.",
+"numbers": [
+27,
+47,
+77
+]
+},
+{
+"keywords": [
+"cá heo",
+"con cá heo"
+],
+"subject": "Mơ thấy cá heo",
+"meaning": "Cá heo là biểu tượng của sự thông minh, thân thiện và niềm vui. Mơ thấy cá heo bơi lội tung tăng thường là điềm tinh thần đang nhẹ nhõm, các mối quan hệ xung quanh hài hòa. Cá heo cứu người hoặc chơi đùa cùng bạn trong mơ cho thấy bạn sắp nhận được sự giúp đỡ chân thành từ một người bạn tốt.",
+"numbers": [
+10,
+40,
+90
+]
+},
+{
+"keywords": [
+"cừu",
+"con cừu"
+],
+"subject": "Mơ thấy cừu",
+"meaning": "Cừu hiền lành trong mơ tượng trưng cho sự bình yên, thuần khiết và cuộc sống ít bon chen. Mơ thấy đàn cừu thường là điềm gia đạo êm ấm, con cái ngoan ngoãn. Mặt khác, giấc mơ cũng có thể nhắc bạn đừng quá thụ động hay đi theo số đông trong những quyết định quan trọng của bản thân.",
+"numbers": [
+11,
+41,
+91
+]
+},
+{
+"keywords": [
+"ngỗng",
+"ngan"
+],
+"subject": "Mơ thấy ngỗng",
+"meaning": "Ngỗng là loài chim chung thủy và cảnh giác, mơ thấy ngỗng thường liên quan đến sự bảo vệ gia đình và tin tức từ người thân. Tiếng ngỗng kêu trong mơ được dân gian xem là dấu hiệu sắp có khách hoặc tin quan trọng ghé nhà. Về tâm lý, giấc mơ phản ánh bạn đang muốn giữ gìn sự ổn định cho tổ ấm của mình.",
+"numbers": [
+30,
+60,
+80
+]
+},
+{
+"keywords": [
+"đỉa",
+"con đỉa"
+],
+"subject": "Mơ thấy đỉa",
+"meaning": "Đỉa bám hút máu trong mơ thường tượng trưng cho những hao tổn nhỏ nhưng kéo dài, như khoản chi rò rỉ hoặc mối quan hệ khiến bạn mệt mỏi. Giấc mơ nhắc bạn rà soát lại các cam kết và thói quen đang âm thầm lấy đi năng lượng của mình. Gỡ được đỉa trong mơ là dấu hiệu bạn sắp thoát khỏi một gánh nặng dai dẳng.",
+"numbers": [
+27,
+47,
+67
+]
+},
+{
+"keywords": [
+"ốc sên",
+"con ốc sên"
+],
+"subject": "Mơ thấy ốc sên",
+"meaning": "Ốc sên chậm chạp nhưng luôn mang theo ngôi nhà trên lưng, mơ thấy ốc sên thường nói về tiến độ chậm mà chắc trong công việc hoặc kế hoạch mua nhà, ổn định chỗ ở. Giấc mơ nhắc bạn rằng không phải lúc nào nhanh cũng tốt, quan trọng là đi đúng hướng. Nó cũng phản ánh mong muốn được an cư của bạn.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"châu chấu",
+"cào cào"
+],
+"subject": "Mơ thấy châu chấu",
+"meaning": "Châu chấu nhảy xa và đi theo đàn, mơ thấy châu chấu thường gắn với những thay đổi nhanh chóng hoặc tin tức lan truyền trong cộng đồng của bạn. Đàn châu chấu dày đặc đôi khi là lời nhắc cẩn trọng với quyết định theo đám đông. Châu chấu xanh đơn lẻ lại là hình ảnh của sự linh hoạt và cơ hội bất ngờ.",
+"numbers": [
+25,
+45,
+85
+]
+},
+{
+"keywords": [
+"đom đóm",
+"con đom đóm"
+],
+"subject": "Mơ thấy đom đóm",
+"meaning": "Đom đóm phát sáng trong đêm là biểu tượng của hy vọng nhỏ bé và những ý tưởng lóe sáng bất ngờ. Mơ thấy đom đóm thường là điềm tinh thần đang được an ủi, một giải pháp tưởng nhỏ lại hóa ra hữu ích. Giấc mơ gợi nhắc bạn trân trọng những niềm vui giản dị và những người âm thầm quan tâm mình.",
+"numbers": [
+28,
+68,
+98
+]
+},
+{
+"keywords": [
+"bọ cạp",
+"con bọ cạp"
+],
+"subject": "Mơ thấy bọ cạp",
+"meaning": "Bọ cạp có nọc độc nên mơ thấy bọ cạp thường là lời nhắc đề phòng những mâu thuẫn ngầm hoặc lời nói sắc bén làm tổn thương nhau. Nếu bạn quan sát bọ cạp mà không bị đốt, điều đó cho thấy bạn đủ bình tĩnh để hóa giải tình huống căng thẳng. Tâm lý học coi bọ cạp là biểu tượng của cảm xúc bị dồn nén cần được giải tỏa lành mạnh.",
+"numbers": [
+29,
+49,
+89
+]
+},
+{
+"keywords": [
+"rết",
+"con rết"
+],
+"subject": "Mơ thấy rết",
+"meaning": "Rết nhiều chân di chuyển nhanh trong mơ thường tượng trưng cho nhiều đầu việc cùng lúc khiến bạn phải chạy đua với thời gian. Dân gian xem mơ thấy rết là nhắc nhở giữ gìn sức khỏe, tránh để cơ thể quá tải. Nếu rết bò vào nhà, hãy chú ý dọn dẹp không gian sống và giải quyết những việc tồn đọng nhỏ trước khi chúng thành vấn đề lớn.",
+"numbers": [
+30,
+60,
+90
+]
+},
+{
+"keywords": [
+"cá mập",
+"con cá mập"
+],
+"subject": "Mơ thấy cá mập",
+"meaning": "Cá mập trong mơ là biểu tượng của áp lực cạnh tranh mạnh hoặc một thử thách lớn đang tới gần trong công việc. Nếu bạn bơi thoát hoặc quan sát cá mập bình tĩnh, giấc mơ cho thấy bản lĩnh và khả năng kiểm soát tình hình của bạn. Nó cũng có thể phản ánh nỗi lo về môi trường làm việc khốc liệt mà bạn đang trải qua.",
+"numbers": [
+27,
+57,
+87
+]
+},
+{
+"keywords": [
+"bạch tuộc",
+"con bạch tuộc"
+],
+"subject": "Mơ thấy bạch tuộc",
+"meaning": "Bạch tuộc với nhiều xúc tu trong mơ tượng trưng cho tình huống có quá nhiều mối liên quan chồng chéo, khiến bạn cảm thấy bị cuốn vào nhiều phía. Giấc mơ nhắc bạn tách từng vấn đề ra giải quyết thay vì ôm đồm tất cả. Mặt tích cực, bạch tuộc cũng là loài thông minh, cho thấy bạn có khả năng xoay xở linh hoạt hơn mình nghĩ.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"hươu",
+"nai",
+"con nai"
+],
+"subject": "Mơ thấy hươu nai",
+"meaning": "Hươu nai là biểu tượng của sự thanh cao, may mắn và lộc trong nhiều nền văn hóa, chữ lộc cũng gắn với hình ảnh con nai. Mơ thấy hươu nai thường là điềm tốt về tài lộc và sự nghiệp thăng tiến nhẹ nhàng. Nai hoảng sợ chạy trốn trong mơ có thể là nhắc bạn đừng bỏ lỡ cơ hội vì quá do dự.",
+"numbers": [
+34,
+64,
+94
+]
+},
+{
+"keywords": [
+"thỏ",
+"con thỏ"
+],
+"subject": "Mơ thấy thỏ",
+"meaning": "Thỏ nhanh nhẹn và hiền lành, mơ thấy thỏ thường gắn với tin vui trong tình cảm, gia đình và chuyện con cái. Thỏ trắng được xem là điềm may mắn, báo hiệu giai đoạn nhẹ nhàng sắp tới. Tuy nhiên thỏ cũng hay giật mình bỏ chạy, nên giấc mơ có thể nhắc bạn mạnh dạn hơn thay vì né tránh một quyết định quan trọng.",
+"numbers": [
+25,
+55,
+85
+]
+},
+{
+"keywords": [
+"cáo",
+"con cáo"
+],
+"subject": "Mơ thấy cáo",
+"meaning": "Cáo nổi tiếng tinh ranh nên mơ thấy cáo thường liên quan đến những tình huống cần sự khôn khéo và tỉnh táo trong giao tiếp. Giấc mơ có thể nhắc bạn cân nhắc kỹ trước khi tin vào lời đường mật trong làm ăn hoặc tình cảm. Mặt khác, cáo cũng tượng trưng cho trí thông minh giúp bạn thoát khỏi thế khó bằng cách mềm mỏng.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"sói",
+"chó sói"
+],
+"subject": "Mơ thấy sói",
+"meaning": "Sói trong mơ tượng trưng cho bản năng, sự độc lập và tinh thần bầy đàn. Mơ thấy sói đơn độc có thể phản ánh cảm giác cô đơn hoặc mong muốn tự do của bạn. Đàn sói hòa thuận lại gợi ý sức mạnh đến từ gia đình và đội nhóm. Nếu sói truy đuổi, hãy xem lại những áp lực đang khiến bạn căng thẳng gần đây.",
+"numbers": [
+27,
+67,
+97
+]
+},
+{
+"keywords": [
+"gấu",
+"con gấu"
+],
+"subject": "Mơ thấy gấu",
+"meaning": "Gấu là biểu tượng của sức mạnh, sự bảo vệ và khả năng chịu đựng qua mùa đông dài. Mơ thấy gấu hiền lành thường là điềm có quý nhân mạnh mẽ đứng sau hỗ trợ bạn. Gấu ngủ đông trong mơ gợi nhắc bạn cần nghỉ ngơi, tích lũy năng lượng trước một giai đoạn bận rộn sắp tới.",
+"numbers": [
+28,
+68,
+88
+]
+},
+{
+"keywords": [
+"chim công",
+"con công"
+],
+"subject": "Mơ thấy chim công",
+"meaning": "Chim công xòe đuôi rực rỡ trong mơ là hình ảnh của sự tự tin, danh tiếng và cơ hội được thể hiện bản thân. Đây thường là điềm tốt cho người làm nghệ thuật, kinh doanh hoặc sắp có dịp quan trọng trước đám đông. Giấc mơ cũng nhắc bạn cân bằng giữa việc tỏa sáng và sự khiêm tốn để giữ được thiện cảm lâu dài.",
+"numbers": [
+29,
+69,
+99
+]
+},
+{
+"keywords": [
+"vẹt",
+"con vẹt"
+],
+"subject": "Mơ thấy vẹt",
+"meaning": "Vẹt biết nhại tiếng người nên mơ thấy vẹt thường liên quan đến lời nói, tin đồn và việc giao tiếp hằng ngày. Giấc mơ nhắc bạn cẩn trọng với những chuyện kể lại chưa kiểm chứng, tránh vô tình tiếp tay cho thị phi. Vẹt nhiều màu sắc vui nhộn cũng có thể báo hiệu những cuộc trò chuyện thú vị và tin vui từ bạn bè sắp tới.",
+"numbers": [
+26,
+46,
+76
+]
+},
+{
+"keywords": [
+"cú mèo",
+"chim cú"
+],
+"subject": "Mơ thấy cú mèo",
+"meaning": "Cú mèo hoạt động về đêm nên trong dân gian thường gắn với tin tức bất ngờ, còn trong nhiều nền văn hóa khác cú là biểu tượng của trí tuệ và khả năng nhìn thấu. Mơ thấy cú mèo có thể là lời nhắc bạn lắng nghe trực giác trước một quyết định. Nó cũng phản ánh giai đoạn bạn cần tĩnh lặng để suy ngẫm hơn là hành động vội vàng.",
+"numbers": [
+31,
+61,
+91
+]
+},
+{
+"keywords": [
+"quạ",
+"chim quạ"
+],
+"subject": "Mơ thấy quạ",
+"meaning": "Quạ đen thường bị gán với điềm không vui trong dân gian, nhưng quạ cũng là loài chim rất thông minh và chung thủy. Mơ thấy quạ thường báo hiệu một tin tức quan trọng sắp đến, đòi hỏi bạn bình tĩnh đón nhận thay vì lo lắng thái quá. Về tâm lý, giấc mơ có thể phản ánh nỗi buồn hoặc chuyện cũ chưa khép lại trong lòng bạn.",
+"numbers": [
+32,
+62,
+92
+]
+},
+{
+"keywords": [
+"bồ câu",
+"chim bồ câu"
+],
+"subject": "Mơ thấy bồ câu",
+"meaning": "Bồ câu là biểu tượng của hòa bình, tình yêu và tin lành đưa thư. Mơ thấy bồ câu trắng thường là điềm tốt, báo hiệu mâu thuẫn sắp được hóa giải hoặc tin vui từ người ở xa. Đàn bồ câu bay lượn gợi cảm giác tự do và nhẹ nhõm sau giai đoạn căng thẳng. Giấc mơ cũng thường đến khi bạn khao khát sự bình yên trong gia đình.",
+"numbers": [
+22,
+52,
+82
+]
+},
+{
+"keywords": [
+"tôm hùm",
+"con tôm hùm"
+],
+"subject": "Mơ thấy tôm hùm",
+"meaning": "Tôm hùm là món ăn sang trọng nên mơ thấy tôm hùm thường gắn với sự thăng tiến, đãi ngộ tốt hoặc dịp ăn mừng đáng nhớ. Bắt được tôm hùm lớn là điềm nỗ lực lâu nay sắp cho thành quả xứng đáng. Giấc mơ cũng có thể phản ánh mong muốn nâng cao chất lượng sống của bạn, chỉ cần cân đối chi tiêu cho hợp lý.",
+"numbers": [
+33,
+63,
+93
+]
+},
+{
+"keywords": [
+"mực",
+"con mực"
+],
+"subject": "Mơ thấy con mực",
+"meaning": "Con mực phun mực đen khi gặp nguy hiểm, mơ thấy con mực thường nói về tình huống rối rắm cần thời gian mới sáng tỏ. Mơ thấy ăn mực là hình ảnh quen thuộc gắn với bữa ăn sum họp và tin vui nhỏ trong nhà. Về tâm lý, giấc mơ có thể là dấu hiệu bạn đang muốn tránh né một cuộc trò chuyện khó, hãy chọn thời điểm thích hợp để đối diện.",
+"numbers": [
+24,
+54,
+84
+]
+},
+{
+"keywords": [
+"ốc",
+"con ốc",
+"sò"
+],
+"subject": "Mơ thấy ốc",
+"meaning": "Ốc biển trong mơ thường tượng trưng cho những giá trị ẩn giấu cần khám phá, giống viên ngọc nằm trong vỏ sò. Mơ thấy nhặt được nhiều ốc là điềm có lộc nhỏ bất ngờ hoặc phát hiện khả năng mới của bản thân. Ốc đóng kín vỏ cũng gợi ý bạn đang khép mình, cần mở lòng hơn với người xung quanh.",
+"numbers": [
+23,
+53,
+83
+]
+},
+{
+"keywords": [
+"lươn",
+"con lươn"
+],
+"subject": "Mơ thấy lươn",
+"meaning": "Lươn trơn và khó nắm bắt nên mơ thấy lươn thường liên quan đến những việc hoặc con người khó đoán trong cuộc sống của bạn. Bắt được lươn trong mơ là dấu hiệu bạn sắp kiểm soát được tình huống tưởng chừng tuột khỏi tay. Giấc mơ nhắc bạn linh hoạt nhưng vẫn giữ nguyên tắc khi xử lý việc khó.",
+"numbers": [
+26,
+56,
+76
+]
+},
+{
+"keywords": [
+"cóc",
+"con cóc"
+],
+"subject": "Mơ thấy cóc",
+"meaning": "Cóc trong phong thủy là linh vật chiêu tài, hình ảnh cóc ngậm tiền rất quen thuộc, nên mơ thấy cóc thường được xem là điềm tài lộc ghé nhà. Cóc nhảy vào nhà là dấu hiệu cơ hội làm ăn đang đến gần, hãy tỉnh táo nắm bắt. Về tâm lý, giấc mơ phản ánh kỳ vọng về một bước tiến trong thu nhập của bạn.",
+"numbers": [
+24,
+44,
+84
+]
+},
+{
+"keywords": [
+"thằn lằn",
+"thạch sùng"
+],
+"subject": "Mơ thấy thằn lằn",
+"meaning": "Thằn lằn thạch sùng là vị khách quen thuộc trong nhà, mơ thấy thằn lằn thường là điềm nhỏ nhặt, liên quan đến sinh hoạt gia đình và những thay đổi không đáng kể. Tiếng thạch sùng kêu trong mơ được nhiều người xem là dấu hiệu có tin hoặc có khách sắp tới. Giấc mơ cũng nhắc bạn chú ý đến những chi tiết nhỏ trong công việc để tránh sai sót.",
+"numbers": [
+25,
+65,
+95
+]
+},
+{
+"keywords": [
+"cá chép",
+"con cá chép"
+],
+"subject": "Mơ thấy cá chép",
+"meaning": "Cá chép gắn với tích chép vượt vũ môn hóa rồng, là biểu tượng của sự kiên trì, thi cử đỗ đạt và thăng tiến. Mơ thấy cá chép thường là điềm lành cho người đang học hành, thi tuyển hoặc theo đuổi mục tiêu lớn. Cá chép vàng bơi trong nước trong cho thấy con đường phía trước đang thuận lợi, chỉ cần bạn bền chí.",
+"numbers": [
+58,
+85,
+95
+]
+},
+{
+"keywords": [
+"chim én",
+"én"
+],
+"subject": "Mơ thấy chim én",
+"meaning": "Chim én về là dấu hiệu mùa xuân và tin vui, mơ thấy chim én thường báo hiệu người thân đi xa sắp trở về hoặc tin tốt lành đang trên đường tới. Én làm tổ dưới mái nhà được xem là điềm gia đình hòa thuận, làm ăn phát đạt. Giấc mơ mang lại cảm giác nhẹ nhõm, gợi bạn mở lòng đón những khởi đầu mới.",
+"numbers": [
+27,
+37,
+87
+]
+},
+{
+"keywords": [
+"cá vàng",
+"cá cảnh"
+],
+"subject": "Mơ thấy cá vàng",
+"meaning": "Cá vàng trong mơ tượng trưng cho tài lộc, sự thư thái và thú vui tao nhã trong cuộc sống. Mơ thấy bể cá vàng đẹp là điềm tinh thần đang ổn định, gia đạo yên vui. Cá vàng chết hoặc bể cá vỡ có thể nhắc bạn chăm sóc tốt hơn cho sức khỏe và những điều mình trân quý. Nhìn chung đây là giấc mơ mang năng lượng nhẹ nhàng, tích cực.",
+"numbers": [
+29,
+79,
+89
+]
+},
+{
+"keywords": [
+"xe đạp",
+"đạp xe"
+],
+"subject": "Mơ thấy xe đạp",
+"meaning": "Xe đạp trong mơ tượng trưng cho sự tự lực và nhịp sống cân bằng do chính bạn làm chủ. Mơ thấy đạp xe nhẹ nhàng là điềm cuộc sống đang đi đúng nhịp, công việc tiến triển đều đặn. Xe đạp hỏng hoặc đạp mãi không đi có thể phản ánh cảm giác nỗ lực nhiều mà kết quả chưa tương xứng, cần xem lại phương pháp.",
+"numbers": [
+28,
+58,
+82
+]
+},
+{
+"keywords": [
+"điện thoại",
+"điện thoại vỡ",
+"gọi điện"
+],
+"subject": "Mơ thấy điện thoại",
+"meaning": "Điện thoại trong mơ là biểu tượng của giao tiếp và kết nối. Mơ thấy nhận cuộc gọi thường báo hiệu một tin tức hoặc lời mời sắp đến mà bạn đang chờ đợi. Điện thoại vỡ, mất sóng trong mơ phản ánh nỗi lo bị ngắt kết nối với ai đó hoặc bỏ lỡ thông tin quan trọng, nhắc bạn chủ động liên lạc lại.",
+"numbers": [
+26,
+46,
+76
+]
+},
+{
+"keywords": [
+"chìa khóa",
+"mất chìa khóa"
+],
+"subject": "Mơ thấy chìa khóa",
+"meaning": "Chìa khóa tượng trưng cho giải pháp, cơ hội và quyền làm chủ một vấn đề. Mơ thấy tìm được chìa khóa là điềm bạn sắp tháo gỡ được nút thắt bấy lâu trong công việc hoặc tình cảm. Ngược lại, mất chìa khóa trong mơ phản ánh cảm giác bế tắc tạm thời, giấc mơ khuyên bạn bình tĩnh nhìn vấn đề từ góc độ khác.",
+"numbers": [
+23,
+53,
+83
+]
+},
+{
+"keywords": [
+"dao",
+"con dao"
+],
+"subject": "Mơ thấy dao",
+"meaning": "Dao là vật sắc bén hai mặt, mơ thấy dao thường liên quan đến quyết định dứt khoát hoặc lời nói cần thận trọng. Cầm dao làm bếp trong mơ là hình ảnh sinh hoạt bình thường, gợi chuyện gia đình và bữa ăn. Nếu dao gây nguy hiểm trong mơ, đó có thể là lời nhắc tránh tranh luận gay gắt khiến mối quan hệ bị tổn thương.",
+"numbers": [
+29,
+59,
+89
+]
+},
+{
+"keywords": [
+"kéo",
+"cái kéo"
+],
+"subject": "Mơ thấy kéo",
+"meaning": "Kéo dùng để cắt bỏ những gì không cần thiết, mơ thấy kéo thường là dấu hiệu bạn đang muốn chấm dứt một thói quen, mối quan hệ hoặc công việc không còn phù hợp. Cắt vải may đồ trong mơ lại là điềm sáng tạo, sắp bắt tay vào kế hoạch mới. Giấc mơ nhắc bạn cắt bỏ một cách khéo léo để không làm tổn thương người khác.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"sách",
+"quyển sách",
+"đọc sách"
+],
+"subject": "Mơ thấy sách",
+"meaning": "Sách trong mơ là biểu tượng của tri thức, kinh nghiệm và những bài học đang chờ bạn khám phá. Mơ thấy đọc sách say sưa là điềm tốt cho học hành, thi cử và việc tự phát triển bản thân. Nhận được cuốn sách làm quà trong mơ gợi ý có người sắp chia sẻ với bạn một lời khuyên quý giá, hãy lắng nghe.",
+"numbers": [
+22,
+52,
+82
+]
+},
+{
+"keywords": [
+"bút",
+"cây bút",
+"viết bút"
+],
+"subject": "Mơ thấy bút",
+"meaning": "Cây bút trong mơ tượng trưng cho việc ký kết, ghi chép và khả năng diễn đạt của bạn. Mơ thấy viết bút lưu loát là điềm thuận lợi cho giấy tờ, hợp đồng và thi cử. Bút hết mực hoặc gãy bút có thể phản ánh cảm giác bí ý tưởng hoặc một kế hoạch đang dang dở cần được tiếp nối.",
+"numbers": [
+25,
+45,
+85
+]
+},
+{
+"keywords": [
+"đồng hồ",
+"đồng hồ đeo tay"
+],
+"subject": "Mơ thấy đồng hồ",
+"meaning": "Đồng hồ trong mơ luôn gắn với thời gian và những thời hạn đang đến gần trong đời thực. Mơ thấy đồng hồ chạy đúng giờ là điềm bạn đang kiểm soát tốt tiến độ của mình. Đồng hồ ngừng chạy hoặc vỡ có thể phản ánh nỗi lo lỡ mất cơ hội, nhắc bạn trân trọng thời gian dành cho gia đình và bản thân.",
+"numbers": [
+28,
+68,
+88
+]
+},
+{
+"keywords": [
+"nhẫn",
+"nhẫn cưới",
+"đeo nhẫn"
+],
+"subject": "Mơ thấy nhẫn",
+"meaning": "Nhẫn là biểu tượng của cam kết, gắn bó và lời hứa trong tình cảm lẫn công việc. Mơ thấy đeo nhẫn cưới thường là điềm vui về chuyện tình cảm hoặc một cam kết quan trọng sắp được xác lập. Làm rơi hoặc mất nhẫn trong mơ phản ánh nỗi lo về sự rạn nứt, nhắc hai bên cùng vun đắp và trò chuyện thẳng thắn.",
+"numbers": [
+29,
+69,
+99
+]
+},
+{
+"keywords": [
+"vòng tay",
+"vòng cổ",
+"dây chuyền"
+],
+"subject": "Mơ thấy vòng trang sức",
+"meaning": "Vòng tay, dây chuyền trong mơ tượng trưng cho mối liên kết và giá trị cá nhân bạn muốn gìn giữ. Được tặng trang sức vòng là điềm được yêu thương, trân trọng. Dây chuyền đứt trong mơ có thể là nhắc nhở chú ý giữ gìn mối quan hệ quan trọng hoặc tài sản cá nhân, tránh lơ là bất cẩn.",
+"numbers": [
+24,
+54,
+84
+]
+},
+{
+"keywords": [
+"giày",
+"dép",
+"đôi giày"
+],
+"subject": "Mơ thấy giày dép",
+"meaning": "Giày dép trong mơ tượng trưng cho con đường bạn đang đi và vị thế của bạn trong cuộc sống. Mơ thấy mang giày mới vừa chân là điềm khởi đầu thuận lợi, có thể là công việc hoặc chuyến đi mới. Đi giày chật, mất dép trong mơ phản ánh cảm giác chưa thoải mái với hoàn cảnh hiện tại, cần điều chỉnh lại hướng đi.",
+"numbers": [
+27,
+57,
+87
+]
+},
+{
+"keywords": [
+"mũ",
+"nón",
+"đội mũ"
+],
+"subject": "Mơ thấy mũ nón",
+"meaning": "Mũ nón che nắng che mưa, trong mơ tượng trưng cho sự bảo vệ, danh phận và cách bạn thể hiện mình trước người khác. Mơ thấy đội nón mới là điềm có thay đổi tích cực về vai trò hoặc hình ảnh cá nhân. Bay mất nón trong mơ có thể là nhắc nhở cẩn thận giữ gìn uy tín và sức khỏe khi thời tiết thay đổi.",
+"numbers": [
+26,
+46,
+86
+]
+},
+{
+"keywords": [
+"ô",
+"dù",
+"che ô"
+],
+"subject": "Mơ thấy ô dù",
+"meaning": "Ô dù trong mơ là hình ảnh của sự che chở và chuẩn bị trước khó khăn. Mơ thấy che ô dưới mưa mà vẫn khô ráo là điềm bạn có chỗ dựa vững vàng khi gặp chuyện. Ô bị gió thổi lật trong mơ phản ánh kế hoạch dự phòng chưa chắc chắn, nhắc bạn chuẩn bị thêm phương án cho việc quan trọng.",
+"numbers": [
+25,
+55,
+85
+]
+},
+{
+"keywords": [
+"túi xách",
+"ba lô",
+"cặp"
+],
+"subject": "Mơ thấy túi xách",
+"meaning": "Túi xách và ba lô trong mơ tượng trưng cho những gì bạn đang mang theo trong hành trình cuộc sống, cả vật chất lẫn trách nhiệm. Ba lô nặng trĩu phản ánh cảm giác gánh nhiều việc cùng lúc, cần chia sẻ bớt. Mơ thấy túi xách bị mất có thể là nỗi lo về giấy tờ, tiền bạc, nhắc bạn cẩn thận khi ra ngoài.",
+"numbers": [
+28,
+48,
+78
+]
+},
+{
+"keywords": [
+"tiền xu",
+"tiền lẻ",
+"đồng xu"
+],
+"subject": "Mơ thấy tiền xu",
+"meaning": "Tiền xu trong mơ thường tượng trưng cho những khoản lộc nhỏ, đều đặn và giá trị tích lũy từ việc nhỏ. Nhặt được tiền xu được dân gian xem là điềm may mắn bất ngờ trong chi tiêu hằng ngày. Ngược lại, đánh rơi tiền xu rải rác nhắc bạn để ý các khoản chi lẻ đang âm thầm cộng dồn thành con số lớn.",
+"numbers": [
+19,
+39,
+79
+]
+},
+{
+"keywords": [
+"kính",
+"kính mắt",
+"đeo kính"
+],
+"subject": "Mơ thấy kính mắt",
+"meaning": "Kính mắt giúp nhìn rõ, nên mơ thấy đeo kính thường là dấu hiệu bạn đang cần nhìn một vấn đề thấu đáo hơn trước khi quyết định. Kính vỡ trong mơ có thể phản ánh sự hiểu lầm hoặc góc nhìn bị méo mó về một người nào đó. Mơ thấy lau kính sạch sẽ là điềm tâm trí sáng suốt, mọi chuyện dần rõ ràng.",
+"numbers": [
+29,
+59,
+79
+]
+},
+{
+"keywords": [
+"quần áo",
+"áo mới",
+"mua quần áo"
+],
+"subject": "Mơ thấy quần áo mới",
+"meaning": "Quần áo trong mơ tượng trưng cho hình ảnh xã hội và cách bạn muốn người khác nhìn nhận mình. Mơ thấy mặc quần áo mới đẹp là điềm tự tin tăng lên, có thể gắn với dịp quan trọng hoặc thay đổi công việc. Quần áo rách hoặc bẩn trong mơ nhắc bạn chú ý giữ gìn hình ảnh và xử lý một chuyện cũ còn tồn đọng.",
+"numbers": [
+26,
+66,
+96
+]
+},
+{
+"keywords": [
+"bàn thờ",
+"thắp hương",
+"nhang"
+],
+"subject": "Mơ thấy bàn thờ",
+"meaning": "Mơ thấy bàn thờ và thắp hương thường gắn với đời sống tâm linh, lòng biết ơn tổ tiên và mong muốn được che chở. Đây thường là điềm nhắc bạn dành thời gian cho gia đình, hướng về nguồn cội. Hương khói nghi ngút bình yên trong mơ cho thấy tâm bạn đang cần sự tĩnh tại sau chuỗi ngày bận rộn.",
+"numbers": [
+27,
+47,
+87
+]
+},
+{
+"keywords": [
+"nến",
+"đèn",
+"ngọn nến",
+"thắp nến"
+],
+"subject": "Mơ thấy nến đèn",
+"meaning": "Ngọn nến trong mơ là biểu tượng của hy vọng, sự soi sáng và những điều ấm áp nhỏ bé giữa khó khăn. Mơ thấy thắp nến sáng là điềm tốt, báo hiệu hướng giải quyết đang dần hiện rõ. Nến tắt vì gió có thể phản ánh niềm tin đang lung lay, giấc mơ khuyên bạn kiên trì thêm một chút nữa.",
+"numbers": [
+28,
+58,
+98
+]
+},
+{
+"keywords": [
+"kiếm",
+"thanh kiếm"
+],
+"subject": "Mơ thấy kiếm",
+"meaning": "Kiếm trong mơ tượng trưng cho quyết tâm, công lý và khả năng bảo vệ quan điểm của bạn. Mơ thấy cầm kiếm vững vàng là điềm bạn sẵn sàng đối mặt thử thách bằng sự chính trực. Kiếm gỉ hoặc gãy trong mơ gợi ý một kế hoạch cần được mài giũa lại, hoặc bạn đang do dự trước quyết định quan trọng.",
+"numbers": [
+29,
+49,
+79
+]
+},
+{
+"keywords": [
+"máy bay",
+"đi máy bay"
+],
+"subject": "Mơ thấy máy bay",
+"meaning": "Máy bay trong mơ tượng trưng cho khát vọng lớn, tầm nhìn xa và những chuyến đi thay đổi cuộc đời. Mơ thấy máy bay cất cánh thuận lợi là điềm kế hoạch dài hạn đang vào guồng. Chuyến bay hỗn loạn hoặc trễ giờ phản ánh nỗi lo về tiến độ, nhắc bạn kiểm tra kỹ khâu chuẩn bị trước việc lớn.",
+"numbers": [
+27,
+57,
+97
+]
+},
+{
+"keywords": [
+"tàu hỏa",
+"đi tàu",
+"xe lửa"
+],
+"subject": "Mơ thấy tàu hỏa",
+"meaning": "Tàu hỏa chạy trên đường ray cố định nên mơ thấy đi tàu thường nói về hành trình cuộc đời đang theo một lộ trình rõ ràng. Lên đúng chuyến tàu là điềm bạn đang nắm bắt đúng cơ hội và thời điểm. Lỡ tàu trong mơ phản ánh nỗi tiếc nuối hoặc lo sợ chậm chân, hãy bình tĩnh vì luôn có chuyến tiếp theo.",
+"numbers": [
+28,
+68,
+88
+]
+},
+{
+"keywords": [
+"thang máy",
+"đi thang máy"
+],
+"subject": "Mơ thấy thang máy",
+"meaning": "Thang máy lên xuống nhanh trong mơ tượng trưng cho sự thăng trầm chóng vánh trong công việc và cảm xúc. Thang máy đi lên êm ái là điềm vận trình đang lên, được nâng đỡ. Thang máy rơi hoặc kẹt trong mơ phản ánh cảm giác mất kiểm soát tạm thời, nhắc bạn chậm lại và tìm chỗ dựa an toàn.",
+"numbers": [
+29,
+59,
+89
+]
+},
+{
+"keywords": [
+"xe buýt",
+"xe khách"
+],
+"subject": "Mơ thấy xe buýt",
+"meaning": "Xe buýt là phương tiện chung của nhiều người, mơ thấy đi xe buýt thường liên quan đến việc hòa nhập tập thể và đi theo kế hoạch chung. Lên xe đông vui vẻ là điềm các mối quan hệ xã hội thuận hòa. Bỏ lỡ chuyến xe buýt trong mơ có thể cho thấy bạn đang chần chừ trước một cơ hội cần quyết định nhanh.",
+"numbers": [
+25,
+55,
+95
+]
+},
+{
+"keywords": [
+"diều",
+"thả diều"
+],
+"subject": "Mơ thấy thả diều",
+"meaning": "Cánh diều bay cao trong mơ là biểu tượng của ước mơ, tự do và tuổi thơ hồn nhiên. Mơ thấy thả diều bay cao, dây căng gió là điềm khát vọng đang được nâng đỡ bởi thời cơ tốt. Diều đứt dây trong mơ gợi cảm giác mất phương hướng tạm thời, nhưng cũng có thể là cơ hội để bạn bắt đầu hướng đi hoàn toàn mới.",
+"numbers": [
+26,
+46,
+76
+]
+},
+{
+"keywords": [
+"đàn",
+"đàn guitar",
+"chơi đàn"
+],
+"subject": "Mơ thấy đàn nhạc",
+"meaning": "Nhạc cụ trong mơ tượng trưng cho cảm xúc, sự sáng tạo và nhu cầu được lắng nghe. Mơ thấy chơi đàn hay cho thấy bạn đang hài hòa với chính mình và người xung quanh. Dây đàn đứt giữa chừng có thể phản ánh một mối quan hệ hoặc dự án sáng tạo bị gián đoạn, cần khéo léo nối lại bằng đối thoại chân thành.",
+"numbers": [
+27,
+67,
+87
+]
+},
+{
+"keywords": [
+"chụp ảnh",
+"chụp hình",
+"máy ảnh"
+],
+"subject": "Mơ thấy chụp ảnh",
+"meaning": "Mơ thấy chụp ảnh thường gắn với mong muốn lưu giữ khoảnh khắc và nhìn lại hành trình đã qua. Chụp được bức ảnh đẹp là điềm bạn đang hài lòng với hiện tại và những người bên cạnh. Ảnh mờ nhòe trong mơ có thể nhắc bạn sống trọn vẹn với hiện tại thay vì mãi tiếc nuối chuyện đã qua.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"ti vi",
+"tivi",
+"xem tivi"
+],
+"subject": "Mơ thấy ti vi",
+"meaning": "Ti vi trong mơ tượng trưng cho cách bạn tiếp nhận thông tin và quan sát cuộc sống từ bên ngoài. Mơ thấy xem tin tức hoặc chương trình quen thuộc thường là điềm sắp có thông tin quan trọng đến với bạn. Ti vi nhiễu sóng trong mơ phản ánh cảm giác rối thông tin, nhắc bạn chọn lọc nguồn tin đáng tin cậy.",
+"numbers": [
+29,
+69,
+79
+]
+},
+{
+"keywords": [
+"máy tính",
+"laptop",
+"máy vi tính"
+],
+"subject": "Mơ thấy máy tính",
+"meaning": "Máy tính trong mơ là biểu tượng của công việc trí óc, xử lý thông tin và kế hoạch chi tiết. Mơ thấy làm việc trơn tru trên máy tính là điềm dự án đang đi đúng hướng. Máy tính treo, mất dữ liệu trong mơ phản ánh áp lực quá tải, nhắc bạn sao lưu công việc và cho đầu óc được nghỉ ngơi.",
+"numbers": [
+26,
+56,
+96
+]
+},
+{
+"keywords": [
+"giếng",
+"giếng nước"
+],
+"subject": "Mơ thấy giếng nước",
+"meaning": "Giếng nước trong mơ tượng trưng cho nguồn lực tiềm ẩn, chiều sâu nội tâm và sự sống được gìn giữ lâu dài. Mơ thấy giếng nước trong đầy là điềm tài lộc bền vững, gia đạo có nền tảng tốt. Giếng cạn trong mơ nhắc bạn bồi đắp lại sức khỏe, kiến thức và các mối quan hệ trước khi chúng cạn kiệt.",
+"numbers": [
+24,
+64,
+94
+]
+},
+{
+"keywords": [
+"động đất",
+"địa chấn"
+],
+"subject": "Mơ thấy động đất",
+"meaning": "Động đất trong mơ tượng trưng cho những biến động nền tảng làm rung chuyển cảm giác an toàn của bạn, như thay đổi công việc, nơi ở hoặc quan điểm sống. Dù nghe đáng sợ, giấc mơ thường xuất hiện khi bạn đang ở ngưỡng thay đổi lớn và cần thích nghi. Sau dư chấn trong mơ, mặt đất yên lại cũng là dấu hiệu mọi chuyện rồi sẽ ổn định trở lại.",
+"numbers": [
+27,
+47,
+77
+]
+},
+{
+"keywords": [
+"sóng thần",
+"sóng lớn"
+],
+"subject": "Mơ thấy sóng thần",
+"meaning": "Sóng thần trong mơ là hình ảnh của cảm xúc dâng trào mạnh mẽ mà bạn khó kiểm soát trong đời thực. Giấc mơ có thể xuất hiện khi bạn chịu áp lực dồn nén lâu ngày và cần tìm cách giải tỏa lành mạnh. Nếu trong mơ bạn tìm được chỗ cao an toàn, đó là dấu hiệu bản năng tự bảo vệ và khả năng vượt qua khủng hoảng của bạn rất tốt.",
+"numbers": [
+28,
+78,
+98
+]
+},
+{
+"keywords": [
+"lũ lụt",
+"nước lũ",
+"ngập lụt"
+],
+"subject": "Mơ thấy lũ lụt",
+"meaning": "Lũ lụt trong mơ thường tượng trưng cho những vấn đề dồn dập ngoài dự tính, đặc biệt liên quan đến tài chính hoặc gia đình. Nước lũ dâng cao nhắc bạn chủ động phòng bị và sắp xếp lại các khoản dự phòng. Nếu mơ thấy nước lũ rút đi, đó là điềm giai đoạn khó khăn đang qua, công việc dần trở lại quỹ đạo.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"tuyết",
+"tuyết rơi"
+],
+"subject": "Mơ thấy tuyết rơi",
+"meaning": "Tuyết trắng trong mơ tượng trưng cho sự tinh khiết, tĩnh lặng và khởi đầu mới sau khi mọi ồn ào lắng xuống. Mơ thấy tuyết rơi nhẹ thường là điềm tâm hồn đang được làm dịu, thích hợp để nghỉ ngơi và suy ngẫm. Tuyết dày cản đường trong mơ có thể nhắc bạn kiên nhẫn chờ thời cơ tan băng trong một mối quan hệ.",
+"numbers": [
+29,
+69,
+99
+]
+},
+{
+"keywords": [
+"sương mù",
+"sương"
+],
+"subject": "Mơ thấy sương mù",
+"meaning": "Sương mù trong mơ tượng trưng cho sự chưa rõ ràng, khi bạn chưa nhìn thấy toàn cảnh của một vấn đề. Giấc mơ khuyên bạn không nên vội quyết định việc lớn khi thông tin còn thiếu, hãy chờ sương tan. Nếu trong mơ bạn vẫn tìm được đường đi, đó là dấu hiệu trực giác đang dẫn lối rất tốt cho bạn.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"lốc xoáy",
+"gió lốc",
+"vòi rồng"
+],
+"subject": "Mơ thấy lốc xoáy",
+"meaning": "Lốc xoáy trong mơ là hình ảnh của những biến cố bất ngờ cuốn mọi thứ vào vòng xoáy, khiến bạn cảm thấy mất kiểm soát. Giấc mơ thường xuất hiện khi đời sống có nhiều thay đổi dồn dập cùng lúc. Tìm được nơi trú ẩn an toàn trong mơ là điềm bạn đủ bản lĩnh chờ cơn bão đi qua mà không tổn thất lớn.",
+"numbers": [
+27,
+67,
+97
+]
+},
+{
+"keywords": [
+"mưa đá",
+"trời mưa đá"
+],
+"subject": "Mơ thấy mưa đá",
+"meaning": "Mưa đá trong mơ tượng trưng cho những tác động bất ngờ, đôi khi là lời nói hoặc sự việc khiến bạn bất ngờ và hơi choáng. Vì mưa đá thường ngắn, giấc mơ hàm ý khó khăn chỉ là tạm thời, qua nhanh nếu bạn giữ bình tĩnh. Nó cũng nhắc bạn bảo vệ những thành quả đang dang dở trước yếu tố bất ngờ bên ngoài.",
+"numbers": [
+28,
+48,
+88
+]
+},
+{
+"keywords": [
+"nhật thực",
+"nguyệt thực"
+],
+"subject": "Mơ thấy nhật thực",
+"meaning": "Nhật thực và nguyệt thực trong mơ là hiện tượng hiếm, tượng trưng cho giai đoạn chuyển giao khi một phần cuộc sống tạm bị che khuất trước khi sáng rõ trở lại. Giấc mơ thường đến khi bạn đang do dự trước thay đổi lớn, khuyên bạn kiên nhẫn chờ thời điểm thích hợp. Về tâm lý, đây là biểu tượng của chu kỳ kết thúc và tái sinh.",
+"numbers": [
+29,
+59,
+79
+]
+},
+{
+"keywords": [
+"núi lửa",
+"núi lửa phun"
+],
+"subject": "Mơ thấy núi lửa",
+"meaning": "Núi lửa trong mơ tượng trưng cho cảm xúc hoặc sức sáng tạo tích tụ lâu ngày đang chực bùng nổ. Nếu núi lửa phun trào trong mơ, có thể bạn đang cần giải tỏa áp lực hoặc nói ra điều giữ kín quá lâu. Núi lửa yên lặng lại là hình ảnh của sức mạnh tiềm ẩn, nhắc bạn chọn thời điểm phù hợp để tỏa sáng.",
+"numbers": [
+27,
+77,
+97
+]
+},
+{
+"keywords": [
+"hạn hán",
+"nắng nóng",
+"khô hạn"
+],
+"subject": "Mơ thấy nắng hạn",
+"meaning": "Hạn hán trong mơ tượng trưng cho giai đoạn cạn kiệt về năng lượng, cảm hứng hoặc nguồn lực mà bạn đang trải qua. Đất nứt nẻ trong mơ nhắc bạn chủ động tìm nguồn bổ sung, từ tài chính đến tinh thần, thay vì cố cầm cự. Giấc mơ cũng thường xuất hiện khi bạn làm việc quá sức và cần được nghỉ ngơi đúng nghĩa.",
+"numbers": [
+26,
+66,
+96
+]
+},
+{
+"keywords": [
+"người chết sống lại",
+"người mất sống lại"
+],
+"subject": "Mơ thấy người chết sống lại",
+"meaning": "Mơ thấy người đã khuất sống lại thường bắt nguồn từ nỗi nhớ thương và những điều chưa kịp nói với người ấy. Dân gian xem đây là điềm người thân về thăm trong mơ, gợi bạn tưởng nhớ và làm việc thiện để lòng thanh thản. Về tâm lý, giấc mơ là cách tâm trí khép lại nỗi buồn và giữ gìn ký ức đẹp về người đã mất.",
+"numbers": [
+27,
+37,
+87
+]
+},
+{
+"keywords": [
+"bị rượt đuổi",
+"rượt đuổi",
+"bị đuổi",
+"chạy trốn"
+],
+"subject": "Mơ thấy bị rượt đuổi",
+"meaning": "Bị rượt đuổi là một trong những giấc mơ phổ biến nhất, thường phản ánh bạn đang tránh né một vấn đề, thời hạn hoặc cảm xúc trong đời thực. Điều quan trọng không phải ai đuổi theo, mà là bạn đang chạy trốn điều gì. Giấc mơ khuyên bạn dừng lại đối diện từng chút một, vấn đề thường nhỏ hơn nỗi sợ tưởng tượng rất nhiều.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"đi lạc",
+"lạc đường",
+"bị lạc"
+],
+"subject": "Mơ thấy đi lạc",
+"meaning": "Đi lạc trong mơ tượng trưng cho cảm giác mất phương hướng trước một lựa chọn quan trọng trong học tập, công việc hoặc tình cảm. Nếu trong mơ bạn nhờ được người chỉ đường, đó là điềm sắp có người giàu kinh nghiệm hỗ trợ bạn. Giấc mơ nhắc bạn chậm lại, xác định lại đích đến thay vì vội vàng đi tiếp.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"nhà cũ",
+"về nhà cũ",
+"ngôi nhà cũ"
+],
+"subject": "Mơ thấy nhà cũ",
+"meaning": "Về thăm nhà cũ trong mơ thường gắn với hoài niệm tuổi thơ và những ký ức gốc rễ của gia đình. Giấc mơ xuất hiện khi bạn đang ở bước ngoặt và vô thức muốn tìm lại cảm giác an toàn quen thuộc. Nhà cũ sáng sủa, ấm cúng là điềm nền tảng gia đình vẫn là chỗ dựa vững, còn nhà cũ hoang tàn nhắc bạn buông bỏ chuyện đã qua.",
+"numbers": [
+25,
+55,
+85
+]
+},
+{
+"keywords": [
+"tắm",
+"tắm sông",
+"tắm biển"
+],
+"subject": "Mơ thấy tắm",
+"meaning": "Tắm trong mơ tượng trưng cho việc gột rửa mệt mỏi, buông bỏ điều phiền muộn và làm mới bản thân. Mơ thấy tắm nước trong mát là điềm tinh thần sảng khoái, sẵn sàng cho khởi đầu thuận lợi. Giấc mơ thường đến sau giai đoạn căng thẳng, như một lời nhắc bạn hãy chăm sóc và cho phép mình được thư giãn.",
+"numbers": [
+28,
+68,
+88
+]
+},
+{
+"keywords": [
+"hát",
+"ca hát",
+"hát karaoke"
+],
+"subject": "Mơ thấy ca hát",
+"meaning": "Ca hát trong mơ là biểu hiện của niềm vui, nhu cầu được thể hiện cảm xúc và được người khác lắng nghe. Mơ thấy hát hay, được vỗ tay là điềm tự tin đang lên cao, thích hợp để trình bày ý tưởng quan trọng. Hát quên lời trong mơ phản ánh nỗi lo bị đánh giá, nhắc bạn chuẩn bị kỹ hơn trước dịp quan trọng.",
+"numbers": [
+27,
+47,
+87
+]
+},
+{
+"keywords": [
+"nhảy múa",
+"khiêu vũ",
+"múa"
+],
+"subject": "Mơ thấy nhảy múa",
+"meaning": "Nhảy múa trong mơ tượng trưng cho sự tự do, hòa nhịp với cuộc sống và niềm vui trong các mối quan hệ. Khiêu vũ ăn ý với một người trong mơ thường là điềm tốt cho tình cảm, sự thấu hiểu đang tăng lên. Giấc mơ cũng phản ánh mong muốn được giải phóng khỏi khuôn khổ gò bó trong công việc hiện tại.",
+"numbers": [
+26,
+66,
+96
+]
+},
+{
+"keywords": [
+"cãi nhau",
+"cãi lộn",
+"tranh cãi"
+],
+"subject": "Mơ thấy cãi nhau",
+"meaning": "Cãi nhau trong mơ thường là cách tâm trí xả bớt những bức xúc chưa nói ra ngoài đời thực. Đôi khi giấc mơ lại cho thấy bạn đang mâu thuẫn với chính mình trước một quyết định khó. Sau cơn cãi vã trong mơ, nếu hai bên làm hòa, đó là điềm mối quan hệ ngoài đời có cơ hội được hàn gắn bằng đối thoại thẳng thắn.",
+"numbers": [
+29,
+59,
+99
+]
+},
+{
+"keywords": [
+"thi đỗ",
+"đỗ đại học",
+"đậu thi"
+],
+"subject": "Mơ thấy thi đỗ",
+"meaning": "Mơ thấy thi đỗ là giấc mơ mang điềm lành kinh điển, phản ánh kỳ vọng và nỗ lực bấy lâu sắp được đền đáp. Dân gian xem đây là dấu hiệu vận may trong học hành, tuyển dụng và các kỳ sát hạch quan trọng. Giấc mơ cũng tiếp thêm niềm tin để bạn giữ vững phong độ trong giai đoạn quyết định sắp tới.",
+"numbers": [
+27,
+77,
+87
+]
+},
+{
+"keywords": [
+"thi trượt",
+"thi rớt",
+"rớt thi"
+],
+"subject": "Mơ thấy thi trượt",
+"meaning": "Mơ thấy thi trượt thường không phải điềm xấu như nhiều người lo lắng, mà chủ yếu phản ánh áp lực và nỗi sợ bị đánh giá trong đời thực. Thú vị là người mơ thi trượt thường đang chuẩn bị rất nghiêm túc cho kỳ thi thật. Giấc mơ nhắc bạn nghỉ ngơi điều độ, vì tâm lý thoải mái mới là chìa khóa đạt kết quả tốt.",
+"numbers": [
+26,
+46,
+76
+]
+},
+{
+"keywords": [
+"mất việc",
+"bị đuổi việc",
+"thất nghiệp"
+],
+"subject": "Mơ thấy mất việc",
+"meaning": "Mơ thấy mất việc thường phản ánh nỗi lo về sự ổn định và giá trị bản thân trong môi trường làm việc, không hẳn là điềm báo thật. Giấc mơ có thể xuất hiện khi công ty có biến động hoặc bạn đang muốn thay đổi hướng đi. Nó nhắc bạn chủ động nâng cao kỹ năng và xây dựng khoản dự phòng để tâm thế vững vàng hơn.",
+"numbers": [
+28,
+58,
+78
+]
+},
+{
+"keywords": [
+"thăng chức",
+"được thăng chức",
+"lên chức"
+],
+"subject": "Mơ thấy thăng chức",
+"meaning": "Mơ thấy thăng chức là điềm tốt về sự ghi nhận, phản ánh tham vọng lành mạnh và mong muốn được đánh giá đúng năng lực. Giấc mơ thường đến khi bạn đang nỗ lực cho một mục tiêu nghề nghiệp rõ ràng. Nó cũng nhắc bạn chuẩn bị tâm thế cho trách nhiệm lớn hơn, vì vị trí cao đi kèm kỳ vọng cao từ tập thể.",
+"numbers": [
+29,
+69,
+89
+]
+},
+{
+"keywords": [
+"buôn bán",
+"kinh doanh",
+"bán hàng"
+],
+"subject": "Mơ thấy buôn bán",
+"meaning": "Mơ thấy buôn bán đông khách là điềm tài lộc quen thuộc, báo hiệu công việc làm ăn đang có tín hiệu thuận lợi. Bán hàng ế ẩm trong mơ không hẳn xấu, chỉ phản ánh bạn đang lo lắng về doanh số hoặc cần đổi cách tiếp cận khách hàng. Giấc mơ khuyên người kinh doanh chú ý chữ tín, vì đó là vốn quý nhất lâu dài.",
+"numbers": [
+27,
+57,
+97
+]
+},
+{
+"keywords": [
+"vay tiền",
+"đi vay",
+"mượn tiền"
+],
+"subject": "Mơ thấy vay tiền",
+"meaning": "Mơ thấy đi vay tiền thường phản ánh áp lực tài chính hoặc cảm giác đang cần sự hỗ trợ trong đời thực. Giấc mơ không phải điềm xấu tuyệt đối, vì vay được tiền trong mơ cho thấy bạn vẫn có người tin tưởng giúp đỡ khi khó khăn. Nó nhắc bạn lên kế hoạch chi tiêu rõ ràng và chỉ vay trong khả năng chi trả.",
+"numbers": [
+26,
+46,
+86
+]
+},
+{
+"keywords": [
+"trả nợ",
+"trả hết nợ"
+],
+"subject": "Mơ thấy trả nợ",
+"meaning": "Mơ thấy trả được nợ là giấc mơ giải tỏa, tượng trưng cho việc gỡ bỏ gánh nặng tài chính lẫn tinh thần. Dân gian xem đây là điềm nhẹ nhõm, báo hiệu giai đoạn thảnh thơi hơn đang tới gần. Nếu còn một phần nợ chưa trả hết trong mơ, đó là nhắc nhở bạn kiên trì theo kế hoạch, đích đến đã không còn xa.",
+"numbers": [
+28,
+68,
+98
+]
+},
+{
+"keywords": [
+"đánh bạc",
+"cờ bạc",
+"chơi bài"
+],
+"subject": "Mơ thấy đánh bạc",
+"meaning": "Mơ thấy đánh bạc thường phản ánh tâm lý mạo hiểm hoặc một quyết định trong đời thực mà bạn cảm thấy như đang đặt cược. Thắng bạc trong mơ không hẳn là điềm giàu nhanh, mà là lời nhắc đừng để may rủi lấn át tính toán. Giấc mơ khuyên bạn giữ đầu óc tỉnh táo trước những cơ hội nghe có vẻ quá dễ dàng.",
+"numbers": [
+29,
+59,
+79
+]
+},
+{
+"keywords": [
+"say rượu",
+"say xỉn",
+"uống say"
+],
+"subject": "Mơ thấy say rượu",
+"meaning": "Mơ thấy say rượu thường tượng trưng cho cảm giác mất kiểm soát hoặc mong muốn tạm thoát khỏi áp lực cuộc sống. Giấc mơ có thể xuất hiện sau những ngày vui quá chén hoặc khi bạn đang mệt mỏi về tinh thần. Nó nhắc bạn tìm cách thư giãn lành mạnh hơn và đừng ngại chia sẻ khó khăn với người thân thiết.",
+"numbers": [
+27,
+67,
+77
+]
+},
+{
+"keywords": [
+"người nổi tiếng",
+"gặp người nổi tiếng",
+"ca sĩ"
+],
+"subject": "Mơ thấy người nổi tiếng",
+"meaning": "Mơ thấy gặp người nổi tiếng phản ánh khát vọng được công nhận và hình mẫu thành công mà bạn đang hướng tới. Nếu trò chuyện vui vẻ trong mơ, đó là điềm tự tin đang tăng, thích hợp để mạnh dạn theo đuổi cơ hội mới. Giấc mơ cũng nhắc bạn tập trung xây dựng giá trị thật của bản thân thay vì chạy theo hào quang bề ngoài.",
+"numbers": [
+28,
+48,
+88
+]
+},
+{
+"keywords": [
+"tặng quà",
+"được tặng quà",
+"nhận quà"
+],
+"subject": "Mơ thấy được tặng quà",
+"meaning": "Được tặng quà trong mơ là điềm vui về tình cảm và các mối quan hệ, cho thấy bạn đang được yêu quý hơn mình nghĩ. Mơ thấy mình tặng quà người khác lại phản ánh tấm lòng hào phóng và mong muốn gắn kết. Món quà bất ngờ trong mơ đôi khi báo hiệu một cơ hội tốt đang được trao đến tay bạn.",
+"numbers": [
+29,
+79,
+89
+]
+},
+{
+"keywords": [
+"du lịch",
+"đi du lịch",
+"đi chơi xa"
+],
+"subject": "Mơ thấy đi du lịch",
+"meaning": "Mơ thấy đi du lịch tượng trưng cho khát khao trải nghiệm mới và nhu cầu thay đổi không khí sau thời gian dài quen thuộc. Chuyến đi vui vẻ trong mơ là điềm tinh thần đang cởi mở, sẵn sàng đón nhận cơ hội ở môi trường mới. Giấc mơ cũng là lời nhắc thiết thực rằng bạn nên dành thời gian nghỉ ngơi thật sự cho bản thân.",
+"numbers": [
+26,
+56,
+96
+]
+},
+{
+"keywords": [
+"nước ngoài",
+"đi nước ngoài",
+"xuất ngoại"
+],
+"subject": "Mơ thấy đi nước ngoài",
+"meaning": "Mơ thấy đi nước ngoài thường gắn với tham vọng mở rộng tầm nhìn, học hỏi điều mới hoặc một thay đổi lớn trong công việc, học tập. Giao tiếp thuận lợi trong mơ là điềm bạn đủ năng lực thích nghi với môi trường lạ. Nếu gặp trở ngại giấy tờ trong mơ, hãy kiểm tra kỹ kế hoạch và thủ tục cho việc quan trọng sắp tới.",
+"numbers": [
+27,
+77,
+97
+]
+},
+{
+"keywords": [
+"xây nhà",
+"xây dựng nhà"
+],
+"subject": "Mơ thấy xây nhà",
+"meaning": "Xây nhà trong mơ là biểu tượng của việc gây dựng nền tảng mới cho gia đình và tương lai. Mơ thấy nhà xây lên vững chắc, đúng tiến độ là điềm kế hoạch lớn đang thuận lợi, có người đồng hành tin cậy. Công trình dang dở trong mơ nhắc bạn kiên trì hoàn thiện từng phần, tránh nóng vội ở giai đoạn nền móng.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"gãy tay",
+"gãy chân",
+"gãy xương"
+],
+"subject": "Mơ thấy gãy xương",
+"meaning": "Mơ thấy gãy tay chân nghe đáng sợ nhưng trong dân gian thường được luận là điềm hóa giải vận hạn, chuyện dữ hóa lành. Về tâm lý, giấc mơ phản ánh cảm giác bất lực hoặc sợ bị chậm trễ trong một việc quan trọng. Nó cũng là lời nhắc thiết thực về việc giữ an toàn khi lao động, di chuyển và chơi thể thao.",
+"numbers": [
+29,
+69,
+99
+]
+},
+{
+"keywords": [
+"ly hôn",
+"chia tay vợ chồng"
+],
+"subject": "Mơ thấy ly hôn",
+"meaning": "Mơ thấy ly hôn thường không phải điềm báo đổ vỡ thật, mà phản ánh giai đoạn hai người thiếu kết nối hoặc bạn đang cân nhắc lại các cam kết trong đời. Giấc mơ có thể là tín hiệu để hai bên dành thời gian trò chuyện và hâm nóng tình cảm. Với người độc thân, nó tượng trưng cho việc khép lại một thói quen cũ để bắt đầu chương mới.",
+"numbers": [
+26,
+46,
+76
+]
+},
+{
+"keywords": [
+"cầu hôn",
+"được cầu hôn"
+],
+"subject": "Mơ thấy cầu hôn",
+"meaning": "Mơ thấy cầu hôn là giấc mơ tình cảm đẹp, tượng trưng cho sự cam kết nghiêm túc và mong muốn gắn bó lâu dài. Với người đang yêu, đây là điềm mối quan hệ đang chín muồi, hai bên cùng hướng về tương lai. Với người độc thân, giấc mơ phản ánh bạn đã sẵn sàng mở lòng đón nhận một mối quan hệ chất lượng hơn.",
+"numbers": [
+27,
+57,
+87
+]
+},
+{
+"keywords": [
+"chia tay",
+"chia tay người yêu"
+],
+"subject": "Mơ thấy chia tay",
+"meaning": "Mơ thấy chia tay người yêu thường bắt nguồn từ nỗi bất an hoặc giai đoạn hai người ít dành thời gian cho nhau, hơn là điềm báo thật. Giấc mơ nhắc bạn chủ động quan tâm và làm rõ những hiểu lầm nhỏ trước khi chúng lớn dần. Đôi khi chia tay trong mơ lại đánh dấu việc bạn buông bỏ được thói quen cũ để trưởng thành hơn trong tình cảm.",
+"numbers": [
+28,
+58,
+78
+]
+},
+{
+"keywords": [
+"hôn",
+"hôn nhau",
+"nụ hôn"
+],
+"subject": "Mơ thấy hôn nhau",
+"meaning": "Nụ hôn trong mơ là biểu tượng của sự gắn kết, tha thứ và cảm xúc được đáp lại. Mơ thấy hôn người mình thương là điềm tình cảm đang ấm áp, hai bên thấu hiểu nhau hơn. Hôn tạm biệt trong mơ đôi khi gợi nỗi nhớ người ở xa hoặc sự luyến tiếc một giai đoạn đẹp đã qua, nhắc bạn trân trọng hiện tại.",
+"numbers": [
+29,
+59,
+89
+]
+},
+{
+"keywords": [
+"phẫu thuật",
+"mổ xẻ",
+"ca mổ",
+"lên bàn mổ"
+],
+"subject": "Mơ thấy phẫu thuật",
+"meaning": "Mơ thấy phẫu thuật thường tượng trưng cho nhu cầu cắt bỏ tận gốc một vấn đề, thói quen xấu hoặc mối bận tâm kéo dài. Ca mổ thành công trong mơ là điềm bạn đủ quyết tâm để thay đổi dù biết sẽ có giai đoạn hồi phục khó khăn. Giấc mơ cũng nhắc bạn quan tâm khám sức khỏe định kỳ thay vì chủ quan với dấu hiệu nhỏ.",
+"numbers": [
+26,
+66,
+86
+]
+},
+{
+"keywords": [
+"bằng khen",
+"nhận thưởng",
+"được khen"
+],
+"subject": "Mơ thấy nhận bằng khen",
+"meaning": "Mơ thấy nhận bằng khen là điềm tốt về sự công nhận, cho thấy nỗ lực thầm lặng của bạn đang dần được nhìn thấy. Giấc mơ tiếp thêm động lực để bạn kiên trì với mục tiêu học tập và sự nghiệp. Nó cũng nhắc bạn đừng quên cảm ơn những người đã đồng hành, vì thành tích hiếm khi là công của một người.",
+"numbers": [
+27,
+67,
+97
+]
+},
+{
+"keywords": [
+"bị mắng",
+"bị chửi",
+"bị la"
+],
+"subject": "Mơ thấy bị mắng",
+"meaning": "Mơ thấy bị mắng thường phản ánh cảm giác áp lực, sợ làm sai hoặc đang tự trách mình điều gì đó trong đời thực. Nếu người mắng là cha mẹ hoặc thầy cô, giấc mơ có thể gợi nỗi nhớ những lời dạy bảo nghiêm khắc mà thương yêu. Đây là lời nhắc bạn đối xử nhẹ nhàng hơn với chính mình và rút kinh nghiệm thay vì dằn vặt.",
+"numbers": [
+28,
+48,
+68
+]
+},
+{
+"keywords": [
+"kho báu",
+"đào kho báu",
+"tìm thấy kho báu"
+],
+"subject": "Mơ thấy kho báu",
+"meaning": "Mơ thấy tìm được kho báu là hình ảnh của cơ hội và giá trị tiềm ẩn bất ngờ xuất hiện trong cuộc sống. Dân gian xem đây là điềm tài lộc, nhưng phần nhiều giấc mơ muốn nói tới kho báu bên trong bạn: tài năng chưa được khai phá. Đào mãi chưa thấy kho báu trong mơ nhắc bạn kiên nhẫn, thành quả lớn hiếm khi đến ngay lập tức.",
+"numbers": [
+29,
+79,
+99
+]
+},
+{
+"keywords": [
+"bóng đá",
+"đá bóng",
+"xem bóng đá"
+],
+"subject": "Mơ thấy bóng đá",
+"meaning": "Mơ thấy đá bóng tượng trưng cho tinh thần đồng đội, cạnh tranh lành mạnh và mục tiêu chung cần phối hợp. Ghi bàn trong mơ là điềm nỗ lực sắp chạm tới kết quả mong đợi, thích hợp để bứt phá trong công việc. Xem bóng đá vui vẻ cùng bạn bè trong mơ lại phản ánh nhu cầu được giải trí và gắn kết xã hội của bạn.",
+"numbers": [
+27,
+47,
+77
+]
+},
+{
+"keywords": [
+"bơi",
+"bơi lội",
+"đi bơi"
+],
+"subject": "Mơ thấy bơi lội",
+"meaning": "Bơi lội trong mơ gắn liền với cảm xúc và khả năng thích ứng của bạn trước hoàn cảnh. Bơi nhẹ nhàng trong nước trong là điềm tinh thần thoải mái, mọi việc đang trong tầm kiểm soát. Bơi ngược dòng mệt mỏi trong mơ phản ánh giai đoạn bạn đang gắng sức nhiều, hãy tìm cách chia sẻ gánh nặng thay vì cố một mình.",
+"numbers": [
+28,
+68,
+98
+]
+},
+{
+"keywords": [
+"đám giỗ",
+"giỗ",
+"cúng giỗ"
+],
+"subject": "Mơ thấy đám giỗ",
+"meaning": "Mơ thấy đám giỗ thường gắn với truyền thống tưởng nhớ tổ tiên và sự sum họp của đại gia đình. Giấc mơ hay xuất hiện khi bạn đang nhớ nhà, nhớ người thân đã khuất hoặc sắp tới dịp giỗ chạp thật. Không khí giỗ ấm cúng trong mơ là điềm gia đạo hòa thuận, các thế hệ gắn kết và được bề trên phù hộ theo quan niệm dân gian.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"ăn hỏi",
+"đám hỏi",
+"lễ ăn hỏi"
+],
+"subject": "Mơ thấy ăn hỏi",
+"meaning": "Mơ thấy lễ ăn hỏi là điềm vui về chuyện đôi lứa, báo hiệu một mối quan hệ đang tiến tới cam kết nghiêm túc hoặc tin vui hỷ sự trong họ hàng. Không khí ăn hỏi rộn ràng trong mơ cũng gợi sự gắn kết tốt đẹp giữa hai bên gia đình. Giấc mơ nhắc bạn trân trọng sự đồng thuận và tôn trọng lẫn nhau trong chuyện trọng đại.",
+"numbers": [
+27,
+57,
+87
+]
+},
+{
+"keywords": [
+"sinh nhật",
+"tiệc sinh nhật"
+],
+"subject": "Mơ thấy sinh nhật",
+"meaning": "Mơ thấy tiệc sinh nhật tượng trưng cho sự khởi đầu của chu kỳ mới và mong muốn được quan tâm, chúc phúc. Thổi nến sinh nhật trong mơ là hình ảnh đẹp về ước nguyện đang ấp ủ, nhắc bạn biến điều ước thành kế hoạch cụ thể. Tiệc sinh nhật đông vui cũng là điềm các mối quan hệ bạn bè, gia đình đang ấm áp và bền chặt.",
+"numbers": [
+28,
+78,
+88
+]
+},
+{
+"keywords": [
+"tết",
+"ăn tết",
+"về quê"
+],
+"subject": "Mơ thấy về quê ăn Tết",
+"meaning": "Mơ thấy về quê ăn Tết là giấc mơ của sự đoàn viên, gợi nỗi nhớ nhà và mong muốn sum họp bên gia đình sau một năm bôn ba. Không khí chuẩn bị Tết trong mơ là điềm khởi đầu mới đầy hy vọng, thích hợp để đặt mục tiêu cho năm tới. Giấc mơ nhắc bạn dù bận rộn đến đâu cũng nên dành thời gian cho người thân yêu.",
+"numbers": [
+29,
+79,
+99
+]
+},
+{
+"keywords": [
+"thư",
+"nhận thư",
+"lá thư",
+"viết thư"
+],
+"subject": "Mơ thấy nhận thư",
+"meaning": "Mơ thấy nhận thư thường báo hiệu một tin tức quan trọng đang trên đường đến với bạn, có thể là tin vui từ người ở xa. Viết thư trong mơ lại cho thấy bạn đang có điều muốn bày tỏ mà chưa nói thành lời ngoài đời thực. Giấc mơ khuyên bạn chủ động liên lạc với người mình đang nhớ, đừng để tình cảm bị ngăn cách bởi sự ngại ngùng.",
+"numbers": [
+26,
+46,
+96
+]
+},
+{
+"keywords": [
+"tăng lương",
+"được tăng lương"
+],
+"subject": "Mơ thấy tăng lương",
+"meaning": "Mơ thấy được tăng lương là điềm tốt về tài chính và sự ghi nhận năng lực, phản ánh kỳ vọng chính đáng của bạn sau thời gian cống hiến. Giấc mơ tiếp thêm tự tin để bạn mạnh dạn đề xuất quyền lợi xứng đáng với cấp trên. Nó cũng nhắc bạn lên kế hoạch sử dụng khoản thu nhập tăng thêm một cách khôn ngoan và bền vững.",
+"numbers": [
+27,
+67,
+87
+]
+},
+{
+"keywords": [
+"chó cắn",
+"bị chó cắn"
+],
+"subject": "Mơ thấy bị chó cắn",
+"meaning": "Mơ thấy bị chó cắn thường là lời nhắc thận trọng trong các mối quan hệ gần gũi, vì chó vốn tượng trưng cho bạn bè và người thân cận. Dân gian cho rằng giấc mơ này gợi ý có hiểu lầm nhỏ cần được giải quyết sớm bằng đối thoại. Về mặt thực tế, nó cũng nhắc bạn cẩn thận khi tiếp xúc với vật nuôi lạ để tránh rủi ro không đáng có.",
+"numbers": [
+29,
+59,
+89
+]
+},
+{
+"keywords": [
+"ngoại tình",
+"người yêu ngoại tình",
+"bị phản bội"
+],
+"subject": "Mơ thấy ngoại tình",
+"meaning": "Mơ thấy người yêu ngoại tình phần lớn bắt nguồn từ nỗi bất an hoặc ghen tuông chưa được chia sẻ, chứ không phải bằng chứng hay điềm báo thật ngoài đời. Giấc mơ là cơ hội để bạn nhìn lại nhu cầu được quan tâm và tin tưởng trong mối quan hệ. Hãy trò chuyện thẳng thắn và nhẹ nhàng với đối phương thay vì suy diễn một mình.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"crush",
+"người thầm thương",
+"người mình thích"
+],
+"subject": "Mơ thấy người thầm thương",
+"meaning": "Mơ thấy người mình thầm thương là giấc mơ tình cảm rất phổ biến, đơn giản vì hình ảnh ấy chiếm nhiều suy nghĩ của bạn lúc thức. Nếu trong mơ hai người trò chuyện vui vẻ, đó là tín hiệu tâm lý cho thấy bạn đang muốn tiến gần hơn và nên tìm cơ hội giao tiếp tự nhiên ngoài đời. Giấc mơ nhắc bạn dù kết quả thế nào, sự chân thành vẫn là điều đáng trân trọng.",
+"numbers": [
+27,
+47,
+97
+]
+},
+{
+"keywords": [
+"cà phê",
+"uống cà phê"
+],
+"subject": "Mơ thấy uống cà phê",
+"meaning": "Mơ thấy uống cà phê thường gắn với nhu cầu tỉnh táo, tập trung và những cuộc trò chuyện quan trọng. Ngồi cà phê cùng bạn bè trong mơ là điềm sắp có buổi gặp gỡ thú vị, có thể mở ra ý tưởng hoặc cơ hội hợp tác mới. Cà phê đắng trong mơ đôi khi nhắc bạn giảm nhịp sống vội vã và chú ý giấc ngủ của mình.",
+"numbers": [
+26,
+56,
+76
+]
+},
+{
+"keywords": [
+"uống rượu",
+"rượu",
+"chén rượu"
+],
+"subject": "Mơ thấy uống rượu",
+"meaning": "Uống rượu trong mơ thường tượng trưng cho tiệc tùng, giao tế và những dịp vui sum họp. Mơ thấy nâng chén chúc mừng là điềm có tin vui đáng ăn mừng trong gia đình hoặc công việc. Nếu bầu không khí trong mơ nặng nề, giấc mơ nhắc bạn tiết chế trong các cuộc vui và giữ tỉnh táo trước quyết định quan trọng.",
+"numbers": [
+28,
+68,
+78
+]
+},
+{
+"keywords": [
+"hoa sen",
+"sen"
+],
+"subject": "Mơ thấy hoa sen",
+"meaning": "Hoa sen vươn lên từ bùn mà vẫn thanh khiết nên mơ thấy hoa sen là điềm rất lành, tượng trưng cho sự trong sáng, bình an và may mắn trong tâm linh. Sen nở rộ trong mơ báo hiệu giai đoạn tâm hồn nhẹ nhõm, công việc hanh thông nhờ cách làm việc thanh sạch. Giấc mơ cũng gợi nhắc bạn giữ sự điềm tĩnh giữa môi trường nhiều bon chen.",
+"numbers": [
+28,
+58,
+98
+]
+},
+{
+"keywords": [
+"hoa hồng",
+"bông hồng"
+],
+"subject": "Mơ thấy hoa hồng",
+"meaning": "Hoa hồng là biểu tượng kinh điển của tình yêu và sự trân trọng. Mơ thấy được tặng hoa hồng là điềm tình cảm đang được đáp lại nồng nhiệt, người độc thân có thể sắp gặp nhân duyên tốt. Hoa hồng nhiều gai trong mơ nhắc bạn rằng tình cảm đẹp cũng cần sự chăm sóc và tôn trọng ranh giới của nhau mới bền lâu.",
+"numbers": [
+29,
+69,
+89
+]
+},
+{
+"keywords": [
+"hoa mai",
+"hoa đào",
+"mai đào"
+],
+"subject": "Mơ thấy hoa mai hoa đào",
+"meaning": "Hoa mai vàng và hoa đào hồng là biểu tượng của mùa xuân, tài lộc và khởi đầu may mắn. Mơ thấy mai đào nở rộ là điềm báo năm mới trong đời bạn đang mở ra với nhiều cơ hội tốt lành. Giấc mơ thường đến khi bạn ấp ủ kế hoạch mới, khích lệ bạn mạnh dạn bắt đầu vì thời cơ đang thuận lợi.",
+"numbers": [
+27,
+77,
+97
+]
+},
+{
+"keywords": [
+"dưa hấu",
+"ăn dưa hấu"
+],
+"subject": "Mơ thấy dưa hấu",
+"meaning": "Dưa hấu đỏ mọng trong mơ tượng trưng cho sự ngọt ngào, sung túc và tin vui về đường con cái, gia đạo theo quan niệm dân gian. Mơ thấy bổ dưa hấu chia cho mọi người là điềm niềm vui được lan tỏa, gia đình hòa thuận. Dưa hấu hỏng trong mơ nhắc bạn kiểm tra kỹ trước khi quyết định việc tưởng chừng rất thuận lợi.",
+"numbers": [
+26,
+46,
+86
+]
+},
+{
+"keywords": [
+"bánh chưng",
+"gói bánh chưng"
+],
+"subject": "Mơ thấy bánh chưng",
+"meaning": "Bánh chưng là biểu tượng của đất trời, nguồn cội và Tết đoàn viên, mơ thấy gói bánh chưng thường gợi không khí sum họp ấm cúng bên gia đình. Đây là điềm của sự đủ đầy và lòng biết ơn với tổ tiên, cha mẹ. Giấc mơ cũng phản ánh mong muốn trở về với giá trị truyền thống sau những ngày tháng bận rộn nơi phố thị.",
+"numbers": [
+28,
+68,
+88
+]
+},
+{
+"keywords": [
+"cánh đồng",
+"đồng ruộng",
+"đồng lúa"
+],
+"subject": "Mơ thấy cánh đồng",
+"meaning": "Cánh đồng rộng trong mơ tượng trưng cho không gian mở của cơ hội và kết quả lao động dài ngày. Cánh đồng lúa xanh mướt là điềm kế hoạch đang phát triển tốt, cần thêm thời gian chăm bón. Cánh đồng trống trải sau mùa gặt gợi cảm giác nhẹ nhõm và chuẩn bị cho chu kỳ mới, nhắc bạn nghỉ ngơi trước khi bắt đầu vụ việc tiếp theo.",
+"numbers": [
+27,
+57,
+97
+]
+},
+{
+"keywords": [
+"rừng",
+"đi rừng",
+"rừng rậm"
+],
+"subject": "Mơ thấy rừng",
+"meaning": "Đi vào rừng trong mơ tượng trưng cho hành trình khám phá phần chưa biết trong chính mình và cuộc sống. Rừng xanh yên bình là điềm bạn đang tìm được sự tĩnh lặng cần thiết để lấy lại năng lượng. Lạc trong rừng rậm trong mơ phản ánh giai đoạn nhiều lựa chọn rối rắm, hãy ưu tiên từng bước nhỏ và rõ ràng.",
+"numbers": [
+26,
+66,
+96
+]
+},
+{
+"keywords": [
+"thác nước",
+"thác"
+],
+"subject": "Mơ thấy thác nước",
+"meaning": "Thác nước đổ mạnh trong mơ là hình ảnh của năng lượng dồi dào và cảm xúc được giải phóng sau thời gian kìm nén. Đứng ngắm thác từ xa là điềm bạn đang chiêm ngưỡng thành quả hoặc cơ hội lớn với tâm thế bình tĩnh. Giấc mơ cũng gợi nhắc sức mạnh của sự kiên trì, vì nước chảy lâu ngày có thể mài mòn cả đá cứng.",
+"numbers": [
+28,
+58,
+78
+]
+},
+{
+"keywords": [
+"suối",
+"dòng suối"
+],
+"subject": "Mơ thấy suối",
+"meaning": "Dòng suối trong veo trong mơ tượng trưng cho sự trong trẻo, dòng chảy nhẹ nhàng của tài lộc và cảm xúc. Mơ thấy uống nước suối mát là điềm sức khỏe và tinh thần đang được hồi phục. Suối cạn trong mơ nhắc bạn bồi đắp lại nguồn năng lượng, đừng để công việc cuốn đi hết thời gian dành cho bản thân.",
+"numbers": [
+27,
+47,
+87
+]
+},
+{
+"keywords": [
+"đảo",
+"ra đảo",
+"hòn đảo"
+],
+"subject": "Mơ thấy đảo",
+"meaning": "Hòn đảo trong mơ tượng trưng cho không gian riêng tư, sự độc lập và đôi khi là cảm giác tách biệt với xung quanh. Mơ thấy đến đảo đẹp yên bình là điềm bạn đang khao khát một khoảng lặng để nạp lại năng lượng. Nếu háo hức khám phá đảo trong mơ, đó là dấu hiệu bạn sẵn sàng cho trải nghiệm và môi trường hoàn toàn mới.",
+"numbers": [
+29,
+59,
+99
+]
+},
+{
+"keywords": [
+"nhà thờ",
+"đi lễ",
+"nhà thờ lớn"
+],
+"subject": "Mơ thấy nhà thờ",
+"meaning": "Mơ thấy nhà thờ thường gắn với đời sống đức tin, nhu cầu được bình an và hướng thiện trong tâm hồn. Không gian nhà thờ trang nghiêm trong mơ gợi bạn đang tìm kiếm sự tĩnh lặng và câu trả lời cho điều băn khoăn bấy lâu. Chuông nhà thờ vang trong mơ được nhiều người xem là dấu hiệu tin vui hoặc dịp trọng đại trong gia đình đang đến gần.",
+"numbers": [
+26,
+46,
+76
+]
+},
+{
+"keywords": [
+"chợ",
+"đi chợ",
+"khu chợ"
+],
+"subject": "Mơ thấy chợ",
+"meaning": "Chợ đông đúc trong mơ tượng trưng cho đời sống xã hội sôi động, cơ hội trao đổi và những lựa chọn phong phú trước mắt bạn. Mơ thấy mua được món đồ ưng ý ở chợ là điềm sắp đạt được thỏa thuận có lợi. Chợ vắng vẻ trong mơ có thể nhắc bạn chủ động kết nối lại với mọi người thay vì khép mình quá lâu.",
+"numbers": [
+28,
+68,
+98
+]
+},
+{
+"keywords": [
+"nghĩa trang",
+"mộ phần",
+"mồ mả",
+"nghĩa địa"
+],
+"subject": "Mơ thấy nghĩa trang",
+"meaning": "Mơ thấy nghĩa trang hay mộ phần thường không đáng sợ như nhiều người nghĩ, mà chủ yếu gắn với nỗi nhớ người đã khuất và sự khép lại của một giai đoạn cũ. Dân gian xem đây là nhắc nhở hướng về tổ tiên, chăm sóc phần mộ và sống tử tế để tích phúc. Không gian nghĩa trang yên tĩnh trong mơ cũng là dấu hiệu tâm bạn đang cần sự bình lặng để chiêm nghiệm.",
+"numbers": [
+27,
+47,
+67
+]
+},
+{
+"keywords": [
+"thư viện",
+"vào thư viện"
+],
+"subject": "Mơ thấy thư viện",
+"meaning": "Thư viện trong mơ tượng trưng cho kho tri thức, sự tĩnh lặng và hành trình tự học không ngừng của bạn. Mơ thấy tìm được cuốn sách cần trong thư viện là điềm bạn sắp có đáp án cho vấn đề đang trăn trở. Giấc mơ khích lệ người đang học hành, nghiên cứu kiên trì thêm, vì nền tảng hôm nay là vốn quý cho ngày mai.",
+"numbers": [
+26,
+56,
+86
+]
+},
+{
+"keywords": [
+"hồ",
+"hồ nước",
+"bờ hồ"
+],
+"subject": "Mơ thấy hồ nước",
+"meaning": "Hồ nước phẳng lặng trong mơ tượng trưng cho mặt cảm xúc yên bình và khả năng quan sát mọi việc một cách điềm tĩnh. Ngồi bên bờ hồ thư thái là điềm tinh thần đang cân bằng, thích hợp để đưa ra quyết định quan trọng. Mặt hồ gợn sóng trong mơ cho thấy có chuyện nhỏ đang khuấy động tâm trí bạn, nhưng sẽ sớm lắng xuống.",
+"numbers": [
+28,
+58,
+88
+]
+},
+{
+"keywords": [
+"vườn",
+"vườn rau",
+"vườn cây"
+],
+"subject": "Mơ thấy vườn rau",
+"meaning": "Khu vườn trong mơ là biểu tượng của những gì bạn vun trồng lâu dài: gia đình, sự nghiệp và các mối quan hệ. Vườn xanh tốt, đầy rau trái là điềm công sức chăm bón đang cho kết quả rõ rệt. Vườn bỏ hoang trong mơ nhắc bạn quay lại chăm sóc một khía cạnh cuộc sống bị lãng quên, từ sức khỏe đến tình thân.",
+"numbers": [
+27,
+67,
+97
+]
+},
+{
+"keywords": [
+"hang động",
+"hang"
+],
+"subject": "Mơ thấy hang động",
+"meaning": "Hang động trong mơ tượng trưng cho chiều sâu tiềm thức, những điều bí ẩn và cảm xúc được cất giữ kín đáo. Khám phá hang động với ánh sáng trong mơ là điềm bạn đang dũng cảm tìm hiểu chính mình và sắp phát hiện khả năng mới. Hang tối ẩm trong mơ nhắc bạn đừng né tránh vấn đề cũ, hãy thắp sáng nó bằng sự đối diện từ tốn.",
+"numbers": [
+29,
+79,
+89
+]
+},
+{
+"keywords": [
+"sa mạc",
+"đi trên sa mạc"
+],
+"subject": "Mơ thấy sa mạc",
+"meaning": "Sa mạc mênh mông trong mơ tượng trưng cho giai đoạn khô khan về cảm xúc hoặc nguồn lực, khi bạn cảm thấy phải tự mình vượt qua chặng đường dài. Tìm thấy ốc đảo trong mơ là điềm hy vọng xuất hiện đúng lúc, có thể là sự giúp đỡ bất ngờ từ người quen. Giấc mơ nhắc bạn tiết kiệm năng lượng và chuẩn bị kỹ cho hành trình dài hạn.",
+"numbers": [
+26,
+46,
+66
+]
+},
+{
+"keywords": [
+"tiệc",
+"ăn tiệc",
+"dự tiệc",
+"tiệc tùng"
+],
+"subject": "Mơ thấy ăn tiệc",
+"meaning": "Mơ thấy dự tiệc vui vẻ là điềm của sự gắn kết xã hội và những dịp đáng ăn mừng trong gia đình, công việc. Bàn tiệc thịnh soạn trong mơ báo hiệu giai đoạn đủ đầy, các mối quan hệ đang được bồi đắp tốt đẹp. Nếu bạn lạc lõng giữa bữa tiệc trong mơ, có thể bạn đang cần tìm nhóm người thật sự hợp với mình hơn.",
+"numbers": [
+28,
+78,
+98
+]
+},
+{
+"keywords": [
+"làng",
+"làng quê",
+"thôn quê"
+],
+"subject": "Mơ thấy làng quê",
+"meaning": "Làng quê trong mơ là hình ảnh của sự bình dị, gốc rễ và nhịp sống chậm rãi mà tâm hồn bạn đang hướng về. Trở về làng cũ trong mơ thường xuất hiện khi bạn mệt mỏi với nhịp sống đô thị và cần tìm lại cân bằng. Không khí làng quê yên bình là điềm gia đạo ổn định, thích hợp để vun vén những giá trị bền lâu.",
+"numbers": [
+27,
+57,
+77
+]
+},
+{
+"keywords": [
+"sân bay",
+"ở sân bay"
+],
+"subject": "Mơ thấy sân bay",
+"meaning": "Sân bay trong mơ tượng trưng cho điểm chuyển tiếp lớn, nơi những hành trình quan trọng bắt đầu hoặc kết thúc. Có mặt ở sân bay với hành lý sẵn sàng là điềm bạn đã chuẩn bị tốt cho thay đổi sắp tới. Chờ chuyến bay lâu trong mơ phản ánh tâm trạng hồi hộp chờ kết quả hoặc tin tức quan trọng từ phương xa.",
+"numbers": [
+28,
+68,
+98
+]
+},
+{
+"keywords": [
+"lễ hội",
+"hội làng",
+"đi hội"
+],
+"subject": "Mơ thấy lễ hội",
+"meaning": "Lễ hội trong mơ là biểu tượng của niềm vui cộng đồng, sự sum vầy và năng lượng tích cực lan tỏa. Mơ thấy đi hội đông vui là điềm đời sống xã hội đang phong phú, có thể sắp có dịp vui đáng nhớ cùng gia đình, bạn bè. Giấc mơ cũng gợi nhắc bạn gìn giữ nét đẹp truyền thống và dành thời gian cho những hoạt động chung của cộng đồng.",
+"numbers": [
+27,
+67,
+87
+]
+},
+{
+"keywords": [
+"pháo hoa",
+"xem pháo hoa"
+],
+"subject": "Mơ thấy pháo hoa",
+"meaning": "Pháo hoa nở rộ trên bầu trời trong mơ là hình ảnh của niềm vui bùng nổ, thành quả được công nhận và khoảnh khắc đáng nhớ. Đây thường là điềm tốt cho dịp kỷ niệm, tin vui lớn trong gia đình hoặc bước ngoặt sự nghiệp. Giấc mơ cũng nhắc bạn trân trọng những khoảnh khắc đẹp dù ngắn ngủi, vì chúng tiếp thêm động lực cho chặng đường dài.",
+"numbers": [
+28,
+88,
+98
+]
+}
 ]
