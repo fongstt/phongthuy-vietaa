@@ -3297,3 +3297,84 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'luc-thap-tu-quai': lucThapV2, 'luan-con-so-trong-mo': conSoMoV2 });
 })();
+
+/* --- Tim que menh + Gieo que xi ngau v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2, W3 = window.PTVToolsW3a || {};
+  var queLookup = W3._queLookup, QUE_TEXT = W3._QUE_TEXT || {};
+  var CUNG_EL = { 'Khảm': 'Thủy', 'Ly': 'Hỏa', 'Chấn': 'Mộc', 'Tốn': 'Mộc', 'Càn': 'Kim', 'Đoài': 'Kim', 'Cấn': 'Thổ', 'Khôn': 'Thổ' };
+  var TRI_BITS = { 'Càn': [1, 1, 1], 'Đoài': [1, 1, 0], 'Ly': [1, 0, 1], 'Chấn': [1, 0, 0], 'Tốn': [0, 1, 1], 'Khảm': [0, 1, 0], 'Cấn': [0, 0, 1], 'Khôn': [0, 0, 0] };
+  var BITS_TRI = {}; Object.keys(TRI_BITS).forEach(function (k) { BITS_TRI[TRI_BITS[k].join('')] = k; });
+  function queMenhV2(c) {
+    c.innerHTML = V.tabsHTML([['qm-one', 'Quẻ mệnh của bạn'], ['qm-pair', 'Đối chiếu quẻ mệnh hai người']]) +
+      '<div id="qm-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1940, 2015, 1990))) + L.field('Giới tính', L.genderSelect('g')) + '</div>', 'Tìm quẻ mệnh của tôi') + '</div>' +
+      '<div id="qm-pair" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh người thứ nhất', L.select('y1', L.yearOptions(1940, 2015, 1990))) + L.field('Giới tính người thứ nhất', L.genderSelect('g1')) + '</div><div class="ptv-row">' + L.field('Năm sinh người thứ hai', L.select('y2', L.yearOptions(1940, 2015, 1994))) + L.field('Giới tính người thứ hai', L.genderSelect('g2')) + '</div>', 'Đối chiếu hai quẻ mệnh') + '</div>';
+    V.wireTabs(c, ['qm-one', 'qm-pair']);
+    c.querySelector('#qm-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#qm-one'), y = parseInt(box.querySelector('#y').value, 10), g = box.querySelector('#g').value;
+      var yi = L.yearInfo(y), cp = L.cungPhi(y, g);
+      var html = '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong> (' + yi.text + ')</span><span>Mệnh nạp âm: <strong>' + esc(yi.napAm) + '</strong></span></div>' +
+        '<h3>Quẻ mệnh của bạn: quẻ ' + cp.cung + '</h3><p>Quẻ mệnh (cung phi) của người sinh năm ' + y + ', ' + g.toLowerCase() + ' là <strong>' + cp.cung + '</strong>, thuộc hành ' + CUNG_EL[cp.cung] + ', nhóm <strong>' + cp.group + '</strong>, ở phương ' + L.CUNG_DIR[cp.cung] + '.</p>' +
+        '<p>' + (cp.group === 'Đông tứ mệnh' ? 'Người Đông tứ mệnh hợp các hướng Bắc, Đông, Đông Nam và Nam. Đây là bốn hướng nhà, hướng bàn thờ và hướng giường nên ưu tiên khi bạn có quyền lựa chọn.' : 'Người Tây tứ mệnh hợp các hướng Tây, Tây Bắc, Tây Nam và Đông Bắc. Đây là bốn hướng nhà, hướng bàn thờ và hướng giường nên ưu tiên khi bạn có quyền lựa chọn.') + '</p>' +
+        '<p>Quẻ mệnh là nền tảng của Bát Trạch: từ quẻ mệnh suy ra bốn sao tốt và bốn sao xấu chiếu vào tám hướng của riêng bạn. Mọi công cụ hướng trong nhóm Trạch Mệnh của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a> đều bắt đầu từ kết quả này.</p>' +
+        L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+    c.querySelector('#qm-pair form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#qm-pair');
+      var y1 = parseInt(box.querySelector('#y1').value, 10), g1 = box.querySelector('#g1').value;
+      var y2 = parseInt(box.querySelector('#y2').value, 10), g2 = box.querySelector('#g2').value;
+      var cp1 = L.cungPhi(y1, g1), cp2 = L.cungPhi(y2, g2);
+      var e1 = CUNG_EL[cp1.cung], e2 = CUNG_EL[cp2.cung];
+      var sameGroup = cp1.group === cp2.group;
+      var rel;
+      if (e1 === e2) rel = 'Hai quẻ mệnh cùng hành ' + e1 + ' (tỷ hòa): tính khí và nhịp sống có nhiều điểm giống nhau, dễ đồng cảm, nhưng cũng dễ cùng mắc một điểm yếu.';
+      else if (L.GENERATES[e1] === e2) rel = 'Hành ' + e1 + ' của người thứ nhất sinh hành ' + e2 + ' của người thứ hai: người thứ nhất thường ở thế nâng đỡ, cho đi nhiều hơn trong quan hệ này.';
+      else if (L.GENERATES[e2] === e1) rel = 'Hành ' + e2 + ' của người thứ hai sinh hành ' + e1 + ' của người thứ nhất: người thứ hai thường ở thế nâng đỡ, là chỗ dựa cho người thứ nhất.';
+      else if (L.CONTROLS[e1] === e2 || L.CONTROLS[e2] === e1) rel = 'Hai hành ' + e1 + ' và ' + e2 + ' có quan hệ khắc: quan điểm dễ trái nhau ở việc lớn, cần thỏa thuận rõ ràng từ đầu thay vì nhường nhịn dồn nén.';
+      else rel = 'Hai hành ' + e1 + ' và ' + e2 + ' ở quan hệ trung tính.';
+      var html = '<h3>Đối chiếu quẻ mệnh: ' + cp1.cung + ' và ' + cp2.cung + '</h3>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th></th><th>Người thứ nhất (' + y1 + ', ' + g1 + ')</th><th>Người thứ hai (' + y2 + ', ' + g2 + ')</th></tr>' +
+        '<tr><td><strong>Quẻ mệnh</strong></td><td>' + cp1.cung + '</td><td>' + cp2.cung + '</td></tr>' +
+        '<tr><td><strong>Hành của quẻ</strong></td><td>' + e1 + '</td><td>' + e2 + '</td></tr>' +
+        '<tr><td><strong>Nhóm mệnh</strong></td><td>' + cp1.group + '</td><td>' + cp2.group + '</td></tr></table></div>' +
+        '<p><strong>' + (sameGroup ? 'Hai người CÙNG nhóm mệnh ' + cp1.group + ': ' : 'Hai người KHÁC nhóm mệnh: ') + '</strong>' + (sameGroup ? 'đây là điểm cộng lớn theo Bát Trạch, vì hai người hợp chung một bộ bốn hướng tốt, nên việc chọn hướng nhà, hướng giường cho cả hai rất dễ thống nhất.' : 'mỗi người hợp một bộ hướng khác nhau, khi chọn nhà chung nên ưu tiên hướng tốt của chủ hộ chính và dùng bố trí phòng để cân bằng cho người còn lại, theo nguyên tắc đã trình bày ở trang Xem phong thủy nhà.') + '</p>' +
+        '<p>' + rel + '</p>' +
+        '<p class="ptv-note">Đối chiếu quẻ mệnh là một lớp trong xem tuổi vợ chồng và đối tác, cần đọc cùng các lớp khác như can chi và mệnh nạp âm ở trang Xem tuổi vợ chồng, không nên kết luận chỉ từ một lớp này.</p>';
+      L.resultBox(box, html);
+    });
+  }
+
+  function xiNgauV2(c) {
+    c.innerHTML = '<div class="ptv-form"><p style="margin-top:0">Nghĩ về điều muốn hỏi rồi bấm gieo xí ngầu. Máy gieo 3 lượt, mỗi lượt 2 viên: lượt đầu lấy quẻ hạ, lượt hai lấy quẻ thượng, lượt ba lấy hào động, rồi tự tính quẻ biến cho bạn.</p>' +
+      '<div class="ptv-row">' + L.field('Điều bạn muốn hỏi (không bắt buộc)', '<input type="text" id="q" value="">', 'ptv-field-name') + '</div>' +
+      '<div class="ptv-kieu-verse" id="ptv-dice2"><p>🎲 🎲</p></div><button type="button" class="ptv-btn" id="ptv-roll2">Gieo xí ngầu</button></div><div class="ptv-out"></div>';
+    c.querySelector('#ptv-roll2').addEventListener('click', function () {
+      function roll2() { return [1 + Math.floor(Math.random() * 6), 1 + Math.floor(Math.random() * 6)]; }
+      var r1 = roll2(), r2 = roll2(), r3 = roll2();
+      var TRI = ['Càn', 'Đoài', 'Ly', 'Chấn', 'Tốn', 'Khảm', 'Cấn', 'Khôn'];
+      var lower = TRI[(r1[0] + r1[1]) % 8], upper = TRI[(r2[0] + r2[1]) % 8];
+      var hao = ((r3[0] + r3[1] - 1) % 6) + 1;
+      c.querySelector('#ptv-dice2').innerHTML = '<p>🎲 Lượt 1: ' + r1.join(' + ') + ' = ' + (r1[0] + r1[1]) + ' · Lượt 2: ' + r2.join(' + ') + ' = ' + (r2[0] + r2[1]) + ' · Lượt 3: ' + r3.join(' + ') + ' = ' + (r3[0] + r3[1]) + '</p>';
+      var q = queLookup(upper, lower);
+      if (!q) return;
+      var loBits = TRI_BITS[lower], upBits = TRI_BITS[upper];
+      var lines = [loBits[0], loBits[1], loBits[2], upBits[0], upBits[1], upBits[2]];
+      var flipped = lines.slice(); flipped[hao - 1] = flipped[hao - 1] ? 0 : 1;
+      var lo2 = BITS_TRI[[flipped[0], flipped[1], flipped[2]].join('')], up2 = BITS_TRI[[flipped[3], flipped[4], flipped[5]].join('')];
+      var q2 = queLookup(up2, lo2);
+      var question = (c.querySelector('#q').value || '').trim();
+      var html = '<h3>Quẻ ' + esc(q.name) + ' <span class="' + (q.rating === 'Cát' ? 'ptv-good' : q.rating === 'Bình' ? 'ptv-mid' : 'ptv-bad') + '">(' + q.rating + ')</span></h3>' +
+        (question ? '<p><strong>Điều bạn hỏi:</strong> ' + esc(question) + '</p>' : '') +
+        '<p>Từ xí ngầu: quẻ hạ ' + lower + ' (tổng lượt 1 là ' + (r1[0] + r1[1]) + '), quẻ thượng ' + upper + ' (tổng lượt 2 là ' + (r2[0] + r2[1]) + '). ' + (QUE_TEXT[q.name] || '') + '</p>' +
+        '<p><strong>Hào động:</strong> hào ' + hao + ' (từ tổng lượt 3 là ' + (r3[0] + r3[1]) + '). Hào động là điểm chuyển biến mạnh nhất của quẻ, việc bạn hỏi sẽ đổi chiều từ điểm này.</p>' +
+        (q2 ? '<h3>Quẻ biến: ' + esc(q2.name) + ' <span class="' + (q2.rating === 'Cát' ? 'ptv-good' : q2.rating === 'Bình' ? 'ptv-mid' : 'ptv-bad') + '">(' + q2.rating + ')</span></h3><p>Lật hào ' + hao + ' của quẻ chính được quẻ biến ' + q2.name + ' (thượng ' + up2 + ', hạ ' + lo2 + '). ' + (QUE_TEXT[q2.name] || '') + ' Đọc quẻ chính là hiện tại, quẻ biến là hướng sự việc sẽ đi tới.</p>' : '') +
+        '<p class="ptv-note">Gieo quẻ xí ngầu là cách lập quẻ nhanh theo tổng điểm ba lượt gieo. Muốn gieo theo nghi thức đầy đủ hơn, bạn dùng Gieo quẻ đồng xu ở <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>.</p>';
+      L.resultBox(c, html);
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'tim-que-menh': queMenhV2, 'gieo-que-xi-ngau': xiNgauV2 });
+})();

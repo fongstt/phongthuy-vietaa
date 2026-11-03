@@ -1011,3 +1011,80 @@
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'tim-que-menh': queMenhV2, 'gieo-que-xi-ngau': xiNgauV2 });
 })();
+
+/* --- Tim nien menh + Giai ma diem bao v2 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function nienMenhV2(c) {
+    c.innerHTML = V.tabsHTML([['nm-one', 'Niên mệnh theo năm sinh'], ['nm-compare', 'So niên mệnh hai năm sinh']]) +
+      '<div id="nm-one">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh', L.select('y', L.yearOptions(1930, 2025, 1990)), 'ptv-field-name') + '</div>', 'Tìm niên mệnh của tôi') + '</div>' +
+      '<div id="nm-compare" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh thứ nhất', L.select('y1', L.yearOptions(1930, 2025, 1990))) + L.field('Năm sinh thứ hai', L.select('y2', L.yearOptions(1930, 2025, 1994))) + '</div>', 'So hai niên mệnh') + '</div>';
+    V.wireTabs(c, ['nm-one', 'nm-compare']);
+    c.querySelector('#nm-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#nm-one'), y = parseInt(box.querySelector('#y').value, 10), yi = L.yearInfo(y);
+      var sameCycle = [];
+      for (var cy = y - 60; cy <= y + 60; cy += 60) if (cy !== y && cy >= 1924 && cy <= 2043) sameCycle.push(cy);
+      var sameNapAm = [];
+      for (var yy = 1924; yy <= 2043; yy++) { if (yy !== y && L.yearInfo(yy).napAm === yi.napAm) sameNapAm.push(yy); }
+      var html = '<div class="ptv-facts"><span>Năm sinh: <strong>' + y + '</strong></span><span>Tuổi: <strong>' + yi.text + '</strong></span><span>Niên mệnh: <strong>' + esc(yi.napAm) + '</strong> ' + L.badge(yi.el) + '</span></div>' +
+        '<p>Người sinh năm ' + y + ' thuộc tuổi ' + yi.text + ', có niên mệnh (mệnh nạp âm) là <strong>' + esc(yi.napAm) + '</strong>, thuộc hành ' + yi.el + '. Thiên can ' + yi.can + ' thuộc hành ' + yi.canEl + ', địa chi ' + yi.chi + ' thuộc hành ' + yi.chiEl + '.</p>' +
+        '<p><strong>Các năm cùng tuổi ' + yi.text + ' (cùng can chi, chu kỳ 60 năm):</strong> ' + (sameCycle.length ? sameCycle.join(', ') : 'không có năm nào khác trong khoảng 1924 đến 2043') + '.</p>' +
+        '<p><strong>Các năm cùng niên mệnh ' + esc(yi.napAm) + ' trong hoa giáp hiện tại:</strong> ' + sameNapAm.join(', ') + '. Trong mỗi chu kỳ 60 năm, một mệnh nạp âm thường ứng với hai cặp năm can chi khác nhau, nên người khác tuổi vẫn có thể trùng niên mệnh với bạn.</p>' +
+        '<p>Niên mệnh là lớp mệnh được dùng nhiều nhất trong các tra cứu theo tuổi của <a href="https://phongthuy.vietaa.com/">Phong Thủy VietAA</a>: chọn màu hợp tuổi, chọn nghề, xem tuổi vợ chồng, chọn người xông đất và xem năm sinh con.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#nm-compare form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#nm-compare');
+      var y1 = parseInt(box.querySelector('#y1').value, 10), y2 = parseInt(box.querySelector('#y2').value, 10);
+      var a = L.yearInfo(y1), b = L.yearInfo(y2), rel;
+      if (a.el === b.el) rel = 'Hai niên mệnh CÙNG hành ' + a.el + ' (tỷ hòa): nền tính cách và nhịp đời có nhiều điểm tương đồng, dễ hiểu nhau, hợp làm bạn và hợp tác dài hạn.';
+      else if (L.GENERATES[a.el] === b.el) rel = 'Hành ' + a.el + ' của năm ' + y1 + ' SINH hành ' + b.el + ' của năm ' + y2 + ': người sinh năm ' + y1 + ' thường ở thế nâng đỡ người sinh năm ' + y2 + ' trong quan hệ giữa hai người.';
+      else if (L.GENERATES[b.el] === a.el) rel = 'Hành ' + b.el + ' của năm ' + y2 + ' SINH hành ' + a.el + ' của năm ' + y1 + ': người sinh năm ' + y2 + ' thường ở thế nâng đỡ người sinh năm ' + y1 + '.';
+      else rel = 'Hành ' + a.el + ' của năm ' + y1 + ' và hành ' + b.el + ' của năm ' + y2 + ' có quan hệ KHẮC: hai bên cần tôn trọng khác biệt và thỏa thuận rõ ràng ở việc chung, nhất là tiền bạc và việc nhà.';
+      var html = '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th></th><th>Năm ' + y1 + '</th><th>Năm ' + y2 + '</th></tr>' +
+        '<tr><td><strong>Tuổi</strong></td><td>' + a.text + '</td><td>' + b.text + '</td></tr>' +
+        '<tr><td><strong>Niên mệnh</strong></td><td>' + esc(a.napAm) + '</td><td>' + esc(b.napAm) + '</td></tr>' +
+        '<tr><td><strong>Hành</strong></td><td>' + a.el + '</td><td>' + b.el + '</td></tr></table></div><p>' + rel + '</p>' +
+        '<p class="ptv-note">So niên mệnh chỉ là lớp hành nạp âm. Xem tuổi vợ chồng đầy đủ còn xét can, chi và cung phi, bạn dùng trang Xem tuổi vợ chồng để có kết luận trọn vẹn hơn.</p>';
+      L.resultBox(box, html);
+    });
+  }
+
+  function diemBaoV2(c) {
+    var dict = (window.PTV_TOOLS_DATA || {}).omenDict || [];
+    var opts = dict.map(function (e, i) { return '<option value="' + i + '">' + esc(e.subject) + '</option>'; }).join('');
+    function typeCls(t) { return t === 'tốt' ? 'ptv-good' : t === 'cần chú ý' ? 'ptv-bad' : 'ptv-mid'; }
+    function omenHTML(e) {
+      var rel = dict.filter(function (x) { return x.type === e.type && x.subject !== e.subject; }).slice(0, 3);
+      return '<h3>' + esc(e.subject) + ' <span class="' + typeCls(e.type) + '">· Điềm ' + e.type + '</span></h3><p>' + esc(e.meaning) + '</p>' +
+        (rel.length ? '<p><strong>Các điềm cùng loại ' + e.type + ' trong dân gian:</strong> ' + rel.map(function (x) { return esc(x.subject.toLowerCase()); }).join(', ') + '. Bạn tra tiếp các điềm này ở danh sách bên trên nếu muốn đọc thêm.</p>' : '');
+    }
+    c.innerHTML = V.tabsHTML([['db-pick', 'Chọn điềm báo bạn gặp'], ['db-search', 'Tìm điềm theo từ khóa'], ['db-all', 'Bảng điềm báo dân gian']]) +
+      '<div id="db-pick">' + V.formWrap2('<div class="ptv-row">' + L.field('Chọn điềm báo bạn gặp', L.select('om', opts), 'ptv-field-name') + '</div>', 'Giải mã điềm báo') + '</div>' +
+      '<div id="db-search" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Từ khóa (ví dụ: mắt, bướm, chim, gương)', '<input type="text" id="kw" value="">', 'ptv-field-name') + '</div>', 'Tìm điềm báo') + '</div>' +
+      '<div id="db-all" hidden><div class="ptv-out"></div></div>';
+    V.wireTabs(c, ['db-pick', 'db-search', 'db-all']);
+    c.querySelector('#db-pick form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#db-pick'), e = dict[parseInt(box.querySelector('#om').value, 10)];
+      if (e) L.resultBox(box, omenHTML(e) + '<p class="ptv-note">Điềm báo là quan niệm dân gian truyền miệng, bạn đọc để tham khảo và suy ngẫm vui vẻ, không nên lo lắng thái quá với các điềm cần chú ý.</p>');
+    });
+    c.querySelector('#db-search form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#db-search'), kw = (box.querySelector('#kw').value || '').toLowerCase().trim();
+      var found = dict.filter(function (e) { return (e.subject + ' ' + e.meaning).toLowerCase().indexOf(kw) >= 0; });
+      if (!kw || !found.length) { L.resultBox(box, '<p>Chưa tìm thấy điềm báo nào khớp với từ khóa này trong ' + dict.length + ' điềm phổ biến. Bạn thử từ khóa ngắn hơn, ví dụ "mắt", "chim", "bướm", "mèo" nhé.</p>'); return; }
+      L.resultBox(box, '<h3>Tìm thấy ' + found.length + ' điềm báo khớp</h3>' + found.map(omenHTML).join(''));
+    });
+    var rendered = false;
+    c.querySelector('[data-t="db-all"]').addEventListener('click', function () {
+      if (rendered) return; rendered = true;
+      var rows = dict.map(function (e) { return '<tr><td><strong>' + esc(e.subject) + '</strong></td><td class="' + typeCls(e.type) + '">Điềm ' + e.type + '</td></tr>'; }).join('');
+      c.querySelector('#db-all .ptv-out').innerHTML = '<h3>Bảng ' + dict.length + ' điềm báo dân gian phổ biến</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Điềm báo</th><th>Loại</th></tr>' + rows + '</table></div><p class="ptv-note">Muốn đọc phần luận của một điềm, quay lại tab chọn điềm và chọn điềm đó trong danh sách.</p>';
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'tim-nien-menh': nienMenhV2, 'giai-ma-diem-bao': diemBaoV2 });
+})();
