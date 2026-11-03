@@ -642,7 +642,17 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   var QUY_NHAN = { 'Giáp': ['Sửu', 'Mùi'], 'Mậu': ['Sửu', 'Mùi'], 'Canh': ['Sửu', 'Mùi'], 'Ất': ['Tý', 'Thân'], 'Kỷ': ['Tý', 'Thân'], 'Bính': ['Hợi', 'Dậu'], 'Đinh': ['Hợi', 'Dậu'], 'Nhâm': ['Mão', 'Tỵ'], 'Quý': ['Mão', 'Tỵ'], 'Tân': ['Ngọ', 'Dần'] };
   var CHI_DIR = { 'Tý': 'Bắc', 'Sửu': 'Đông Bắc', 'Dần': 'Đông Bắc', 'Mão': 'Đông', 'Thìn': 'Đông Nam', 'Tỵ': 'Đông Nam', 'Ngọ': 'Nam', 'Mùi': 'Tây Nam', 'Thân': 'Tây Nam', 'Dậu': 'Tây', 'Tuất': 'Tây Bắc', 'Hợi': 'Tây Bắc' };
-  window.PTVDay = { dayInfo: dayInfo, fmtSolar: fmtSolar, fmtLunar: fmtLunar, trucOf: trucOf, satOf: satOf, GIO_HD: GIO_HD, scoreDay: scoreDay, monthDays: monthDays, lunar2solar: lunar2solar, QUY_NHAN: QUY_NHAN, CHI_DIR: CHI_DIR, PURPOSE_TRUC: PURPOSE_TRUC };
+  var TAI_THAN = { 'Giáp': 'Đông Nam', 'Ất': 'Đông Nam', 'Bính': 'Chính Đông', 'Đinh': 'Chính Đông', 'Mậu': 'Chính Bắc', 'Kỷ': 'Chính Nam', 'Canh': 'Tây Nam', 'Tân': 'Tây Nam', 'Nhâm': 'Chính Tây', 'Quý': 'Tây Bắc' };
+  var HY_THAN = { 'Giáp': 'Đông Bắc', 'Kỷ': 'Đông Bắc', 'Ất': 'Tây Bắc', 'Canh': 'Tây Bắc', 'Bính': 'Tây Nam', 'Tân': 'Tây Nam', 'Đinh': 'Chính Nam', 'Nhâm': 'Chính Nam', 'Mậu': 'Đông Nam', 'Quý': 'Đông Nam' };
+  var LTP_NAMES = ['Tuyệt Lộ', 'Đại An', 'Tốc Hỷ', 'Lưu Niên', 'Xích Khẩu', 'Tiểu Cát'];
+  var LTP_GOOD = { 'Đại An': 1, 'Tốc Hỷ': 1, 'Tiểu Cát': 1 };
+  var LTP_TEXT = { 'Đại An': 'Mọi việc hanh thông, nhà cửa yên lành, người xuất hành bình an, cầu tài nên đi hướng Tây hoặc Nam.', 'Tốc Hỷ': 'Tin vui sắp tới, đi việc quan và gặp gỡ đều may mắn, cầu tài nên đi hướng Nam, người đi có tin tốt về.', 'Tiểu Cát': 'May mắn chắc chắn, buôn bán có lời, mọi việc hòa hợp, có bệnh cầu chữa sẽ khỏi, người nhà mạnh khỏe.', 'Lưu Niên': 'Việc khó thành nhanh, cầu tài mờ mịt, kiện cáo nên hoãn, người đi lâu có tin về, nên làm chậm mà chắc.', 'Xích Khẩu': 'Dễ sinh cãi cọ và thị phi, nên hoãn chuyến đi nếu được, giữ lời ăn tiếng nói, đề phòng điều tiếng.', 'Tuyệt Lộ': 'Cầu tài dễ trái ý, ra đi dễ gặp trở ngại, tránh khởi sự việc lớn trong khắc này.' };
+  var CHI_KHAC = { 'Tý': 1, 'Sửu': 2, 'Dần': 3, 'Mão': 4, 'Thìn': 5, 'Tỵ': 6, 'Ngọ': 1, 'Mùi': 2, 'Thân': 3, 'Dậu': 4, 'Tuất': 5, 'Hợi': 6 };
+  function ltpOf(lunarDay, lunarMonth, hourChi) {
+    var r = ((lunarDay + lunarMonth + (CHI_KHAC[hourChi] || 1) - 2) % 6 + 6) % 6;
+    return LTP_NAMES[r];
+  }
+  window.PTVDay = { dayInfo: dayInfo, fmtSolar: fmtSolar, fmtLunar: fmtLunar, trucOf: trucOf, satOf: satOf, GIO_HD: GIO_HD, scoreDay: scoreDay, monthDays: monthDays, lunar2solar: lunar2solar, QUY_NHAN: QUY_NHAN, CHI_DIR: CHI_DIR, PURPOSE_TRUC: PURPOSE_TRUC, TAI_THAN: TAI_THAN, HY_THAN: HY_THAN, ltpOf: ltpOf, LTP_TEXT: LTP_TEXT, LTP_GOOD: LTP_GOOD };
 })();
 /* PhongThuy VietAA - cong cu dot 1: Trach Menh + Linh Khi (v1.3) */
 (function () {
@@ -4408,4 +4418,209 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
     ]),
     'xem-y-nghia-hinh-xam': tattooV2
   });
+})();
+
+/* --- Thuoc Lo Ban v3: thuoc keo truc quan + luoi Rong x Cao + canh bao sat ranh --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var LOBAN3 = [
+    { id: 'r522', name: 'Thước 52,2 cm (cửa, cổng, thông thủy)', cycle: 52.2, segs: [['Quý Nhân', 1, 'Gặp quý nhân giúp đỡ, công việc hanh thông'], ['Hiểm Họa', 0, 'Dễ gặp trở ngại, hao tốn'], ['Thiên Tai', 0, 'Tránh dùng, chủ về bất trắc'], ['Thiên Tài', 1, 'Tài lộc tìm đến, làm ăn phát đạt'], ['Phúc Lộc', 1, 'Phúc lộc dồi dào, con cháu hưởng phúc'], ['Cô Độc', 0, 'Chủ về đơn lẻ, thiếu hòa khí'], ['Thiên Tặc', 0, 'Dễ mất mát, trộm cắp để ý'], ['Tể Tướng', 1, 'Quyền uy, địa vị vững vàng']] },
+    { id: 'r429', name: 'Thước 42,9 cm (bàn, ghế, bếp, giường)', cycle: 42.9, segs: [['Tài', 1, 'Tài lộc, tiền bạc thuận lợi'], ['Bệnh', 0, 'Ảnh hưởng sức khỏe, nên tránh'], ['Ly', 0, 'Chia ly, xa cách'], ['Nghĩa', 1, 'Nghĩa tình, quan hệ tốt đẹp'], ['Quan', 1, 'Công danh, thi cử thuận lợi'], ['Nạn', 0, 'Tai nạn, biến cố bất ngờ'], ['Hại', 0, 'Tổn hại, hao tài'], ['Bản', 1, 'Gốc rễ vững, vốn liếng bền']] },
+    { id: 'r388', name: 'Thước 38,8 cm (bàn thờ, mộ, đồ thờ)', cycle: 38.8, segs: [['Đinh', 1, 'Con trai, thêm người thêm của'], ['Hại', 0, 'Tổn hại, nên tránh'], ['Vượng', 1, 'Thịnh vượng, phát triển'], ['Khổ', 0, 'Vất vả, khó khăn'], ['Nghĩa', 1, 'Nghĩa tình trọn vẹn'], ['Quan', 1, 'Quan lộc, địa vị'], ['Tử', 0, 'Hung, tuyệt đối tránh'], ['Hưng', 1, 'Hưng thịnh, đi lên'], ['Thất', 0, 'Thất thoát, mất mát'], ['Tài', 1, 'Tài lộc dồi dào']] }
+  ];
+  function fmt(n) { return String(Math.round(n * 10) / 10).replace('.', ','); }
+  function measure3(r, cm) {
+    var segLen = r.cycle / r.segs.length, pos = cm % r.cycle; if (pos === 0) pos = r.cycle;
+    var idx = Math.min(r.segs.length - 1, Math.floor((pos - 0.0001) / segLen));
+    var start = (Math.floor(cm / r.cycle) * r.cycle) + idx * segLen;
+    if (pos === r.cycle) start = cm - segLen;
+    return { seg: r.segs[idx], idx: idx, start: start, end: start + segLen, segLen: segLen, toEdge: Math.min(cm - start, start + segLen - cm) };
+  }
+  function nearestGood3(r, cm) {
+    var segLen = r.cycle / r.segs.length, base = Math.floor(cm / r.cycle) * r.cycle, out = [];
+    for (var k = -1; k <= 1; k++) for (var i = 0; i < r.segs.length; i++) {
+      if (!r.segs[i][1]) continue;
+      var s = base + k * r.cycle + i * segLen, e = s + segLen;
+      if (e > cm - segLen * 2 && s < cm + segLen * 2) out.push({ s: s, e: e, name: r.segs[i][0] });
+    }
+    out.sort(function (a, b) { return Math.abs((a.s + a.e) / 2 - cm) - Math.abs((b.s + b.e) / 2 - cm); });
+    return out.slice(0, 2);
+  }
+  function rulerStrip(r, cm) {
+    var px = 7, half = 45, from = Math.max(0, cm - half), to = cm + half;
+    var html = '<div style="position:relative;height:64px;overflow:hidden;border:1px solid #d8cfc0;border-radius:8px;background:#fdfaf4">';
+    var startCycle = Math.floor(from / r.cycle) * r.cycle;
+    for (var base = startCycle; base < to; base += r.cycle) {
+      for (var i = 0; i < r.segs.length; i++) {
+        var s = base + i * (r.cycle / r.segs.length), e = s + r.cycle / r.segs.length;
+        if (e < from || s > to) continue;
+        var left = (Math.max(s, from) - from) * px, wdt = (Math.min(e, to) - Math.max(s, from)) * px;
+        var good = r.segs[i][1];
+        html += '<div style="position:absolute;top:0;bottom:0;left:' + left + 'px;width:' + wdt + 'px;background:' + (good ? '#e3f2e4' : '#fbe7e4') + ';border-right:1px dashed #b9ac96;text-align:center;font-size:11px;padding-top:6px;color:' + (good ? '#27632c' : '#93392f') + '">' + (wdt > 34 ? esc(r.segs[i][0]) + '<br>' + fmt(Math.max(s, from)) : '') + '</div>';
+      }
+    }
+    html += '<div style="position:absolute;top:0;bottom:0;left:' + ((cm - from) * px) + 'px;width:2px;background:#c0392b"></div>';
+    html += '<div style="position:absolute;top:2px;left:' + Math.min(((cm - from) * px) + 4, (to - from) * px - 66) + 'px;background:#c0392b;color:#fff;font-size:11px;padding:1px 6px;border-radius:8px">' + fmt(cm) + ' cm</div>';
+    return html + '</div>';
+  }
+  function loBanV3(c) {
+    c.innerHTML = V.tabsHTML([['lb3-visual', 'Thước kéo trực quan'], ['lb3-grid', 'Đo lưới Rộng × Cao'], ['lb3-one', 'Đo một kích thước'], ['lb3-multi', 'Đo nhiều kích thước + lưu']]) +
+      '<div id="lb3-visual">' + V.formWrap2('<div class="ptv-row">' + L.field('Loại thước', L.select('r', LOBAN3.map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join(''))) + L.field('Kích thước (cm)', '<input type="text" id="cm" inputmode="decimal" value="81">') + '</div><div class="ptv-row">' + L.field('Kéo để đo (10 đến 300 cm)', '<input type="range" id="rg" min="10" max="300" step="0.1" value="81">', 'ptv-field-name') + '</div>', 'Cập nhật thước') + '<div class="ptv-out" id="lb3-live"></div></div>' +
+      '<div id="lb3-grid" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Loại thước', L.select('r', LOBAN3.map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join(''))) + L.field('Chiều rộng (cm)', '<input type="text" id="w" inputmode="decimal" value="81">') + L.field('Chiều cao / dài (cm)', '<input type="text" id="h" inputmode="decimal" value="202">') + '</div>', 'Đo cả hai chiều') + '</div>' +
+      '<div id="lb3-one" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Kích thước cần đo (cm)', '<input type="text" id="cm" inputmode="decimal" value="81">', 'ptv-field-name') + '</div>', 'Đo trên 3 loại thước') + '</div>' +
+      '<div id="lb3-multi" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Loại thước áp dụng', L.select('r', LOBAN3.map(function (r) { return '<option value="' + r.id + '">' + r.name + '</option>'; }).join(''))) + '</div><div class="ptv-row">' + L.field('Danh sách kích thước, mỗi dòng một số (cm)', '<textarea id="list" rows="6">81\n107\n127\n153\n197\n217</textarea>', 'ptv-field-name') + '</div>', 'Đo và lưu danh sách') + '<div id="lb3-saved"></div></div>';
+    V.wireTabs(c, ['lb3-visual', 'lb3-grid', 'lb3-one', 'lb3-multi']);
+    function getR(box) { return LOBAN3.filter(function (x) { return x.id === box.querySelector('#r').value; })[0]; }
+    function verdictHTML(r, cm) {
+      var m = measure3(r, cm);
+      var warn = m.toEdge <= 0.5 ? '<p class="ptv-bad"><strong>Cảnh báo sát ranh:</strong> kích thước chỉ cách mép cung ' + fmt(m.toEdge) + ' cm. Sai số thi công vài mm có thể đẩy sang cung kề bên, bạn nên chốt số đo lùi vào giữa cung thêm ít nhất 1 cm cho an toàn.</p>' : '';
+      return '<h3>' + fmt(cm) + ' cm trên ' + r.name + '</h3>' + rulerStrip(r, cm) +
+        '<p>Rơi vào cung <strong class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</strong>, khoảng cung từ ' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm. ' + m.seg[2] + '.</p>' + warn +
+        (m.seg[1] ? '' : '<p><strong>Gợi ý chỉnh về cung tốt gần nhất:</strong> ' + nearestGood3(r, cm).map(function (g) { return 'khoảng ' + fmt(g.s) + ' đến ' + fmt(g.e) + ' cm (cung ' + g.name + ')'; }).join(' hoặc ') + '.</p>');
+    }
+    var vbox = c.querySelector('#lb3-visual');
+    function renderVisual() {
+      var cm = parseFloat(String(vbox.querySelector('#cm').value).replace(',', '.'));
+      if (!cm || cm <= 0) return;
+      c.querySelector('#lb3-live').innerHTML = verdictHTML(getR(vbox), cm);
+    }
+    vbox.querySelector('#rg').addEventListener('input', function () { vbox.querySelector('#cm').value = this.value; renderVisual(); });
+    vbox.querySelector('form').addEventListener('submit', function (ev) { ev.preventDefault(); vbox.querySelector('#rg').value = vbox.querySelector('#cm').value; renderVisual(); });
+    renderVisual();
+    c.querySelector('#lb3-grid form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb3-grid'), r = getR(box);
+      var w = parseFloat(String(box.querySelector('#w').value).replace(',', '.')), h = parseFloat(String(box.querySelector('#h').value).replace(',', '.'));
+      if (!w || !h) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập đủ hai chiều nhé.</p>'); return; }
+      var mw = measure3(r, w), mh = measure3(r, h), good = (mw.seg[1] ? 1 : 0) + (mh.seg[1] ? 1 : 0);
+      var head = good === 2 ? 'Cả hai chiều đều đẹp' : good === 1 ? 'Một chiều đẹp, một chiều cần chỉnh' : 'Cả hai chiều đều chưa đẹp';
+      L.resultBox(box, '<h3>Lưới ' + fmt(w) + ' × ' + fmt(h) + ' cm: ' + head + '</h3>' +
+        '<p><strong>Chiều rộng ' + fmt(w) + ' cm:</strong> cung <span class="' + (mw.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + mw.seg[0] + '</span> (' + fmt(mw.start) + ' đến ' + fmt(mw.end) + ' cm)' + (mw.toEdge <= 0.5 ? ' — sát ranh, cách mép ' + fmt(mw.toEdge) + ' cm' : '') + (mw.seg[1] ? '.' : '. Gợi ý: ' + nearestGood3(r, w).map(function (g) { return fmt(g.s) + '–' + fmt(g.e) + ' (' + g.name + ')'; }).join(' hoặc ') + '.') + '</p>' +
+        '<p><strong>Chiều cao/dài ' + fmt(h) + ' cm:</strong> cung <span class="' + (mh.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + mh.seg[0] + '</span> (' + fmt(mh.start) + ' đến ' + fmt(mh.end) + ' cm)' + (mh.toEdge <= 0.5 ? ' — sát ranh, cách mép ' + fmt(mh.toEdge) + ' cm' : '') + (mh.seg[1] ? '.' : '. Gợi ý: ' + nearestGood3(r, h).map(function (g) { return fmt(g.s) + '–' + fmt(g.e) + ' (' + g.name + ')'; }).join(' hoặc ') + '.') + '</p>' +
+        rulerStrip(r, w) + '<p class="ptv-note">Thước trên hình là chiều rộng. Với cửa và cổng, hai chiều thông thủy đều nên đẹp; với bàn ghế thường chỉ cần chiều chính đẹp, chiều phụ nên tránh cung xấu nhất của thước.</p>');
+    });
+    c.querySelector('#lb3-one form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb3-one'), cm = parseFloat(String(box.querySelector('#cm').value).replace(',', '.'));
+      if (!cm || cm <= 0) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập một kích thước lớn hơn 0 nhé.</p>'); return; }
+      var html = '<h3>Kết quả đo ' + fmt(cm) + ' cm trên 3 loại thước</h3>';
+      LOBAN3.forEach(function (r) { var m = measure3(r, cm); html += '<p><strong>' + r.name + ':</strong> cung <span class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</span>, khoảng ' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm' + (m.toEdge <= 0.5 ? ' <span class="ptv-bad">(sát ranh, cách mép ' + fmt(m.toEdge) + ' cm)</span>' : '') + '. ' + m.seg[2] + '.</p>'; });
+      html += '<p class="ptv-note">Mỗi hạng mục chỉ chốt theo một loại thước đúng công dụng: cửa và thông thủy dùng 52,2; bàn ghế, bếp, giường dùng 42,9; bàn thờ và đồ thờ dùng 38,8.</p>';
+      L.resultBox(box, html);
+    });
+    var savedBox = c.querySelector('#lb3-saved');
+    function drawSaved() {
+      var arr = []; try { arr = JSON.parse(localStorage.getItem('ptvLoBanSaved') || '[]'); } catch (e) { arr = []; }
+      savedBox.innerHTML = arr.length ? '<h3>Các lần đo đã lưu trên máy này (' + arr.length + ')</h3>' + arr.map(function (x) { return '<p>' + esc(x) + '</p>'; }).join('') + '<p><button type="button" class="ptv-btn" id="lb3-clear">Xóa danh sách đã lưu</button></p>' : '';
+      var b = savedBox.querySelector('#lb3-clear');
+      if (b) b.addEventListener('click', function () { localStorage.removeItem('ptvLoBanSaved'); drawSaved(); });
+    }
+    drawSaved();
+    c.querySelector('#lb3-multi form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#lb3-multi'), r = getR(box);
+      var nums = box.querySelector('#list').value.split(/\s+/).map(function (s) { return parseFloat(String(s).replace(',', '.')); }).filter(function (n) { return n > 0; });
+      if (!nums.length) { L.resultBox(box, '<p class="ptv-bad">Danh sách chưa có kích thước hợp lệ nào.</p>'); return; }
+      var lines = [];
+      var rows = nums.map(function (cm) {
+        var m = measure3(r, cm);
+        lines.push(fmt(cm) + ' cm: cung ' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + ', khoảng ' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm');
+        return '<tr><td><strong>' + fmt(cm) + ' cm</strong></td><td class="' + (m.seg[1] ? 'ptv-good' : 'ptv-bad') + '">' + m.seg[0] + (m.seg[1] ? ' (tốt)' : ' (xấu)') + '</td><td>' + fmt(m.start) + ' đến ' + fmt(m.end) + ' cm</td><td>' + (m.seg[1] ? 'Giữ nguyên' : 'Chỉnh về ' + nearestGood3(r, cm).map(function (g) { return fmt(g.s) + '–' + fmt(g.e); }).join(' hoặc ')) + '</td></tr>';
+      }).join('');
+      var arr = []; try { arr = JSON.parse(localStorage.getItem('ptvLoBanSaved') || '[]'); } catch (e) { arr = []; }
+      arr.unshift('Đo ngày ' + new Date().toLocaleDateString('vi-VN') + ' theo ' + r.name + ': ' + lines.join(' · '));
+      try { localStorage.setItem('ptvLoBanSaved', JSON.stringify(arr.slice(0, 10))); } catch (e) {}
+      drawSaved();
+      L.resultBox(box, '<h3>Đo ' + nums.length + ' kích thước theo ' + r.name + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Kích thước</th><th>Cung</th><th>Khoảng của cung</th><th>Gợi ý</th></tr>' + rows + '</table></div><p class="ptv-note">Danh sách này đã được lưu ở mục dưới để bạn mở lại sau, tối đa 10 lần đo gần nhất trên trình duyệt này.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'thuoc-lo-ban': loBanV3 });
+})();
+
+/* --- Xem gio xuat hanh v3 (them Ly Thuan Phong + 3 huong than) va Huong xuat hanh dau nam v3 --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, esc = L.esc, V = window.PTVDayToolsV2;
+  var CHIS = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+  var CLOCK = { 'Tý': '23h-1h', 'Sửu': '1h-3h', 'Dần': '3h-5h', 'Mão': '5h-7h', 'Thìn': '7h-9h', 'Tỵ': '9h-11h', 'Ngọ': '11h-13h', 'Mùi': '13h-15h', 'Thân': '15h-17h', 'Dậu': '17h-19h', 'Tuất': '19h-21h', 'Hợi': '21h-23h' };
+  function dirsOf(info) {
+    var qn = (D.QUY_NHAN[info.day.can] || []).map(function (x) { return D.CHI_DIR[x]; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).join(', ');
+    return { qn: qn, tai: D.TAI_THAN[info.day.can] || '', hy: D.HY_THAN[info.day.can] || '' };
+  }
+  function gioXuatHanhV3(c) {
+    var today = new Date();
+    var iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    c.innerHTML = V.tabsHTML([['gx-day', 'Giờ và hướng của một ngày'], ['gx-ltp', 'Giờ xuất hành Lý Thuần Phong'], ['gx-scan', 'Quét giờ tốt cả tháng']]) +
+      '<div id="gx-day">' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày dương lịch (năm-tháng-ngày)', '<input type="text" id="d" value="' + iso + '">', 'ptv-field-name') + '</div>', 'Xem giờ và hướng ngày này') + '</div>' +
+      '<div id="gx-ltp" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày dương lịch (năm-tháng-ngày)', '<input type="text" id="d" value="' + iso + '">', 'ptv-field-name') + '</div>', 'Tính 12 giờ theo Lý Thuần Phong') + '</div>' +
+      '<div id="gx-scan" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của bạn', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng dương lịch muốn quét', L.select('m', V.monthOptions2()), 'ptv-field-name') + '</div>', 'Quét ngày xuất hành tốt trong tháng') + '</div>';
+    V.wireTabs(c, ['gx-day', 'gx-ltp', 'gx-scan']);
+    function parseD(box) { var p = box.querySelector('#d').value.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+    c.querySelector('#gx-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gx-day'), dt = parseD(box);
+      if (isNaN(dt.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày nhé.</p>'); return; }
+      var info = D.dayInfo(dt), dirs = dirsOf(info);
+      L.resultBox(box, '<h3>Ngày ' + D.fmtSolar(info) + ' (ngày ' + info.day.text + ', ' + D.fmtLunar(info) + ')</h3>' +
+        '<p><strong>Giờ hoàng đạo trong ngày:</strong> giờ ' + D.GIO_HD[info.day.chi].join(', ') + '.</p>' +
+        '<p><strong>Ba hướng thần của ngày (theo can ' + info.day.can + '):</strong> Quý Nhân hướng ' + dirs.qn + ' (đón quý khí, hợp mọi chuyến đi); Tài Thần hướng ' + dirs.tai + ' (hợp chuyến đi cầu tài, ký kết, mở hàng); Hỷ Thần hướng ' + dirs.hy + ' (hợp chuyến đi cầu vui, hỷ sự, gặp gỡ). Chọn một hướng theo mục đích chính của chuyến đi, ra cửa đi về hướng đó một đoạn rồi rẽ tới điểm đến.</p>' +
+        '<p class="ptv-note">Giờ hoàng đạo và giờ Lý Thuần Phong là hai hệ khác nhau; xem thêm tab Lý Thuần Phong để đối chiếu trước khi chốt giờ khởi hành.</p>');
+    });
+    c.querySelector('#gx-ltp form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gx-ltp'), dt = parseD(box);
+      if (isNaN(dt.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày nhé.</p>'); return; }
+      var info = D.dayInfo(dt), good = [];
+      var rows = CHIS.map(function (ch) {
+        var name = D.ltpOf(info.lunar.d, info.lunar.m, ch), g = !!D.LTP_GOOD[name];
+        if (g) good.push('giờ ' + ch + ' (' + CLOCK[ch] + ')');
+        return '<tr><td><strong>Giờ ' + ch + '</strong></td><td>' + CLOCK[ch] + '</td><td class="' + (g ? 'ptv-good' : 'ptv-bad') + '">' + name + (g ? ' (tốt)' : ' (nên tránh)') + '</td><td>' + D.LTP_TEXT[name] + '</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>Giờ xuất hành Lý Thuần Phong ngày ' + D.fmtSolar(info) + ' (' + D.fmtLunar(info) + ')</h3>' +
+        '<p>Công thức cổ truyền: lấy (ngày âm + tháng âm + số khắc của giờ định đi) trừ 2 rồi chia 6 lấy dư. Khắc tính theo cặp giờ: Tý và Ngọ là khắc 1, Sửu và Mùi khắc 2, Dần và Thân khắc 3, Mão và Dậu khắc 4, Thìn và Tuất khắc 5, Tỵ và Hợi khắc 6.</p>' +
+        '<p><strong>Các giờ tốt để xuất hành trong ngày:</strong> ' + good.join(', ') + '.</p>' +
+        '<div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Giờ</th><th>Khung giờ</th><th>Trạng thái</th><th>Luận giải</th></tr>' + rows + '</table></div>' +
+        '<p class="ptv-note">Ba trạng thái tốt là Đại An, Tốc Hỷ và Tiểu Cát; ba trạng thái nên tránh là Lưu Niên, Xích Khẩu và Tuyệt Lộ. Hệ này chỉ luận giờ khởi hành, không thay đổi tốt xấu của chính ngày đó.</p>');
+    });
+    c.querySelector('#gx-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#gx-scan'), y = parseInt(box.querySelector('#y').value, 10), parts = box.querySelector('#m').value.split('-').map(Number);
+      var me = L.yearInfo(y), days = D.monthDays(parts[0], parts[1]);
+      var scored = days.map(function (i) { return { i: i, s: D.scoreDay(i, { purpose: 'xuat-hanh', birthChi: me.chi }) }; }).sort(function (a, b) { return b.s.score - a.s.score; }).slice(0, 8);
+      var rows = scored.map(function (x) {
+        var good = CHIS.filter(function (ch) { return D.LTP_GOOD[D.ltpOf(x.i.lunar.d, x.i.lunar.m, ch)]; });
+        return '<tr><td><strong>' + x.i.solar.d + '/' + x.i.solar.m + '</strong></td><td>' + x.i.day.text + '</td><td>' + V.fmtScore(x.s.score) + '</td><td>giờ ' + D.GIO_HD[x.i.day.chi].slice(0, 3).join(', ') + '...</td><td>giờ ' + good.slice(0, 3).join(', ') + '...</td></tr>';
+      }).join('');
+      L.resultBox(box, '<h3>8 ngày xuất hành tốt nhất tháng ' + parts[1] + '/' + parts[0] + ' cho tuổi ' + me.text + '</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Ngày</th><th>Can chi</th><th>Điểm</th><th>Giờ hoàng đạo (đầu danh sách)</th><th>Giờ Lý Thuần Phong tốt (đầu danh sách)</th></tr>' + rows + '</table></div><p class="ptv-note">Giờ đẹp nhất là giờ nằm trong cả hai hệ cùng lúc; bạn mở tab Lý Thuần Phong với từng ngày để xem đủ 12 giờ.</p>');
+    });
+  }
+
+  function huongTetV3(c) {
+    c.innerHTML = V.tabsHTML([['ht3-tet', 'Hướng các ngày Tết'], ['ht3-any', 'Tra hướng cho một ngày bất kỳ']]) +
+      '<div id="ht3-tet">' + V.formWrap2('<div class="ptv-row">' + L.field('Tết năm', L.select('ty', L.yearOptions(2026, 2028, 2027)), 'ptv-field-name') + '</div>', 'Xem hướng các ngày Tết') + '</div>' +
+      '<div id="ht3-any" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Ngày dương lịch (năm-tháng-ngày)', '<input type="text" id="d" value="2027-02-17">', 'ptv-field-name') + '</div>', 'Tra hướng ngày này') + '</div>';
+    V.wireTabs(c, ['ht3-tet', 'ht3-any']);
+    c.querySelector('#ht3-tet form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ht3-tet'), ty = parseInt(box.querySelector('#ty').value, 10), rows = '';
+      for (var ld = 1; ld <= 10; ld++) {
+        var dt = D.lunar2solar(ld, 1, ty, false); if (!dt) continue;
+        var info = D.dayInfo(dt), dirs = dirsOf(info);
+        rows += '<tr><td><strong>Mùng ' + ld + '</strong></td><td>' + D.fmtSolar(info) + '</td><td>' + info.day.text + '</td><td>' + dirs.tai + '</td><td>' + dirs.hy + '</td><td>' + dirs.qn + '</td><td>' + D.GIO_HD[info.day.chi].slice(0, 3).join(', ') + '...</td></tr>';
+      }
+      L.resultBox(box, '<h3>Hướng xuất hành đầu năm Tết ' + ty + '</h3><p>Ba hướng thần đều tính theo can của ngày: <strong>Tài Thần</strong> cho chuyến đi cầu tài lộc và công việc, <strong>Hỷ Thần</strong> cho chuyến đi cầu vui và hỷ sự, <strong>Quý Nhân</strong> là hướng đón quý khí dùng chung cho mọi chuyến đi. Cách dùng: ra khỏi nhà đi về hướng đã chọn một đoạn trước, rồi mới rẽ tới điểm đến thật.</p><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Ngày Tết</th><th>Dương lịch</th><th>Ngày can chi</th><th>Hướng Tài Thần</th><th>Hướng Hỷ Thần</th><th>Hướng Quý Nhân</th><th>Giờ hoàng đạo đầu ngày</th></tr>' + rows + '</table></div><p class="ptv-note">Ba hướng này tính theo ngày chứ không theo tuổi người đi, nên cả nhà xuất hành cùng ngày chọn chung một hướng theo mục đích chuyến đi.</p>');
+    });
+    c.querySelector('#ht3-any form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#ht3-any'), p = box.querySelector('#d').value.split('-').map(Number);
+      var dt = new Date(p[0], p[1] - 1, p[2]); if (isNaN(dt.getTime())) { L.resultBox(box, '<p class="ptv-bad">Bạn nhập ngày theo dạng năm-tháng-ngày, ví dụ 2027-02-17.</p>'); return; }
+      var info = D.dayInfo(dt), dirs = dirsOf(info);
+      L.resultBox(box, '<h3>Ngày ' + D.fmtSolar(info) + ' (ngày ' + info.day.text + ')</h3>' +
+        '<p><strong>Hướng Tài Thần:</strong> ' + dirs.tai + '. <strong>Hướng Hỷ Thần:</strong> ' + dirs.hy + '. <strong>Hướng Quý Nhân:</strong> ' + dirs.qn + '. Cả ba đều tính theo can ' + info.day.can + ' của ngày.</p>' +
+        '<p><strong>Giờ hoàng đạo trong ngày:</strong> giờ ' + D.GIO_HD[info.day.chi].join(', ') + '.</p>' +
+        '<p>Bộ ba hướng này dùng được cho mọi chuyến xuất hành trong năm, không riêng dịp Tết: đi xa cầu việc thì ưu tiên Tài Thần, đi dự hỷ sự và gặp gỡ thì ưu tiên Hỷ Thần, chuyến đi thường ngày lấy Quý Nhân là đủ.</p>');
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-gio-xuat-hanh': gioXuatHanhV3, 'huong-xuat-hanh-dau-nam': huongTetV3 });
 })();
