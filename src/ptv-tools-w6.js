@@ -139,3 +139,152 @@
 
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'gieo-que-dong-xu': dongXuV2 });
 })();
+
+/* --- Bo cong cu xem ngay v2 dung chung: quet thang / kiem tra ngay / top 3 thang --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, D = window.PTVDay, E = window.PTVEngine, esc = L.esc;
+  function monthOptions2() {
+    var now = new Date(), out = '';
+    for (var k = 0; k < 14; k++) { var d = new Date(now.getFullYear(), now.getMonth() + k, 1); out += '<option value="' + d.getFullYear() + '-' + (d.getMonth() + 1) + '"' + (k === 0 ? ' selected' : '') + '>Tháng ' + (d.getMonth() + 1) + '/' + d.getFullYear() + '</option>'; }
+    return out;
+  }
+  function fmtScore(s) { return String(s).replace('.', ','); }
+  function verdictFor(s) { return s >= 7.5 ? 'Rất tốt' : s >= 6 ? 'Tốt' : s >= 5 ? 'Khá' : s >= 4 ? 'Trung bình' : s >= 3 ? 'Kém' : 'Nên tránh'; }
+  function gioHDText(info) { return D.GIO_HD[info.day.chi].map(function (g) { return g + ' (' + E.HOUR_LABEL[g] + ')'; }).join(', '); }
+  function dayLineHTML(x) {
+    var i = x.i, s = x.s;
+    return '<div class="ptv-dayline"><span class="ptv-dayline-date">' + D.fmtSolar(i) + '</span> <span class="ptv-dayline-lunar">' + D.fmtLunar(i) + ', ngày ' + i.day.text + '</span> <span class="ptv-dayline-score">' + fmtScore(s.score) + ' điểm</span><span class="ptv-dayline-why">' + s.notes.join('. ') + '. Giờ hoàng đạo: ' + gioHDText(i) + '.</span></div>';
+  }
+  function scanHTML(purpose, birthChi, yy, mm, label, extraOpts) {
+    var opts = { purpose: purpose, birthChi: birthChi };
+    if (extraOpts) for (var k in extraOpts) opts[k] = extraOpts[k];
+    var me = null;
+    var scored = D.monthDays(yy, mm).map(function (i) { return { i: i, s: D.scoreDay(i, opts) }; });
+    var good = scored.filter(function (x) { return x.s.score >= 7; }).sort(function (a, b) { return b.s.score - a.s.score; });
+    var ok = scored.filter(function (x) { return x.s.score >= 5.5 && x.s.score < 7; }).sort(function (a, b) { return b.s.score - a.s.score; });
+    var bad = scored.filter(function (x) { return x.s.score <= 3; }).sort(function (a, b) { return a.i.dayOfMonth - b.i.dayOfMonth; });
+    var html = '';
+    html += '<h4>Ngày rất tốt (từ 7 điểm)</h4>' + (good.length ? good.slice(0, 10).map(dayLineHTML).join('') : '<p>Tháng này không có ngày nào đạt từ 7 điểm, bạn xem nhóm ngày khá bên dưới hoặc đổi sang tháng khác.</p>');
+    if (ok.length) html += '<h4>Ngày khá (5,5 đến dưới 7 điểm), dùng được khi cần gấp</h4>' + ok.slice(0, 8).map(dayLineHTML).join('');
+    if (bad.length) html += '<p class="ptv-note"><strong>Ngày nên tránh ' + label + ' trong tháng:</strong> ' + bad.map(function (x) { return D.fmtSolar(x.i) + ' (' + x.s.notes[x.s.notes.length - 1] + ')'; }).join('; ') + '.</p>';
+    return html;
+  }
+  function quarterHTML(purpose, birthChi, label) {
+    var now = new Date(), all = [];
+    for (var k = 0; k < 3; k++) {
+      var base = new Date(now.getFullYear(), now.getMonth() + k, 1);
+      D.monthDays(base.getFullYear(), base.getMonth() + 1).forEach(function (i) {
+        if (k === 0 && i.date < new Date(now.getFullYear(), now.getMonth(), now.getDate())) return;
+        var s = D.scoreDay(i, { purpose: purpose, birthChi: birthChi });
+        if (s.score >= 6.5) all.push({ i: i, s: s });
+      });
+    }
+    all.sort(function (a, b) { return b.s.score - a.s.score || a.i.date - b.i.date; });
+    if (!all.length) return '<p>Trong 3 tháng tới không có ngày nào đạt từ 6,5 điểm cho tuổi của bạn. Bạn nới sang tháng thứ tư hoặc chấp nhận một ngày khá ở tab quét tháng.</p>';
+    return '<h4>Top ngày tốt ' + label + ' trong 3 tháng tới</h4>' + all.slice(0, 8).map(dayLineHTML).join('');
+  }
+  function checkDayHTML(purpose, birthChi, dateStr, label) {
+    var p = (dateStr || '').split('-').map(Number);
+    if (p.length !== 3 || !p[0] || !p[1] || !p[2] || p[1] < 1 || p[1] > 12 || p[2] < 1 || p[2] > 31) return '<p>Ngày chưa đúng định dạng. Bạn nhập theo dạng năm-tháng-ngày, ví dụ 2027-03-17.</p>';
+    var info = D.dayInfo(new Date(p[0], p[1] - 1, p[2]));
+    var s = D.scoreDay(info, { purpose: purpose, birthChi: birthChi });
+    return '<h4>Ngày ' + D.fmtSolar(info) + ' (' + D.fmtLunar(info) + '), ngày ' + info.day.text + ': <span class="' + (s.score >= 6 ? 'ptv-good' : s.score >= 4 ? 'ptv-mid' : 'ptv-bad') + '">' + fmtScore(s.score) + '/10, ' + verdictFor(s.score) + '</span></h4>' +
+      '<p>' + s.notes.join('. ') + '.</p><p><strong>Giờ hoàng đạo trong ngày:</strong> ' + gioHDText(info) + '. Khi ' + label + ', nên chọn một giờ hoàng đạo thuận tiện nhất để bắt đầu.</p>';
+  }
+  function tabsHTML(labels) {
+    return '<div class="ptv-xtabs">' + labels.map(function (x, i) { return '<button type="button" class="ptv-xtab' + (i === 0 ? ' ptv-on' : '') + '" data-t="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
+  }
+  function wireTabs(c, ids) {
+    var tabs = c.querySelectorAll('.ptv-xtab');
+    function show(t) {
+      for (var i = 0; i < tabs.length; i++) tabs[i].classList.toggle('ptv-on', tabs[i].getAttribute('data-t') === t);
+      ids.forEach(function (id) { var el = c.querySelector('#' + id); if (el) el.hidden = id !== t; });
+    }
+    for (var i = 0; i < tabs.length; i++) tabs[i].addEventListener('click', function () { show(this.getAttribute('data-t')); });
+  }
+  function formWrap2(inner, btn) { return '<form class="ptv-form">' + inner + '<button type="submit" class="ptv-btn">' + (btn || 'Xem kết quả') + '</button></form><div class="ptv-out"></div>'; }
+
+  function dongThoV2(c) {
+    c.innerHTML = tabsHTML([['dt-scan', 'Quét ngày tốt theo tháng'], ['dt-day', 'Kiểm tra một ngày cụ thể'], ['dt-quarter', 'Top ngày tốt 3 tháng tới'], ['dt-year', 'Kiểm tra năm xây nhà']]) +
+      '<div id="dt-scan">' + formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn động thổ', L.select('m', monthOptions2())) + '</div>', 'Xem ngày tốt động thổ') + '</div>' +
+      '<div id="dt-day" hidden>' + formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Ngày dự kiến động thổ (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="dt-quarter" hidden>' + formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990)), 'ptv-field-name') + '</div>', 'Tìm ngày tốt nhất 3 tháng tới') + '</div>' +
+      '<div id="dt-year" hidden>' + formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Năm dự định xây nhà', L.select('by', L.yearOptions(2024, 2035, 2027))) + '</div>', 'Kiểm tra năm xây') + '</div>';
+    wireTabs(c, ['dt-scan', 'dt-day', 'dt-quarter', 'dt-year']);
+    function birthChi(box) { return L.yearInfo(parseInt(box.querySelector('#y').value, 10)); }
+    c.querySelector('#dt-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dt-scan'), me = birthChi(box);
+      var parts = box.querySelector('#m').value.split('-').map(Number);
+      var yy = parts[0], mm = parts[1], age = yy - me.year + 1;
+      var tt = L.tamTai(me.chi, yy), kl = L.kimLau(age), ho = L.hoangOc(age);
+      var html = '<h3>Ngày tốt động thổ tháng ' + mm + '/' + yy + ' cho gia chủ sinh năm ' + me.year + ' (tuổi ' + me.chi + ')</h3>' +
+        '<p class="ptv-note"><strong>Kiểm tra năm ' + yy + ' theo tuổi:</strong> gia chủ ' + age + ' tuổi âm, ' + (tt ? 'phạm tam tai' : 'không phạm tam tai') + ', ' + (kl.bad ? 'phạm ' + kl.kind.toLowerCase() : 'không phạm kim lâu') + ', hoang ốc cung ' + ho.name + (ho.bad ? ' (cung xấu)' : ' (cung tốt)') + '. Chi tiết ở tab Kiểm tra năm xây nhà.</p>' +
+        scanHTML('dong-tho', me.chi, yy, mm, 'động thổ');
+      L.resultBox(box, html);
+    });
+    c.querySelector('#dt-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dt-day'), me = birthChi(box);
+      L.resultBox(box, checkDayHTML('dong-tho', me.chi, box.querySelector('#dt').value, 'động thổ'));
+    });
+    c.querySelector('#dt-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dt-quarter'), me = birthChi(box);
+      L.resultBox(box, '<h3>Ngày tốt động thổ nhất trong 3 tháng tới cho tuổi ' + me.chi + '</h3>' + quarterHTML('dong-tho', me.chi, 'động thổ'));
+    });
+    c.querySelector('#dt-year form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#dt-year'), me = birthChi(box);
+      var by = parseInt(box.querySelector('#by').value, 10), bInfo = L.yearInfo(by), age = by - me.year + 1;
+      var tt = L.tamTai(me.chi, by), kl = L.kimLau(age), ho = L.hoangOc(age);
+      var badCount = (tt ? 1 : 0) + (kl.bad ? 1 : 0) + (ho.bad ? 1 : 0);
+      var TAI = { 'Thân': 'Dần, Mão, Thìn', 'Tý': 'Dần, Mão, Thìn', 'Thìn': 'Dần, Mão, Thìn', 'Dần': 'Thân, Dậu, Tuất', 'Ngọ': 'Thân, Dậu, Tuất', 'Tuất': 'Thân, Dậu, Tuất', 'Hợi': 'Tỵ, Ngọ, Mùi', 'Mão': 'Tỵ, Ngọ, Mùi', 'Mùi': 'Tỵ, Ngọ, Mùi', 'Tỵ': 'Hợi, Tý, Sửu', 'Dậu': 'Hợi, Tý, Sửu', 'Sửu': 'Hợi, Tý, Sửu' };
+      var html = '<h3>Năm ' + by + ' (' + bInfo.text + ') với gia chủ sinh năm ' + me.year + ' (tuổi ' + me.chi + ', ' + age + ' tuổi âm)</h3>' +
+        '<p><strong>Tam tai:</strong> ' + (tt ? 'phạm tam tai. Tuổi ' + me.chi + ' phạm tam tai vào các năm ' + TAI[me.chi] + ', và năm ' + by + ' là năm ' + bInfo.chi + '.' : 'không phạm. Tuổi ' + me.chi + ' chỉ phạm tam tai vào các năm ' + TAI[me.chi] + ', năm ' + by + ' là năm ' + bInfo.chi + ' nên không phạm.') + '</p>' +
+        '<p><strong>Kim lâu:</strong> ' + (kl.bad ? 'phạm ' + kl.kind + ' (tuổi âm ' + age + ' chia 9 dư ' + (age % 9) + ').' : 'không phạm (tuổi âm ' + age + ' chia 9 dư ' + (age % 9) + ', các số dư phạm là 1, 3, 6, 8).') + '</p>' +
+        '<p><strong>Hoang ốc:</strong> cung ' + ho.name + ', ' + (ho.bad ? 'là cung xấu trong 6 cung hoang ốc.' : 'là cung tốt trong 6 cung hoang ốc.') + '</p>' +
+        '<p><strong>Kết luận:</strong> ' + (badCount === 0 ? 'năm ' + by + ' không phạm cả ba hạn, là năm thuận để gia chủ tự đứng tuổi động thổ và xây nhà.' : 'năm ' + by + ' phạm ' + badCount + ' trong 3 hạn lớn. Cách xử lý phổ biến là mượn tuổi của người không phạm hạn để đứng tên động thổ và làm các lễ chính, thủ tục và cách tính chi tiết có ở công cụ <a href="https://phongthuy.vietaa.com/xem-tuoi-xay-nha/">Xem tuổi xây nhà</a> của Phong Thủy VietAA. Nếu vẫn muốn tự làm, nên chọn ngày giờ thật tốt ở các tab bên trên và cân nhắc quy mô xây dựng vừa phải.') + '</p>' +
+        '<p class="ptv-note">Ba hạn tam tai, kim lâu, hoang ốc là lớp kiểm tra theo NĂM và tuổi gia chủ, khác với điểm ngày ở các tab còn lại vốn chấm theo ngày. Một năm đẹp vẫn cần chọn ngày đẹp, và một ngày đẹp trong năm phạm hạn vẫn nên cân nhắc mượn tuổi.</p>';
+      L.resultBox(box, html);
+    });
+  }
+
+  window.PTVDayToolsV2 = { scanHTML: scanHTML, quarterHTML: quarterHTML, checkDayHTML: checkDayHTML, tabsHTML: tabsHTML, wireTabs: wireTabs, formWrap2: formWrap2, monthOptions2: monthOptions2, fmtScore: fmtScore, verdictFor: verdictFor };
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-dong-tho': dongThoV2 });
+})();
+
+/* --- Nang cap rieng Xem Ngay Mua Nha (v2) --- */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  function muaNhaV2(c) {
+    c.innerHTML = V.tabsHTML([['mn-scan', 'Quét ngày tốt theo tháng'], ['mn-day', 'Kiểm tra một ngày cụ thể'], ['mn-quarter', 'Top ngày tốt 3 tháng tới']]) +
+      '<div id="mn-scan">' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Tháng muốn mua nhà', L.select('m', V.monthOptions2())) + '</div><div class="ptv-row">' + L.field('Việc chính trong ngày', L.select('mode', '<option value="ban-giao">Nhận bàn giao nhà</option><option value="ky-ket">Ký hợp đồng, đặt cọc</option>'), 'ptv-field-name') + '</div>', 'Xem ngày tốt mua nhà') + '</div>' +
+      '<div id="mn-day" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990))) + L.field('Ngày dự kiến (năm-tháng-ngày)', '<input type="text" id="dt" value="2027-03-17">') + '</div>', 'Kiểm tra ngày này') + '</div>' +
+      '<div id="mn-quarter" hidden>' + V.formWrap2('<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select('y', L.yearOptions(1940, 2010, 1990)), 'ptv-field-name') + '</div>', 'Tìm ngày tốt nhất 3 tháng tới') + '</div>';
+    V.wireTabs(c, ['mn-scan', 'mn-day', 'mn-quarter']);
+    c.querySelector('#mn-scan form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mn-scan'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      var parts = box.querySelector('#m').value.split('-').map(Number);
+      var mode = box.querySelector('#mode').value;
+      var note = mode === 'ban-giao'
+        ? '<p class="ptv-note">Bạn đang xem ngày cho việc <strong>nhận bàn giao nhà</strong>: đây là mốc bạn chính thức nhận chìa khóa và bước vào nhà mới, nên ưu tiên ngày giờ thuận tiện để kiểm tra kỹ hiện trạng nhà, đồng hồ điện nước và biên bản bàn giao. Nếu ngày ký hợp đồng khác ngày nhận nhà, bạn có thể kiểm tra riêng ngày ký ở tab Kiểm tra một ngày cụ thể.</p>'
+        : '<p class="ptv-note">Bạn đang xem ngày cho việc <strong>ký hợp đồng, đặt cọc</strong>: đây là mốc pháp lý quan trọng nhất của giao dịch, nên ưu tiên ngày đẹp và mang đủ giấy tờ, đọc kỹ điều khoản trước khi ký. Ngày nhận bàn giao sau này có thể chọn riêng ở tab Kiểm tra một ngày cụ thể.</p>';
+      L.resultBox(box, '<h3>Ngày tốt mua nhà tháng ' + parts[1] + '/' + parts[0] + ' cho gia chủ sinh năm ' + me.year + ' (tuổi ' + me.chi + ')</h3>' + note + V.scanHTML('mua-nha', me.chi, parts[0], parts[1], 'mua nhà'));
+    });
+    c.querySelector('#mn-day form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mn-day'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, V.checkDayHTML('mua-nha', me.chi, box.querySelector('#dt').value, 'ký kết và nhận nhà'));
+    });
+    c.querySelector('#mn-quarter form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#mn-quarter'), me = L.yearInfo(parseInt(box.querySelector('#y').value, 10));
+      L.resultBox(box, '<h3>Ngày tốt mua nhà nhất trong 3 tháng tới cho tuổi ' + me.chi + '</h3>' + V.quarterHTML('mua-nha', me.chi, 'mua nhà'));
+    });
+  }
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-ngay-mua-nha': muaNhaV2 });
+})();

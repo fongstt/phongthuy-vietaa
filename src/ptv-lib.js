@@ -82,7 +82,7 @@
   }
   function tamTai(yearChi, buildYear) {
     var groups = { 'Thân': 0, 'Tý': 0, 'Thìn': 0, 'Dần': 1, 'Ngọ': 1, 'Tuất': 1, 'Hợi': 2, 'Mão': 2, 'Mùi': 2, 'Tỵ': 3, 'Dậu': 3, 'Sửu': 3 };
-    var taiYears = [['Dần', 'Mão', 'Thìn'], ['Tỵ', 'Ngọ', 'Mùi'], ['Hợi', 'Tý', 'Sửu'], ['Thân', 'Dậu', 'Tuất']];
+    var taiYears = [['Dần', 'Mão', 'Thìn'], ['Thân', 'Dậu', 'Tuất'], ['Tỵ', 'Ngọ', 'Mùi'], ['Hợi', 'Tý', 'Sửu']];
     var bChi = yearInfo(buildYear).chi;
     return taiYears[groups[yearChi]].indexOf(bChi) >= 0;
   }
