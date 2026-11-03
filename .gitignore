@@ -1,0 +1,3 @@
+*.zip
+.secrets/
+.DS_Store

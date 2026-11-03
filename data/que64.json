@@ -1,0 +1,386 @@
+[
+  {
+    "upper": "Càn",
+    "lower": "Càn",
+    "name": "Thuần Càn",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Khôn",
+    "name": "Thuần Khôn",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Chấn",
+    "name": "Thủy Lôi Truân",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Khảm",
+    "name": "Sơn Thủy Mông",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Càn",
+    "name": "Thủy Thiên Nhu",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Khảm",
+    "name": "Thiên Thủy Tụng",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Khảm",
+    "name": "Địa Thủy Sư",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Khôn",
+    "name": "Thủy Địa Tỷ",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Càn",
+    "name": "Phong Thiên Tiểu Súc",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Đoài",
+    "name": "Thiên Trạch Lý",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Càn",
+    "name": "Địa Thiên Thái",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Khôn",
+    "name": "Thiên Địa Bĩ",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Ly",
+    "name": "Thiên Hỏa Đồng Nhân",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Càn",
+    "name": "Hỏa Thiên Đại Hữu",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Cấn",
+    "name": "Địa Sơn Khiêm",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Khôn",
+    "name": "Lôi Địa Dự",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Chấn",
+    "name": "Trạch Lôi Tùy",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Tốn",
+    "name": "Sơn Phong Cổ",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Đoài",
+    "name": "Địa Trạch Lâm",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Khôn",
+    "name": "Phong Địa Quan",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Chấn",
+    "name": "Hỏa Lôi Phệ Hạp",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Ly",
+    "name": "Sơn Hỏa Bí",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Khôn",
+    "name": "Sơn Địa Bác",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Chấn",
+    "name": "Địa Lôi Phục",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Chấn",
+    "name": "Thiên Lôi Vô Vọng",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Càn",
+    "name": "Sơn Thiên Đại Súc",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Chấn",
+    "name": "Sơn Lôi Di",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Tốn",
+    "name": "Trạch Phong Đại Quá",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Khảm",
+    "name": "Thuần Khảm",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Ly",
+    "name": "Thuần Ly",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Cấn",
+    "name": "Trạch Sơn Hàm",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Tốn",
+    "name": "Lôi Phong Hằng",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Cấn",
+    "name": "Thiên Sơn Độn",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Càn",
+    "name": "Lôi Thiên Đại Tráng",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Khôn",
+    "name": "Hỏa Địa Tấn",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Ly",
+    "name": "Địa Hỏa Minh Di",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Ly",
+    "name": "Phong Hỏa Gia Nhân",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Đoài",
+    "name": "Hỏa Trạch Khuê",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Cấn",
+    "name": "Thủy Sơn Kiển",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Khảm",
+    "name": "Lôi Thủy Giải",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Đoài",
+    "name": "Sơn Trạch Tổn",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Chấn",
+    "name": "Phong Lôi Ích",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Càn",
+    "name": "Trạch Thiên Quải",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Càn",
+    "lower": "Tốn",
+    "name": "Thiên Phong Cấu",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Khôn",
+    "name": "Trạch Địa Tụy",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khôn",
+    "lower": "Tốn",
+    "name": "Địa Phong Thăng",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Khảm",
+    "name": "Trạch Thủy Khốn",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Tốn",
+    "name": "Thủy Phong Tỉnh",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Ly",
+    "name": "Trạch Hỏa Cách",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Tốn",
+    "name": "Hỏa Phong Đỉnh",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Chấn",
+    "name": "Thuần Chấn",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Cấn",
+    "lower": "Cấn",
+    "name": "Thuần Cấn",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Cấn",
+    "name": "Phong Sơn Tiệm",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Đoài",
+    "name": "Lôi Trạch Quy Muội",
+    "rating": "Hung"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Ly",
+    "name": "Lôi Hỏa Phong",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Cấn",
+    "name": "Hỏa Sơn Lữ",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Tốn",
+    "name": "Thuần Tốn",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Đoài",
+    "lower": "Đoài",
+    "name": "Thuần Đoài",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Khảm",
+    "name": "Phong Thủy Hoán",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Đoài",
+    "name": "Thủy Trạch Tiết",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Tốn",
+    "lower": "Đoài",
+    "name": "Phong Trạch Trung Phu",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Chấn",
+    "lower": "Cấn",
+    "name": "Lôi Sơn Tiểu Quá",
+    "rating": "Bình"
+  },
+  {
+    "upper": "Khảm",
+    "lower": "Ly",
+    "name": "Thủy Hỏa Ký Tế",
+    "rating": "Cát"
+  },
+  {
+    "upper": "Ly",
+    "lower": "Khảm",
+    "name": "Hỏa Thủy Vị Tế",
+    "rating": "Hung"
+  }
+]

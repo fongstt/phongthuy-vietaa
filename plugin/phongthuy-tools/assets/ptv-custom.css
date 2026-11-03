@@ -1,0 +1,180 @@
+/* PhongThuy VietAA Tools - giao dien cong cu (v1.2.1) */
+.ptv-hero{background:linear-gradient(135deg,#14532d 0%,#166534 55%,#92700c 130%);color:#fff;border-radius:14px;padding:30px 28px 24px;margin:6px 0 20px;text-align:center}
+.ptv-hero h1{color:#fff;margin:0 0 8px;font-size:32px;line-height:1.25}
+.ptv-hero p{margin:0 auto;max-width:640px;color:#e9f5e9;font-size:16.5px}
+.ptv-hero .ptv-hero-badge{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;padding:3px 14px;font-size:13.5px;font-weight:700;margin-bottom:12px;letter-spacing:.4px}
+.ptv-tool{max-width:860px;margin:0 auto;font-size:16px;line-height:1.6;color:#26281f}
+.ptv-form{background:#fff;border:1px solid #e3dcc8;border-radius:14px;padding:22px;box-shadow:0 8px 24px rgba(90,75,20,.10);margin:16px 0 24px}
+.ptv-form .ptv-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.ptv-form label{display:block;font-weight:600;margin-bottom:4px;font-size:14.5px;color:#4c4633}
+.ptv-form .ptv-field{flex:1 1 140px}
+.ptv-form input[type=text],.ptv-form select{width:100%;padding:10px 11px;border:1.5px solid #d8cdaa;border-radius:8px;background:#fffef9;box-sizing:border-box;font-size:16px}
+.ptv-form input[type=text]:focus,.ptv-form select:focus{border-color:#166534;outline:2px solid rgba(22,101,52,.18)}
+.ptv-form .ptv-field-name{flex:1 1 100%}
+.ptv-form .ptv-field-name input{font-size:18px;font-weight:600}
+.ptv-form .ptv-optional{border-top:1px dashed #ddd3ba;margin-top:4px;padding-top:12px}
+.ptv-form .ptv-optional-title{font-weight:700;color:#4c4633;margin:0 0 8px;font-size:14.5px}
+.ptv-btn{background:linear-gradient(135deg,#166534,#14532d);color:#fff;border:0;border-radius:999px;padding:12px 38px;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(20,83,45,.35);display:block;margin:6px auto 0}
+.ptv-btn:hover{filter:brightness(1.1)}
+.ptv-card{background:#fff;border:1px solid #e7e2d6;border-left:5px solid #b8860b;border-radius:12px;padding:20px 22px;margin:0 0 18px;box-shadow:0 3px 12px rgba(90,75,20,.06)}
+.ptv-card h3{margin-top:0;color:#14532d;font-size:20px}
+.ptv-facts{display:flex;flex-wrap:wrap;gap:8px 18px;background:#faf6ee;border-radius:8px;padding:10px 14px;margin-bottom:10px}
+.ptv-menh{font-size:18px}
+.ptv-table{width:100%;border-collapse:collapse;margin:10px 0}
+.ptv-table th,.ptv-table td{border:1px solid #e0d9c8;padding:7px 9px;text-align:left;vertical-align:top}
+.ptv-table th{background:#faf6ee}
+.ptv-table-wrap{overflow-x:auto}
+.ptv-el{display:inline-block;color:#fff;border-radius:10px;padding:0 9px;font-size:13px;font-weight:700;vertical-align:middle}
+.ptv-bar-row{display:flex;align-items:center;gap:8px;margin:5px 0}
+.ptv-bar-label{width:64px}
+.ptv-bar-track{flex:1;background:#f0ead9;border-radius:5px;height:14px;overflow:hidden}
+.ptv-bar-fill{display:block;height:100%;border-radius:5px}
+.ptv-bar-num{width:26px;text-align:right;font-weight:700}
+.ptv-chars{display:flex;flex-wrap:wrap;gap:12px}
+.ptv-char{flex:1 1 130px;border:1px solid #e7e2d6;border-radius:10px;padding:12px;text-align:center;background:#fffef9}
+.ptv-char-han{font-size:44px;line-height:1.15;color:#14532d}
+.ptv-char-token{font-weight:700;font-size:17px}
+.ptv-char p{margin:4px 0}
+.ptv-char-meaning{color:#555;font-size:14px}
+.ptv-char-missing{background:#fdf3f3}
+.ptv-block{border-bottom:1px dashed #ddd3ba;padding:10px 0}
+.ptv-block:last-child{border-bottom:0}
+.ptv-block-head{display:flex;justify-content:space-between;font-weight:700;gap:10px;flex-wrap:wrap}
+.ptv-block-score{color:#92700c;white-space:nowrap}
+.ptv-mini-track{background:#f0ead9;border-radius:4px;height:7px;margin:5px 0 3px;overflow:hidden}
+.ptv-mini-fill{display:block;height:100%;background:linear-gradient(90deg,#b8860b,#166534)}
+.ptv-block p{margin:4px 0 2px;color:#444}
+.ptv-good{color:#2e7d32;font-weight:700}
+.ptv-mid{color:#b8860b;font-weight:700}
+.ptv-bad{color:#c62828;font-weight:700}
+.ptv-parent{border-bottom:1px dashed #ddd3ba;padding:8px 0}
+.ptv-parent:last-of-type{border-bottom:0}
+.ptv-parent-head{font-size:17px;margin:2px 0 4px}
+.ptv-parent-pillar{color:#777;font-size:14px}
+.ptv-parent p{margin:3px 0}
+.ptv-sugs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:10px}
+.ptv-sug{display:flex;align-items:center;gap:8px;background:#faf6ee;border:1.5px solid #e3dcc8;border-radius:10px;padding:10px 12px;cursor:pointer;text-align:left;font-size:15px}
+.ptv-sug:hover{border-color:#166534;background:#f2f8f0}
+.ptv-sug-name{font-weight:700;flex:1}
+.ptv-sug-meta{color:#777;font-size:13px;white-space:nowrap}
+.ptv-sug-score{color:#fff;font-weight:800;border-radius:8px;padding:2px 9px;font-size:15px}
+.ptv-score-wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.ptv-score-circle{width:112px;height:112px;border:6px solid #2e7d32;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;font-weight:800;line-height:1;flex:0 0 auto;background:#fffef9}
+.ptv-score-circle span{font-size:15px;color:#777;font-weight:600;margin-top:3px}
+.ptv-verdict{font-size:21px;font-weight:800;margin:2px 0 8px;color:#26281f}
+.ptv-alert{background:#fdf3f3;border:1px solid #e5b4b4;border-radius:10px;padding:14px 16px;margin:0 0 18px}
+.ptv-note{color:#555;font-size:14.5px}
+@media (max-width:640px){
+  .ptv-hero{padding:22px 16px 18px}
+  .ptv-hero h1{font-size:25px}
+  .ptv-form{padding:16px}
+  .ptv-card{padding:16px}
+  .ptv-score-wrap{gap:14px}
+}
+
+/* ---- Boi Kieu ---- */
+.ptv-kieu-topics{display:flex;flex-wrap:wrap;gap:8px}
+.ptv-chip{cursor:pointer}
+.ptv-chip input{position:absolute;opacity:0;pointer-events:none}
+.ptv-chip span{display:inline-block;border:1.5px solid #d8cdaa;border-radius:999px;padding:7px 16px;background:#fffef9;font-weight:600;font-size:15px}
+.ptv-chip input:checked + span{background:#166534;border-color:#166534;color:#fff}
+.ptv-kieu-result{border-left-color:#92700c}
+.ptv-kieu-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.ptv-kieu-topic{font-weight:700;color:#14532d;text-transform:capitalize}
+.ptv-kieu-tone{color:#fff;font-weight:800;border-radius:999px;padding:3px 14px;font-size:14px}
+.ptv-kieu-verse{margin:14px 0 4px;padding:20px 16px;background:#faf6ee;border-radius:10px;text-align:center;border:0}
+.ptv-kieu-verse p{margin:2px 0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:23px;line-height:1.5;color:#5c4510}
+.ptv-kieu-src{text-align:center;color:#8a8272;font-size:13.5px;margin:0 0 8px}
+.ptv-kieu-for{text-align:center}
+.ptv-kieu-result h4{margin:16px 0 4px;color:#14532d;font-size:17px}
+
+/* ---- Trang chu: danh muc ung dung ---- */
+.ptv-home{max-width:1060px;margin:0 auto}
+.ptv-home .ptv-hero{margin-bottom:26px}
+.ptv-hero-stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.ptv-hero-stats span{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 16px;color:#fff;font-size:14.5px}
+.ptv-hero-stats strong{font-size:17px}
+.ptv-home-h2{color:#14532d;font-size:24px;margin:28px 0 14px;border-bottom:2px solid #e3dcc8;padding-bottom:7px}
+.ptv-home-h2 small{color:#8a8272;font-size:15px;font-weight:400}
+.ptv-hot{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+.ptv-hot-item{display:flex;align-items:center;gap:9px;background:#fff;border:1.5px solid #e3dcc8;border-radius:10px;padding:10px 12px;text-decoration:none;color:#26281f;font-weight:600}
+a.ptv-hot-item:hover{border-color:#166534;background:#f2f8f0}
+.ptv-hot-item.is-soon{opacity:.62}
+.ptv-hot-num{background:#92700c;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:800;flex:0 0 auto}
+.ptv-hot-icon{font-size:19px}
+.ptv-hot-name{font-size:15px;line-height:1.3}
+.ptv-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px}
+.ptv-app-card{display:flex;flex-direction:column;gap:3px;background:#fff;border:1.5px solid #e7e2d6;border-radius:12px;padding:16px;text-decoration:none;color:#26281f;box-shadow:0 3px 10px rgba(90,75,20,.05)}
+a.ptv-app-card:hover{border-color:#166534;transform:translateY(-2px);transition:all .15s ease}
+.ptv-app-card.is-soon{opacity:.66;background:#fdfcf7}
+.ptv-app-icon{font-size:30px}
+.ptv-app-name{font-weight:800;font-size:17px;color:#14532d}
+.ptv-app-desc{color:#555;font-size:14.5px;line-height:1.45;flex:1}
+.ptv-app-go{color:#166534;font-weight:700;font-size:14.5px;margin-top:6px}
+.ptv-app-soon{color:#92700c;font-weight:700;font-size:13.5px;margin-top:6px;text-transform:uppercase;letter-spacing:.3px}
+.ptv-home-note{background:#faf6ee;border-radius:12px;padding:20px 22px;margin-top:30px}
+.ptv-home-note h2{margin-top:0;color:#14532d;font-size:21px}
+@media (max-width:640px){
+  .ptv-kieu-verse p{font-size:19px}
+  .ptv-apps{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+}
+
+/* ---- Chuan hoa can le (v1.2.1) ---- */
+.ptv-page{max-width:860px;margin:0 auto}
+.ptv-page > p, .ptv-page > h2{margin-left:2px;margin-right:2px}
+.ptv-form .ptv-field > label{display:block;font-weight:600;margin-bottom:5px;font-size:14.5px;color:#4c4633;line-height:1.35}
+.ptv-form input[type=text],.ptv-form input[type=number],.ptv-form select{height:46px;line-height:1.4;padding:0 11px;vertical-align:middle}
+.ptv-form .ptv-field{display:flex;flex-direction:column;justify-content:flex-start}
+.ptv-form .ptv-field input,.ptv-form .ptv-field select{margin-top:auto}
+.ptv-form .ptv-optional{flex-direction:row}
+.ptv-form .ptv-optional-title{flex:1 1 100%}
+.ptv-chip{position:relative;display:inline-flex;margin:0}
+.ptv-chip input{left:0;top:0;width:100%;height:100%}
+.ptv-hero{box-sizing:border-box}
+.ptv-card,.ptv-form,.ptv-alert{box-sizing:border-box}
+.ptv-tool form{margin:0}
+.ptv-home-h2{clear:both}
+.ptv-app-card,.ptv-hot-item{box-sizing:border-box}
+.ptv-kieu-topics{margin-top:2px}
+.ptv-form .ptv-row{align-items:flex-end}
+.ptv-form .ptv-row:first-child{margin-top:0}
+
+/* --- Dat Ten Con v2 panels --- */
+.ptv-list{margin:8px 0 8px 18px}
+.ptv-list li{margin:4px 0;line-height:1.55}
+.ptv-xtabs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.ptv-xtab{border:1.5px solid #b8860b;background:#fff;color:#7a5b06;border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:14px}
+.ptv-xtab.ptv-on{background:#b8860b;color:#fff}
+.ptv-xpane textarea{width:100%;box-sizing:border-box;border:1.5px solid #d8cfc0;border-radius:10px;padding:10px 12px;font:inherit;margin:6px 0 10px;background:#fffdf8}
+.ptv-xrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}
+.ptv-xrow input[type="text"],.ptv-xpane input[type="text"]{flex:1 1 200px;box-sizing:border-box;border:1.5px solid #d8cfc0;border-radius:10px;padding:10px 12px;font:inherit;background:#fffdf8;min-height:44px}
+.ptv-xrow select{border:1.5px solid #d8cfc0;border-radius:10px;padding:10px;font:inherit;background:#fffdf8;min-height:44px}
+.ptv-xbtn{background:#2e7d32;color:#fff;border:none;border-radius:10px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:14px}
+.ptv-xbtn:hover{background:#256b29}
+
+/* --- Boi Kieu v2 --- */
+.ptv-kieu-modes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.ptv-kieu-modes-label{font-weight:700;color:#7a5b06}
+.ptv-kieu-ritual summary{cursor:pointer;font-weight:700;color:#7a5b06}
+.ptv-kieu-daily{border-left:4px solid #b8860b}
+.ptv-kieu-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.ptv-hist-item{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;width:100%;text-align:left;background:#fffdf8;border:1.5px solid #e4dcc9;border-radius:10px;padding:9px 12px;margin:6px 0;cursor:pointer;font:inherit}
+.ptv-hist-item:hover{border-color:#b8860b}
+.ptv-hist-date{font-size:12.5px;color:#8a8378;min-width:118px}
+.ptv-hist-line{font-style:italic;flex:1}
+.ptv-hist-clear{margin-top:8px;background:#8a8378}
+.ptv-brandline{margin-top:26px;padding:14px 16px;background:#fdf6e0;border:1px solid #e7d9a8;border-radius:10px;line-height:1.6}
+
+/* --- Trang chu v2 --- */
+.ptv-home-searchwrap{margin:18px 0 6px}
+.ptv-home-searchwrap input{width:100%;box-sizing:border-box;border:2px solid #b8860b;border-radius:12px;padding:13px 16px;font:inherit;font-size:16px;background:#fffdf8}
+.ptv-home-chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.ptv-home-chips span{font-weight:700;color:#7a5b06}
+.ptv-home-chips a{border:1.5px solid #d8cfc0;background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;color:#5c4a08;text-decoration:none}
+.ptv-home-chips a:hover{border-color:#b8860b;background:#fdf6e0}
+.ptv-home-intro{line-height:1.65;color:#4a463f;margin:2px 0 12px}
+.ptv-home-sections{margin-top:30px;line-height:1.7}
+.ptv-home-sections h2{color:#7a5b06;margin:26px 0 8px}
+.ptv-home-sections h3{color:#14532d;font-size:17.5px;margin:18px 0 6px}
+.ptv-home-sections ul,.ptv-home-sections ol{margin:6px 0 10px 20px}
+.ptv-home-sections li{margin:5px 0}

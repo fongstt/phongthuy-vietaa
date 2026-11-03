@@ -1,0 +1,2081 @@
+{
+  "an": {
+    "element": "Thổ",
+    "han": "安",
+    "meaning": "bình yên, an ổn, an lành",
+    "strokes": 6
+  },
+  "anh": {
+    "element": "Mộc",
+    "han": "英",
+    "meaning": "anh hùng, tinh hoa, kiệt xuất",
+    "strokes": 11
+  },
+  "binh": {
+    "element": "Thủy",
+    "han": "兵",
+    "meaning": "quân lính, binh khí",
+    "strokes": 7,
+    "uncertain": true
+  },
+  "biên": {
+    "element": "Kim",
+    "han": "編",
+    "meaning": "biên soạn, ghi chép, sắp xếp",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "biểu": {
+    "element": "Thủy",
+    "han": "表",
+    "meaning": "bên ngoài, biểu hiện, đồng hồ",
+    "strokes": 9
+  },
+  "bách": {
+    "element": "Mộc",
+    "han": "柏",
+    "meaning": "cây bách, trường thọ, vững chãi",
+    "strokes": 9
+  },
+  "bình": {
+    "element": "Thủy",
+    "han": "平",
+    "meaning": "bằng phẳng, bình yên, công bằng",
+    "strokes": 5
+  },
+  "bích": {
+    "element": "Kim",
+    "han": "碧",
+    "meaning": "ngọc bích, xanh biếc",
+    "strokes": 14
+  },
+  "bính": {
+    "element": "Hỏa",
+    "han": "丙",
+    "meaning": "can Bính, lửa sáng",
+    "strokes": 5
+  },
+  "bùi": {
+    "element": "Mộc",
+    "han": "裴",
+    "meaning": "họ, nghĩa gốc áo dài, phấp phới",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "băng": {
+    "element": "Thủy",
+    "han": "冰",
+    "meaning": "băng giá, trong trẻo, thuần khiết",
+    "strokes": 6
+  },
+  "bạch": {
+    "element": "Kim",
+    "han": "白",
+    "meaning": "trắng, trong sạch, rõ ràng",
+    "strokes": 5
+  },
+  "bản": {
+    "element": "Mộc",
+    "han": "本",
+    "meaning": "gốc, căn bản, nền tảng",
+    "strokes": 5
+  },
+  "bảo": {
+    "element": "Kim",
+    "han": "寶",
+    "meaning": "quý báu, châu báu, trân quý",
+    "strokes": 20
+  },
+  "bắc": {
+    "element": "Thủy",
+    "han": "北",
+    "meaning": "phương bắc",
+    "strokes": 5
+  },
+  "bằng": {
+    "element": "Thủy",
+    "han": "朋",
+    "meaning": "bạn bè, bằng hữu",
+    "strokes": 8,
+    "uncertain": true
+  },
+  "cao": {
+    "element": "Mộc",
+    "han": "高",
+    "meaning": "cao, cao quý, hơn người",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "chi": {
+    "element": "Mộc",
+    "han": "芝",
+    "meaning": "cỏ chi, linh chi, thanh nhã",
+    "strokes": 10
+  },
+  "chinh": {
+    "element": "Hỏa",
+    "han": "貞",
+    "meaning": "trinh tiết, chính chuyên, kiên định",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "chiến": {
+    "element": "Kim",
+    "han": "戰",
+    "meaning": "chiến đấu, chiến thắng",
+    "strokes": 16
+  },
+  "chu": {
+    "element": "Hỏa",
+    "han": "朱",
+    "meaning": "màu đỏ son, họ Chu",
+    "strokes": 6
+  },
+  "chung": {
+    "element": "Kim",
+    "han": "鍾",
+    "meaning": "chuông, tập trung tình cảm",
+    "strokes": 17
+  },
+  "châu": {
+    "element": "Kim",
+    "han": "珠",
+    "meaning": "hạt ngọc, trân châu, quý báu",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "chí": {
+    "element": "Hỏa",
+    "han": "志",
+    "meaning": "ý chí, chí hướng",
+    "strokes": 7
+  },
+  "chính": {
+    "element": "Kim",
+    "han": "正",
+    "meaning": "ngay thẳng, chính trực, đúng",
+    "strokes": 5
+  },
+  "cát": {
+    "element": "Thổ",
+    "han": "吉",
+    "meaning": "tốt lành, may mắn, cát tường",
+    "strokes": 6
+  },
+  "công": {
+    "element": "Kim",
+    "han": "公",
+    "meaning": "công bằng, chung, ông",
+    "strokes": 4,
+    "uncertain": true
+  },
+  "cúc": {
+    "element": "Mộc",
+    "han": "菊",
+    "meaning": "hoa cúc, trường thọ",
+    "strokes": 14
+  },
+  "cương": {
+    "element": "Kim",
+    "han": "剛",
+    "meaning": "cứng rắn, cương trực, mạnh",
+    "strokes": 10
+  },
+  "cường": {
+    "element": "Mộc",
+    "han": "強",
+    "meaning": "mạnh mẽ, khỏe, cường thịnh",
+    "strokes": 11,
+    "uncertain": true
+  },
+  "cẩm": {
+    "element": "Kim",
+    "han": "錦",
+    "meaning": "gấm vóc, đẹp đẽ, rực rỡ",
+    "strokes": 16
+  },
+  "danh": {
+    "element": "Mộc",
+    "han": "名",
+    "meaning": "tên, danh tiếng, nổi tiếng",
+    "strokes": 6
+  },
+  "diễm": {
+    "element": "Hỏa",
+    "han": "艷",
+    "meaning": "diễm lệ, đẹp rực rỡ",
+    "strokes": 24,
+    "uncertain": true
+  },
+  "diệp": {
+    "element": "Mộc",
+    "han": "葉",
+    "meaning": "lá cây, thế hệ, trang sách",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "diệu": {
+    "element": "Thủy",
+    "han": "妙",
+    "meaning": "kỳ diệu, tinh tế, hay",
+    "strokes": 7
+  },
+  "doanh": {
+    "element": "Hỏa",
+    "han": "營",
+    "meaning": "kinh doanh, doanh trại, gây dựng",
+    "strokes": 17,
+    "uncertain": true
+  },
+  "doãn": {
+    "element": "Thổ",
+    "han": "尹",
+    "meaning": "họ, người cai quản, doãn sứ",
+    "strokes": 4
+  },
+  "dung": {
+    "element": "Thổ",
+    "han": "容",
+    "meaning": "dung mạo, bao dung, dung chứa",
+    "strokes": 10
+  },
+  "duy": {
+    "element": "Thổ",
+    "han": "維",
+    "meaning": "duy nhất, giữ gìn, liên kết",
+    "strokes": 14
+  },
+  "duyên": {
+    "element": "Thổ",
+    "han": "緣",
+    "meaning": "duyên phận, nhân duyên, sợi tơ",
+    "strokes": 15
+  },
+  "duệ": {
+    "element": "Kim",
+    "han": "睿",
+    "meaning": "sáng suốt sâu xa, thông tuệ",
+    "strokes": 14
+  },
+  "dũng": {
+    "element": "Thổ",
+    "han": "勇",
+    "meaning": "dũng cảm, can đảm, mạnh mẽ",
+    "strokes": 9
+  },
+  "dương": {
+    "element": "Mộc",
+    "han": "楊",
+    "meaning": "họ Dương, cây dương liễu",
+    "strokes": 13
+  },
+  "dự": {
+    "element": "Thổ",
+    "han": "譽",
+    "meaning": "danh dự, tiếng khen",
+    "strokes": 21,
+    "uncertain": true
+  },
+  "gia": {
+    "element": "Hỏa",
+    "han": "加",
+    "meaning": "thêm vào, tăng thêm, tốt đẹp",
+    "strokes": 5
+  },
+  "giang": {
+    "element": "Thủy",
+    "han": "江",
+    "meaning": "sông lớn",
+    "strokes": 7
+  },
+  "giáp": {
+    "element": "Mộc",
+    "han": "甲",
+    "meaning": "can Giáp, đầu tiên, áo giáp",
+    "strokes": 5
+  },
+  "hiếu": {
+    "element": "Kim",
+    "han": "孝",
+    "meaning": "hiếu thảo với cha mẹ",
+    "strokes": 7,
+    "uncertain": true
+  },
+  "hiền": {
+    "element": "Mộc",
+    "han": "賢",
+    "meaning": "hiền lành, người hiền tài",
+    "strokes": 15
+  },
+  "hiển": {
+    "element": "Kim",
+    "han": "顯",
+    "meaning": "hiển hách, rõ ràng, nổi bật",
+    "strokes": 23,
+    "uncertain": true
+  },
+  "hiệp": {
+    "element": "Mộc",
+    "han": "協",
+    "meaning": "hiệp lực, hòa hợp, hiệp sĩ",
+    "strokes": 8,
+    "uncertain": true
+  },
+  "hoa": {
+    "element": "Mộc",
+    "han": "華",
+    "meaning": "hoa, tinh hoa, rực rỡ",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "hoan": {
+    "element": "Thủy",
+    "han": "歡",
+    "meaning": "vui mừng, hoan hỉ",
+    "strokes": 22
+  },
+  "hoà": {
+    "element": "Thủy",
+    "han": "和",
+    "meaning": "hòa hợp, hòa bình, êm ấm",
+    "strokes": 8
+  },
+  "hoài": {
+    "element": "Thủy",
+    "han": "懷",
+    "meaning": "hoài bão, nhớ nhung, ôm ấp",
+    "strokes": 20
+  },
+  "hoàng": {
+    "element": "Kim",
+    "han": "皇",
+    "meaning": "vua, lớn lao, rực rỡ, cao quý",
+    "strokes": 9
+  },
+  "huy": {
+    "element": "Hỏa",
+    "han": "輝",
+    "meaning": "huy hoàng, ánh sáng rực rỡ",
+    "strokes": 15
+  },
+  "huyền": {
+    "element": "Thủy",
+    "han": "玄",
+    "meaning": "huyền diệu, sâu xa, đen huyền",
+    "strokes": 5
+  },
+  "huệ": {
+    "element": "Thủy",
+    "han": "慧",
+    "meaning": "trí huệ, thông minh sáng suốt",
+    "strokes": 15
+  },
+  "huỳnh": {
+    "element": "Thổ",
+    "han": "黃",
+    "meaning": "màu vàng, đất vàng",
+    "strokes": 12
+  },
+  "hà": {
+    "element": "Thủy",
+    "han": "何",
+    "meaning": "họ, nghĩa gốc mang, gánh, vì sao",
+    "strokes": 7
+  },
+  "hàm": {
+    "element": "Thủy",
+    "han": "涵",
+    "meaning": "bao hàm, hàm dưỡng, chứa đựng",
+    "strokes": 12
+  },
+  "hàn": {
+    "element": "Kim",
+    "han": "韓",
+    "meaning": "họ, tên nước cổ, giếng làng",
+    "strokes": 17
+  },
+  "hào": {
+    "element": "Thủy",
+    "han": "豪",
+    "meaning": "hào kiệt, hào hùng, tài giỏi",
+    "strokes": 14
+  },
+  "hân": {
+    "element": "Mộc",
+    "han": "欣",
+    "meaning": "vui mừng, hân hoan",
+    "strokes": 8
+  },
+  "hùng": {
+    "element": "Kim",
+    "han": "雄",
+    "meaning": "anh hùng, mạnh mẽ, hùng dũng",
+    "strokes": 12,
+    "uncertain": true
+  },
+  "hưng": {
+    "element": "Thủy",
+    "han": "興",
+    "meaning": "hưng thịnh, phát khởi, vui",
+    "strokes": 16,
+    "uncertain": true
+  },
+  "hương": {
+    "element": "Mộc",
+    "han": "香",
+    "meaning": "hương thơm, quê hương",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "hạ": {
+    "element": "Hỏa",
+    "han": "夏",
+    "meaning": "mùa hạ, lớn",
+    "strokes": 10
+  },
+  "hạnh": {
+    "element": "Thổ",
+    "han": "幸",
+    "meaning": "may mắn, hạnh phúc",
+    "strokes": 8
+  },
+  "hải": {
+    "element": "Thủy",
+    "han": "澥",
+    "meaning": "biển lớn, rộng rãi, bao la",
+    "strokes": 16
+  },
+  "hảo": {
+    "element": "Thủy",
+    "han": "好",
+    "meaning": "tốt, đẹp, yêu thích",
+    "strokes": 6
+  },
+  "hậu": {
+    "element": "Thủy",
+    "han": "厚",
+    "meaning": "dày, hậu hĩnh, đôn hậu",
+    "strokes": 9
+  },
+  "hằng": {
+    "element": "Thủy",
+    "han": "姮",
+    "meaning": "chị Hằng, mặt trăng",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "học": {
+    "element": "Thổ",
+    "han": "學",
+    "meaning": "học hành, học vấn",
+    "strokes": 16
+  },
+  "hồ": {
+    "element": "Thủy",
+    "han": "胡",
+    "meaning": "họ, nghĩa gốc râu, phương bắc",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "hồng": {
+    "element": "Hỏa",
+    "han": "紅",
+    "meaning": "màu đỏ, hồng, tươi thắm",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "hợp": {
+    "element": "Thủy",
+    "han": "合",
+    "meaning": "hợp lại, phù hợp, hòa hợp",
+    "strokes": 6
+  },
+  "hữu": {
+    "element": "Thổ",
+    "han": "有",
+    "meaning": "có, sở hữu, giàu có",
+    "strokes": 6
+  },
+  "khai": {
+    "element": "Kim",
+    "han": "開",
+    "meaning": "mở ra, khai sáng, bắt đầu",
+    "strokes": 12
+  },
+  "khang": {
+    "element": "Mộc",
+    "han": "康",
+    "meaning": "khỏe mạnh, an khang, yên vui",
+    "strokes": 11
+  },
+  "khoa": {
+    "element": "Mộc",
+    "han": "科",
+    "meaning": "khoa học, khoa cử, ngành học",
+    "strokes": 9
+  },
+  "khoan": {
+    "element": "Thổ",
+    "han": "寬",
+    "meaning": "rộng rãi, khoan dung",
+    "strokes": 15
+  },
+  "khuê": {
+    "element": "Thổ",
+    "han": "圭",
+    "meaning": "ngọc khuê, sao Khuê, văn chương",
+    "strokes": 6
+  },
+  "khánh": {
+    "element": "Kim",
+    "han": "慶",
+    "meaning": "mừng, khánh hỷ, tốt lành",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "khôi": {
+    "element": "Mộc",
+    "han": "魁",
+    "meaning": "đứng đầu, khôi ngô, sao Khôi",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "khương": {
+    "element": "Mộc",
+    "han": "姜",
+    "meaning": "họ, cây gừng",
+    "strokes": 9
+  },
+  "khả": {
+    "element": "Mộc",
+    "han": "可",
+    "meaning": "có thể, khả ái, vừa ý",
+    "strokes": 5
+  },
+  "khải": {
+    "element": "Mộc",
+    "han": "凱",
+    "meaning": "khải hoàn, thắng lợi trở về",
+    "strokes": 12
+  },
+  "khắc": {
+    "element": "Kim",
+    "han": "克",
+    "meaning": "khắc phục, chế ngự, thắng",
+    "strokes": 7
+  },
+  "kim": {
+    "element": "Kim",
+    "han": "金",
+    "meaning": "vàng, kim loại, quý giá",
+    "strokes": 8
+  },
+  "kiên": {
+    "element": "Thổ",
+    "han": "堅",
+    "meaning": "kiên cố, vững chắc, bền chí",
+    "strokes": 11
+  },
+  "kiến": {
+    "element": "Mộc",
+    "han": "建",
+    "meaning": "xây dựng, kiến thiết, lập nên",
+    "strokes": 9
+  },
+  "kiều": {
+    "element": "Mộc",
+    "han": "喬",
+    "meaning": "cao, kiều diễm, xinh đẹp",
+    "strokes": 12
+  },
+  "kiệt": {
+    "element": "Mộc",
+    "han": "傑",
+    "meaning": "kiệt xuất, tài giỏi hơn người",
+    "strokes": 12
+  },
+  "kính": {
+    "element": "Mộc",
+    "han": "敬",
+    "meaning": "kính trọng, tôn kính",
+    "strokes": 13
+  },
+  "kỳ": {
+    "element": "Mộc",
+    "han": "奇",
+    "meaning": "kỳ lạ, kỳ tài, đặc biệt",
+    "strokes": 8,
+    "uncertain": true
+  },
+  "kỷ": {
+    "element": "Mộc",
+    "han": "紀",
+    "meaning": "kỷ luật, ghi chép, đầu mối",
+    "strokes": 9
+  },
+  "lam": {
+    "element": "Mộc",
+    "han": "藍",
+    "meaning": "màu lam, xanh chàm",
+    "strokes": 20
+  },
+  "lan": {
+    "element": "Mộc",
+    "han": "蘭",
+    "meaning": "hoa lan, thanh cao, thơm",
+    "strokes": 23
+  },
+  "linh": {
+    "element": "Kim",
+    "han": "玲",
+    "meaning": "linh lung, tiếng ngọc, lanh lợi",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "liên": {
+    "element": "Mộc",
+    "han": "蓮",
+    "meaning": "hoa sen, thanh khiết",
+    "strokes": 17,
+    "uncertain": true
+  },
+  "liễu": {
+    "element": "Mộc",
+    "han": "柳",
+    "meaning": "cây liễu, mềm mại",
+    "strokes": 9
+  },
+  "loan": {
+    "element": "Kim",
+    "han": "鸞",
+    "meaning": "chim loan, loan phụng tốt lành",
+    "strokes": 30,
+    "uncertain": true
+  },
+  "long": {
+    "element": "Hỏa",
+    "han": "龍",
+    "meaning": "con rồng, cao quý, quyền uy",
+    "strokes": 16
+  },
+  "luân": {
+    "element": "Hỏa",
+    "han": "倫",
+    "meaning": "luân lý, đạo người, thứ lớp",
+    "strokes": 10
+  },
+  "luật": {
+    "element": "Hỏa",
+    "han": "律",
+    "meaning": "luật lệ, quy luật, âm luật",
+    "strokes": 9
+  },
+  "ly": {
+    "element": "Hỏa",
+    "han": "璃",
+    "meaning": "lưu ly, pha lê, trong sáng",
+    "strokes": 20,
+    "uncertain": true
+  },
+  "lâm": {
+    "element": "Mộc",
+    "han": "林",
+    "meaning": "rừng, nhiều cây, sum suê",
+    "strokes": 8
+  },
+  "lân": {
+    "element": "Hỏa",
+    "han": "麟",
+    "meaning": "kỳ lân, điềm lành, nhân hậu",
+    "strokes": 23
+  },
+  "lã": {
+    "element": "Hỏa",
+    "han": "呂",
+    "meaning": "họ, xương sống, nốt nhạc cổ",
+    "strokes": 7
+  },
+  "lê": {
+    "element": "Mộc",
+    "han": "黎",
+    "meaning": "họ lớn, nghĩa gốc đông đúc, đen",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "lý": {
+    "element": "Mộc",
+    "han": "李",
+    "meaning": "họ, cây mận, quả mận",
+    "strokes": 7
+  },
+  "lĩnh": {
+    "element": "Thổ",
+    "han": "嶺",
+    "meaning": "đỉnh núi, dãy núi",
+    "strokes": 17,
+    "uncertain": true
+  },
+  "lưu": {
+    "element": "Kim",
+    "han": "劉",
+    "meaning": "họ, rìu búa, giết",
+    "strokes": 15
+  },
+  "lương": {
+    "element": "Thổ",
+    "han": "良",
+    "meaning": "tốt lành, lương thiện, giỏi",
+    "strokes": 7
+  },
+  "lễ": {
+    "element": "Hỏa",
+    "han": "禮",
+    "meaning": "lễ nghi, lễ phép, kính trọng",
+    "strokes": 18
+  },
+  "lệ": {
+    "element": "Hỏa",
+    "han": "麗",
+    "meaning": "đẹp đẽ, lệ, rực rỡ",
+    "strokes": 19
+  },
+  "lộc": {
+    "element": "Hỏa",
+    "han": "祿",
+    "meaning": "lộc, bổng lộc, phúc lộc",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "lợi": {
+    "element": "Kim",
+    "han": "利",
+    "meaning": "lợi ích, sắc bén, thuận lợi",
+    "strokes": 7
+  },
+  "lực": {
+    "element": "Kim",
+    "han": "力",
+    "meaning": "sức lực, sức mạnh",
+    "strokes": 2,
+    "uncertain": true
+  },
+  "mai": {
+    "element": "Mộc",
+    "han": "梅",
+    "meaning": "cây mai, hoa mai mùa xuân",
+    "strokes": 11
+  },
+  "minh": {
+    "element": "Hỏa",
+    "han": "明",
+    "meaning": "sáng, sáng suốt, minh bạch",
+    "strokes": 8
+  },
+  "my": {
+    "element": "Thủy",
+    "han": "美",
+    "meaning": "đẹp, tốt đẹp, mỹ lệ",
+    "strokes": 9
+  },
+  "mã": {
+    "element": "Hỏa",
+    "han": "馬",
+    "meaning": "họ, con ngựa",
+    "strokes": 10
+  },
+  "mạnh": {
+    "element": "Thủy",
+    "han": "孟",
+    "meaning": "con trưởng, đầu mùa, mạnh",
+    "strokes": 8,
+    "uncertain": true
+  },
+  "mẫn": {
+    "element": "Thủy",
+    "han": "敏",
+    "meaning": "nhanh nhạy, mẫn tiệp, thông minh",
+    "strokes": 11
+  },
+  "mậu": {
+    "element": "Mộc",
+    "han": "茂",
+    "meaning": "tươi tốt, thịnh vượng, phong phú",
+    "strokes": 11
+  },
+  "mộng": {
+    "element": "Thủy",
+    "han": "夢",
+    "meaning": "giấc mộng, mơ ước",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "mỹ": {
+    "element": "Thủy",
+    "han": "美",
+    "meaning": "đẹp, tốt đẹp, mỹ lệ",
+    "strokes": 9
+  },
+  "na": {
+    "element": "Hỏa",
+    "han": "娜",
+    "meaning": "duyên dáng, mềm mại, thướt tha",
+    "strokes": 10
+  },
+  "nam": {
+    "element": "Hỏa",
+    "han": "南",
+    "meaning": "phương nam",
+    "strokes": 9
+  },
+  "nghiệp": {
+    "element": "Mộc",
+    "han": "業",
+    "meaning": "sự nghiệp, nghề nghiệp, công việc",
+    "strokes": 13
+  },
+  "nghĩa": {
+    "element": "Kim",
+    "han": "義",
+    "meaning": "nghĩa, lẽ phải, tình nghĩa",
+    "strokes": 13
+  },
+  "nghị": {
+    "element": "Mộc",
+    "han": "議",
+    "meaning": "bàn bạc, nghị luận, quyết nghị",
+    "strokes": 20
+  },
+  "nguyên": {
+    "element": "Thổ",
+    "han": "原",
+    "meaning": "nguồn gốc, ban đầu, đồng bằng",
+    "strokes": 10
+  },
+  "nguyễn": {
+    "element": "Thổ",
+    "han": "阮",
+    "meaning": "họ phổ biến nhất Việt Nam, gốc tên nước cổ",
+    "strokes": 6
+  },
+  "nguyệt": {
+    "element": "Thủy",
+    "han": "月",
+    "meaning": "mặt trăng, tháng",
+    "strokes": 4
+  },
+  "ngân": {
+    "element": "Kim",
+    "han": "銀",
+    "meaning": "bạc, ngân, sáng như bạc",
+    "strokes": 14
+  },
+  "ngô": {
+    "element": "Thổ",
+    "han": "吳",
+    "meaning": "họ, tên nước cổ, nói lớn",
+    "strokes": 7,
+    "uncertain": true
+  },
+  "ngọc": {
+    "element": "Thổ",
+    "han": "玉",
+    "meaning": "ngọc, quý báu, trong sáng",
+    "strokes": 5
+  },
+  "nhi": {
+    "element": "Kim",
+    "han": "兒",
+    "meaning": "trẻ nhỏ, con trẻ",
+    "strokes": 8
+  },
+  "nhiên": {
+    "element": "Hỏa",
+    "han": "然",
+    "meaning": "như vậy, tự nhiên, cháy",
+    "strokes": 12
+  },
+  "nho": {
+    "element": "Kim",
+    "han": "儒",
+    "meaning": "nhà nho, học giả, nho học",
+    "strokes": 16
+  },
+  "nhu": {
+    "element": "Mộc",
+    "han": "柔",
+    "meaning": "mềm mại, nhu hòa",
+    "strokes": 9
+  },
+  "nhung": {
+    "element": "Kim",
+    "han": "絨",
+    "meaning": "nhung, mịn màng, êm ái",
+    "strokes": 12
+  },
+  "nhâm": {
+    "element": "Thủy",
+    "han": "壬",
+    "meaning": "can Nhâm, nước lớn",
+    "strokes": 4
+  },
+  "nhân": {
+    "element": "Mộc",
+    "han": "仁",
+    "meaning": "lòng nhân, nhân ái, hạt",
+    "strokes": 4
+  },
+  "nhã": {
+    "element": "Mộc",
+    "han": "雅",
+    "meaning": "nhã nhặn, thanh lịch, tao nhã",
+    "strokes": 12
+  },
+  "như": {
+    "element": "Kim",
+    "han": "如",
+    "meaning": "như, giống như, bằng",
+    "strokes": 6
+  },
+  "nhược": {
+    "element": "Mộc",
+    "han": "若",
+    "meaning": "như, giống, cây hương nhược",
+    "strokes": 11
+  },
+  "nhượng": {
+    "element": "Thổ",
+    "han": "讓",
+    "meaning": "nhường nhịn, khiêm nhường",
+    "strokes": 24,
+    "uncertain": true
+  },
+  "nhất": {
+    "element": "Thổ",
+    "han": "一",
+    "meaning": "một, thứ nhất, duy nhất",
+    "strokes": 1
+  },
+  "nhật": {
+    "element": "Hỏa",
+    "han": "日",
+    "meaning": "mặt trời, ban ngày, ánh sáng",
+    "strokes": 4
+  },
+  "ninh": {
+    "element": "Hỏa",
+    "han": "寧",
+    "meaning": "yên ổn, an ninh, thà rằng",
+    "strokes": 14
+  },
+  "niên": {
+    "element": "Hỏa",
+    "han": "年",
+    "meaning": "năm, tuổi, niên",
+    "strokes": 6
+  },
+  "năng": {
+    "element": "Hỏa",
+    "han": "能",
+    "meaning": "năng lực, có thể, tài năng",
+    "strokes": 10
+  },
+  "nương": {
+    "element": "Kim",
+    "han": "娘",
+    "meaning": "cô nương, người con gái",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "nữ": {
+    "element": "Hỏa",
+    "han": "女",
+    "meaning": "nữ giới, con gái",
+    "strokes": 3
+  },
+  "oanh": {
+    "element": "Mộc",
+    "han": "鶯",
+    "meaning": "chim oanh, giọng trong trẻo",
+    "strokes": 21
+  },
+  "phan": {
+    "element": "Thủy",
+    "han": "潘",
+    "meaning": "họ, tên sông, nước trong",
+    "strokes": 15
+  },
+  "phi": {
+    "element": "Thủy",
+    "han": "飛",
+    "meaning": "bay, phi, nhanh",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "phong": {
+    "element": "Thủy",
+    "han": "風",
+    "meaning": "gió, phong cách, phong độ",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "phát": {
+    "element": "Kim",
+    "han": "發",
+    "meaning": "phát triển, phát đạt, nảy sinh",
+    "strokes": 12
+  },
+  "phùng": {
+    "element": "Thủy",
+    "han": "馮",
+    "meaning": "họ, ngựa chạy nhanh, dựa vào",
+    "strokes": 12
+  },
+  "phú": {
+    "element": "Thủy",
+    "han": "富",
+    "meaning": "giàu có, phú quý, phong phú",
+    "strokes": 12
+  },
+  "phúc": {
+    "element": "Thủy",
+    "han": "福",
+    "meaning": "phúc, tốt lành, hạnh phúc",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "phương": {
+    "element": "Mộc",
+    "han": "芳",
+    "meaning": "thơm, hương thơm, danh tiếng tốt",
+    "strokes": 10
+  },
+  "phước": {
+    "element": "Thủy",
+    "han": "福",
+    "meaning": "phước lành, phúc đức",
+    "strokes": 14,
+    "uncertain": true
+  },
+  "phượng": {
+    "element": "Hỏa",
+    "han": "鳳",
+    "meaning": "chim phượng, cao quý, đẹp",
+    "strokes": 14
+  },
+  "phạm": {
+    "element": "Thủy",
+    "han": "範",
+    "meaning": "họ lớn, nghĩa gốc khuôn mẫu, phép tắc",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "quang": {
+    "element": "Hỏa",
+    "han": "光",
+    "meaning": "ánh sáng, quang vinh",
+    "strokes": 6
+  },
+  "quy": {
+    "element": "Mộc",
+    "han": "歸",
+    "meaning": "trở về, thuộc về, quy tụ",
+    "strokes": 18
+  },
+  "quyên": {
+    "element": "Thủy",
+    "han": "娟",
+    "meaning": "xinh đẹp, dịu dàng, quyên",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "quyết": {
+    "element": "Thủy",
+    "han": "決",
+    "meaning": "quyết định, quả quyết, dứt khoát",
+    "strokes": 8
+  },
+  "quyền": {
+    "element": "Mộc",
+    "han": "權",
+    "meaning": "quyền, cân, quyền biến",
+    "strokes": 22
+  },
+  "quách": {
+    "element": "Mộc",
+    "han": "郭",
+    "meaning": "họ, thành quách bao ngoài",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "quân": {
+    "element": "Mộc",
+    "han": "軍",
+    "meaning": "quân đội, người quân tử",
+    "strokes": 9,
+    "uncertain": true
+  },
+  "quý": {
+    "element": "Mộc",
+    "han": "貴",
+    "meaning": "quý giá, cao quý, tôn quý",
+    "strokes": 12
+  },
+  "quảng": {
+    "element": "Mộc",
+    "han": "廣",
+    "meaning": "rộng, quảng bác, mở rộng",
+    "strokes": 15
+  },
+  "quế": {
+    "element": "Mộc",
+    "han": "桂",
+    "meaning": "cây quế, quý, thơm",
+    "strokes": 10
+  },
+  "quốc": {
+    "element": "Thổ",
+    "han": "國",
+    "meaning": "nước, quốc gia, đất nước",
+    "strokes": 11
+  },
+  "quỳnh": {
+    "element": "Mộc",
+    "han": "瓊",
+    "meaning": "ngọc quỳnh, hoa quỳnh, đẹp quý",
+    "strokes": 20,
+    "uncertain": true
+  },
+  "sinh": {
+    "element": "Kim",
+    "han": "生",
+    "meaning": "sinh ra, sống, sinh sôi",
+    "strokes": 5
+  },
+  "song": {
+    "element": "Kim",
+    "han": "雙",
+    "meaning": "đôi, song, cả hai",
+    "strokes": 18
+  },
+  "sáng": {
+    "element": "Kim",
+    "han": "創",
+    "meaning": "sáng tạo, khởi đầu, tạo dựng",
+    "strokes": 12,
+    "uncertain": true
+  },
+  "sâm": {
+    "element": "Mộc",
+    "han": "森",
+    "meaning": "rừng rậm, sum suê, nghiêm",
+    "strokes": 12
+  },
+  "sĩ": {
+    "element": "Thổ",
+    "han": "士",
+    "meaning": "kẻ sĩ, học giả, người có học",
+    "strokes": 3
+  },
+  "sơn": {
+    "element": "Thổ",
+    "han": "山",
+    "meaning": "núi, vững chãi",
+    "strokes": 3
+  },
+  "sương": {
+    "element": "Thủy",
+    "han": "霜",
+    "meaning": "sương giá, trong trẻo",
+    "strokes": 17
+  },
+  "sỹ": {
+    "element": "Thổ",
+    "han": "士",
+    "meaning": "kẻ sĩ, học giả, người có học",
+    "strokes": 3
+  },
+  "thanh": {
+    "element": "Thủy",
+    "han": "清",
+    "meaning": "trong sạch, thanh cao, trong trẻo",
+    "strokes": 12
+  },
+  "thi": {
+    "element": "Kim",
+    "han": "詩",
+    "meaning": "thơ ca, thi phú",
+    "strokes": 13
+  },
+  "thiên": {
+    "element": "Hỏa",
+    "han": "天",
+    "meaning": "trời, thiên nhiên, trên cao",
+    "strokes": 4
+  },
+  "thiết": {
+    "element": "Kim",
+    "han": "鐵",
+    "meaning": "sắt, cứng rắn, thiết thực",
+    "strokes": 21
+  },
+  "thiện": {
+    "element": "Kim",
+    "han": "善",
+    "meaning": "tốt lành, thiện lương, giỏi",
+    "strokes": 12
+  },
+  "thiệu": {
+    "element": "Kim",
+    "han": "紹",
+    "meaning": "nối tiếp, giới thiệu, kế thừa",
+    "strokes": 11
+  },
+  "thoa": {
+    "element": "Kim",
+    "han": "釵",
+    "meaning": "trâm cài tóc, trang sức",
+    "strokes": 11,
+    "uncertain": true
+  },
+  "thoại": {
+    "element": "Kim",
+    "han": "話",
+    "meaning": "lời nói, điện thoại, câu chuyện",
+    "strokes": 13
+  },
+  "thu": {
+    "element": "Kim",
+    "han": "秋",
+    "meaning": "mùa thu",
+    "strokes": 9
+  },
+  "thuyên": {
+    "element": "Kim",
+    "han": "詮",
+    "meaning": "giải thích đầy đủ, chọn lọc",
+    "strokes": 13,
+    "uncertain": true
+  },
+  "thuần": {
+    "element": "Kim",
+    "han": "純",
+    "meaning": "thuần khiết, thuần túy, chân thật",
+    "strokes": 10
+  },
+  "thuận": {
+    "element": "Kim",
+    "han": "順",
+    "meaning": "thuận lợi, hòa thuận, xuôi",
+    "strokes": 12
+  },
+  "thuỷ": {
+    "element": "Thủy",
+    "han": "水",
+    "meaning": "nước",
+    "strokes": 4
+  },
+  "thành": {
+    "element": "Kim",
+    "han": "成",
+    "meaning": "thành công, hoàn thành, nên",
+    "strokes": 7,
+    "uncertain": true
+  },
+  "thái": {
+    "element": "Thủy",
+    "han": "泰",
+    "meaning": "thái bình, thông suốt, lớn, an",
+    "strokes": 9
+  },
+  "thân": {
+    "element": "Kim",
+    "han": "申",
+    "meaning": "can Thân, bày tỏ, kéo dài",
+    "strokes": 5
+  },
+  "thùy": {
+    "element": "Thổ",
+    "han": "垂",
+    "meaning": "rủ xuống, thùy mị, dịu dàng",
+    "strokes": 8,
+    "uncertain": true
+  },
+  "thúy": {
+    "element": "Kim",
+    "han": "翠",
+    "meaning": "xanh biếc, ngọc phỉ thúy",
+    "strokes": 14
+  },
+  "thăng": {
+    "element": "Hỏa",
+    "han": "昇",
+    "meaning": "lên cao, thăng tiến",
+    "strokes": 8
+  },
+  "thư": {
+    "element": "Kim",
+    "han": "書",
+    "meaning": "sách, thư, viết",
+    "strokes": 10
+  },
+  "thường": {
+    "element": "Kim",
+    "han": "常",
+    "meaning": "thường, bình thường, lâu dài",
+    "strokes": 11
+  },
+  "thạch": {
+    "element": "Thổ",
+    "han": "石",
+    "meaning": "đá, vững chắc",
+    "strokes": 5
+  },
+  "thảo": {
+    "element": "Mộc",
+    "han": "草",
+    "meaning": "cỏ, thảo mộc, hiền thảo",
+    "strokes": 12
+  },
+  "thần": {
+    "element": "Kim",
+    "han": "神",
+    "meaning": "thần linh, tinh thần, kỳ diệu",
+    "strokes": 10
+  },
+  "thắng": {
+    "element": "Kim",
+    "han": "勝",
+    "meaning": "thắng lợi, hơn, giỏi hơn",
+    "strokes": 12
+  },
+  "thế": {
+    "element": "Kim",
+    "han": "世",
+    "meaning": "đời, thế hệ, thế gian",
+    "strokes": 5
+  },
+  "thị": {
+    "element": "Thủy",
+    "han": "氏",
+    "meaning": "họ, bà, dùng cho tên nữ xưa",
+    "strokes": 4
+  },
+  "thịnh": {
+    "element": "Kim",
+    "han": "盛",
+    "meaning": "thịnh vượng, đầy, lớn mạnh",
+    "strokes": 11,
+    "uncertain": true
+  },
+  "thọ": {
+    "element": "Kim",
+    "han": "壽",
+    "meaning": "sống lâu, trường thọ",
+    "strokes": 14
+  },
+  "thục": {
+    "element": "Thủy",
+    "han": "淑",
+    "meaning": "hiền thục, tốt đẹp, trong sạch",
+    "strokes": 12
+  },
+  "thụy": {
+    "element": "Kim",
+    "han": "瑞",
+    "meaning": "điềm lành, thụy, tốt lành",
+    "strokes": 13
+  },
+  "thủy": {
+    "element": "Thủy",
+    "han": "水",
+    "meaning": "nước",
+    "strokes": 4
+  },
+  "thức": {
+    "element": "Thổ",
+    "han": "識",
+    "meaning": "hiểu biết, tri thức, nhận biết",
+    "strokes": 19,
+    "uncertain": true
+  },
+  "thừa": {
+    "element": "Kim",
+    "han": "承",
+    "meaning": "thừa hưởng, gánh vác, tiếp nối",
+    "strokes": 8
+  },
+  "tinh": {
+    "element": "Hỏa",
+    "han": "晶",
+    "meaning": "trong sáng, tinh anh, sao",
+    "strokes": 12
+  },
+  "tiên": {
+    "element": "Kim",
+    "han": "仙",
+    "meaning": "tiên, thần tiên, thoát tục",
+    "strokes": 5
+  },
+  "tiêu": {
+    "element": "Mộc",
+    "han": "蕭",
+    "meaning": "tiêu điều, họ Tiêu, cây ngải",
+    "strokes": 19,
+    "uncertain": true
+  },
+  "tiến": {
+    "element": "Hỏa",
+    "han": "進",
+    "meaning": "tiến lên, tiến bộ, dâng",
+    "strokes": 15
+  },
+  "tiết": {
+    "element": "Kim",
+    "han": "節",
+    "meaning": "đốt, tiết chế, lễ tiết, khí tiết",
+    "strokes": 15
+  },
+  "tiền": {
+    "element": "Kim",
+    "han": "錢",
+    "meaning": "tiền, của cải",
+    "strokes": 16
+  },
+  "tiểu": {
+    "element": "Kim",
+    "han": "小",
+    "meaning": "nhỏ, tiểu, khiêm nhường",
+    "strokes": 3
+  },
+  "toàn": {
+    "element": "Kim",
+    "han": "全",
+    "meaning": "toàn vẹn, đầy đủ, hoàn toàn",
+    "strokes": 6
+  },
+  "toản": {
+    "element": "Kim",
+    "han": "鑽",
+    "meaning": "khoan, nghiên cứu sâu, toản",
+    "strokes": 27,
+    "uncertain": true
+  },
+  "trang": {
+    "element": "Mộc",
+    "han": "莊",
+    "meaning": "trang nghiêm, thôn trang, đoan trang",
+    "strokes": 13
+  },
+  "trinh": {
+    "element": "Hỏa",
+    "han": "貞",
+    "meaning": "trinh, trong trắng, kiên định",
+    "strokes": 9
+  },
+  "triều": {
+    "element": "Kim",
+    "han": "朝",
+    "meaning": "triều đình, buổi sáng, hướng về",
+    "strokes": 12
+  },
+  "triệu": {
+    "element": "Hỏa",
+    "han": "趙",
+    "meaning": "họ Triệu, tên nước cổ",
+    "strokes": 14
+  },
+  "trung": {
+    "element": "Hỏa",
+    "han": "忠",
+    "meaning": "trung thành, trung hậu",
+    "strokes": 8
+  },
+  "truyền": {
+    "element": "Kim",
+    "han": "傳",
+    "meaning": "truyền lại, lưu truyền, phó",
+    "strokes": 13
+  },
+  "trà": {
+    "element": "Mộc",
+    "han": "茶",
+    "meaning": "trà, chè, thanh nhã",
+    "strokes": 12
+  },
+  "trác": {
+    "element": "Hỏa",
+    "han": "卓",
+    "meaning": "cao vượt, trác việt, nổi bật",
+    "strokes": 8
+  },
+  "tráng": {
+    "element": "Kim",
+    "han": "壯",
+    "meaning": "tráng kiện, mạnh mẽ, lớn",
+    "strokes": 7
+  },
+  "trâm": {
+    "element": "Kim",
+    "han": "簪",
+    "meaning": "trâm cài tóc, trang sức quý",
+    "strokes": 18,
+    "uncertain": true
+  },
+  "trân": {
+    "element": "Kim",
+    "han": "珍",
+    "meaning": "trân quý, trân châu, quý báu",
+    "strokes": 10
+  },
+  "trình": {
+    "element": "Hỏa",
+    "han": "程",
+    "meaning": "quy trình, đường đi, mức độ",
+    "strokes": 12
+  },
+  "trí": {
+    "element": "Hỏa",
+    "han": "智",
+    "meaning": "trí tuệ, hiểu biết, thông minh",
+    "strokes": 12
+  },
+  "trúc": {
+    "element": "Mộc",
+    "han": "竹",
+    "meaning": "cây trúc, thanh cao, khí tiết",
+    "strokes": 6
+  },
+  "trương": {
+    "element": "Hỏa",
+    "han": "張",
+    "meaning": "họ, giương ra, mở rộng",
+    "strokes": 11
+  },
+  "trường": {
+    "element": "Hỏa",
+    "han": "長",
+    "meaning": "dài, lớn, trường cửu",
+    "strokes": 8
+  },
+  "trạch": {
+    "element": "Thủy",
+    "han": "澤",
+    "meaning": "ân trạch, đầm nước, ơn huệ",
+    "strokes": 17
+  },
+  "trần": {
+    "element": "Thổ",
+    "han": "陳",
+    "meaning": "họ lớn, nghĩa gốc bày, sắp đặt",
+    "strokes": 16,
+    "uncertain": true
+  },
+  "trị": {
+    "element": "Thủy",
+    "han": "治",
+    "meaning": "trị, cai quản, chữa trị",
+    "strokes": 9
+  },
+  "trịnh": {
+    "element": "Hỏa",
+    "han": "鄭",
+    "meaning": "họ, tên nước cổ, trang trọng",
+    "strokes": 19,
+    "uncertain": true
+  },
+  "trọng": {
+    "element": "Hỏa",
+    "han": "重",
+    "meaning": "nặng, quan trọng, tôn trọng",
+    "strokes": 9
+  },
+  "tuyên": {
+    "element": "Kim",
+    "han": "宣",
+    "meaning": "tuyên bố, ban bố, lan truyền",
+    "strokes": 9
+  },
+  "tuyết": {
+    "element": "Thủy",
+    "han": "雪",
+    "meaning": "tuyết, trắng trong, thanh khiết",
+    "strokes": 11
+  },
+  "tuyền": {
+    "element": "Thủy",
+    "han": "泉",
+    "meaning": "suối, nguồn nước",
+    "strokes": 9
+  },
+  "tuân": {
+    "element": "Thổ",
+    "han": "遵",
+    "meaning": "tuân theo, tuân thủ",
+    "strokes": 19
+  },
+  "tuấn": {
+    "element": "Hỏa",
+    "han": "俊",
+    "meaning": "tuấn tú, tài giỏi, khôi ngô",
+    "strokes": 9
+  },
+  "tuệ": {
+    "element": "Thủy",
+    "han": "慧",
+    "meaning": "trí tuệ, thông minh (như huệ)",
+    "strokes": 15
+  },
+  "tài": {
+    "element": "Kim",
+    "han": "財",
+    "meaning": "tài sản, tiền của, tài năng",
+    "strokes": 10
+  },
+  "tâm": {
+    "element": "Hỏa",
+    "han": "心",
+    "meaning": "tim, lòng, tâm hồn, trung tâm",
+    "strokes": 4
+  },
+  "tân": {
+    "element": "Kim",
+    "han": "新",
+    "meaning": "mới, tân tiến, đổi mới",
+    "strokes": 13
+  },
+  "tây": {
+    "element": "Kim",
+    "han": "西",
+    "meaning": "phương tây",
+    "strokes": 6
+  },
+  "tình": {
+    "element": "Kim",
+    "han": "情",
+    "meaning": "tình cảm, tình nghĩa",
+    "strokes": 12
+  },
+  "tín": {
+    "element": "Kim",
+    "han": "信",
+    "meaning": "tin, chữ tín, trung tín",
+    "strokes": 9
+  },
+  "tòng": {
+    "element": "Hỏa",
+    "han": "從",
+    "meaning": "theo, tòng, nghe theo",
+    "strokes": 11
+  },
+  "tô": {
+    "element": "Mộc",
+    "han": "蘇",
+    "meaning": "họ, cây tía tô, hồi sinh",
+    "strokes": 22,
+    "uncertain": true
+  },
+  "tôn": {
+    "element": "Kim",
+    "han": "尊",
+    "meaning": "tôn kính, cao quý, tôn trọng",
+    "strokes": 12
+  },
+  "tông": {
+    "element": "Kim",
+    "han": "宗",
+    "meaning": "tông phái, tổ tông, gốc",
+    "strokes": 8
+  },
+  "tùng": {
+    "element": "Mộc",
+    "han": "松",
+    "meaning": "cây tùng, trường thọ, khí tiết",
+    "strokes": 8
+  },
+  "tú": {
+    "element": "Kim",
+    "han": "秀",
+    "meaning": "tú, thanh tú, xuất sắc",
+    "strokes": 7,
+    "uncertain": true
+  },
+  "tĩnh": {
+    "element": "Kim",
+    "han": "靜",
+    "meaning": "yên tĩnh, tĩnh lặng",
+    "strokes": 14
+  },
+  "tường": {
+    "element": "Hỏa",
+    "han": "祥",
+    "meaning": "điềm lành, cát tường",
+    "strokes": 11,
+    "uncertain": true
+  },
+  "tạ": {
+    "element": "Kim",
+    "han": "謝",
+    "meaning": "họ, cảm ơn, tạ ơn, hoa tàn",
+    "strokes": 17
+  },
+  "tạo": {
+    "element": "Kim",
+    "han": "造",
+    "meaning": "tạo dựng, chế tạo, đến",
+    "strokes": 14
+  },
+  "tấn": {
+    "element": "Hỏa",
+    "han": "晉",
+    "meaning": "tiến lên, nhà Tấn, thăng tiến",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "tất": {
+    "element": "Kim",
+    "han": "必",
+    "meaning": "ắt, nhất định, tất yếu",
+    "strokes": 5
+  },
+  "tố": {
+    "element": "Kim",
+    "han": "素",
+    "meaning": "trắng, mộc mạc, vốn có",
+    "strokes": 10
+  },
+  "tống": {
+    "element": "Mộc",
+    "han": "宋",
+    "meaning": "họ, nhà Tống, tên nước cổ",
+    "strokes": 7
+  },
+  "uyên": {
+    "element": "Thủy",
+    "han": "淵",
+    "meaning": "vực sâu, uyên bác, sâu xa",
+    "strokes": 13
+  },
+  "uất": {
+    "element": "Thổ",
+    "han": "尉",
+    "meaning": "chức úy, yên ổn",
+    "strokes": 11,
+    "uncertain": true
+  },
+  "vi": {
+    "element": "Mộc",
+    "han": "薇",
+    "meaning": "cây vi, hoa nhỏ, tinh tế",
+    "strokes": 19,
+    "uncertain": true
+  },
+  "vinh": {
+    "element": "Mộc",
+    "han": "榮",
+    "meaning": "vinh quang, vinh hiển, thịnh",
+    "strokes": 14
+  },
+  "viên": {
+    "element": "Thổ",
+    "han": "園",
+    "meaning": "vườn, viên, tròn đầy (viên mãn)",
+    "strokes": 13,
+    "uncertain": true
+  },
+  "việt": {
+    "element": "Thổ",
+    "han": "越",
+    "meaning": "vượt qua, Việt, xuất sắc",
+    "strokes": 12
+  },
+  "vân": {
+    "element": "Thủy",
+    "han": "雲",
+    "meaning": "mây, vân",
+    "strokes": 12
+  },
+  "võ": {
+    "element": "Hỏa",
+    "han": "武",
+    "meaning": "võ, quân sự, mạnh mẽ",
+    "strokes": 8
+  },
+  "văn": {
+    "element": "Thủy",
+    "han": "文",
+    "meaning": "văn, chữ, văn hóa, hoa văn",
+    "strokes": 4
+  },
+  "vĩ": {
+    "element": "Thổ",
+    "han": "偉",
+    "meaning": "vĩ đại, lớn lao, cao cả",
+    "strokes": 12,
+    "uncertain": true
+  },
+  "vĩnh": {
+    "element": "Thổ",
+    "han": "永",
+    "meaning": "vĩnh viễn, lâu dài, mãi mãi",
+    "strokes": 5
+  },
+  "vũ": {
+    "element": "Hỏa",
+    "han": "武",
+    "meaning": "võ, quân sự, mạnh mẽ",
+    "strokes": 8
+  },
+  "vương": {
+    "element": "Thổ",
+    "han": "王",
+    "meaning": "vua, đứng đầu, vương giả",
+    "strokes": 4
+  },
+  "vượng": {
+    "element": "Hỏa",
+    "han": "旺",
+    "meaning": "thịnh vượng, hưng vượng",
+    "strokes": 8
+  },
+  "vạn": {
+    "element": "Thổ",
+    "han": "萬",
+    "meaning": "vạn, mười nghìn, rất nhiều",
+    "strokes": 15
+  },
+  "vận": {
+    "element": "Thổ",
+    "han": "運",
+    "meaning": "vận chuyển, vận mệnh, xoay vần",
+    "strokes": 16
+  },
+  "vệ": {
+    "element": "Thổ",
+    "han": "衛",
+    "meaning": "bảo vệ, vệ, canh giữ",
+    "strokes": 15
+  },
+  "vịnh": {
+    "element": "Thổ",
+    "han": "詠",
+    "meaning": "ngâm vịnh, ca ngợi",
+    "strokes": 12
+  },
+  "vọng": {
+    "element": "Kim",
+    "han": "望",
+    "meaning": "trông mong, danh vọng, nhìn xa",
+    "strokes": 11
+  },
+  "xuyến": {
+    "element": "Kim",
+    "han": "釧",
+    "meaning": "vòng xuyến, trang sức tay",
+    "strokes": 11
+  },
+  "xuân": {
+    "element": "Mộc",
+    "han": "春",
+    "meaning": "mùa xuân, tươi trẻ",
+    "strokes": 9
+  },
+  "xương": {
+    "element": "Kim",
+    "han": "昌",
+    "meaning": "hưng thịnh, xương, tốt đẹp",
+    "strokes": 8
+  },
+  "xảo": {
+    "element": "Thổ",
+    "han": "巧",
+    "meaning": "khéo léo, xảo, tinh xảo",
+    "strokes": 5
+  },
+  "y": {
+    "element": "Thổ",
+    "han": "伊",
+    "meaning": "người ấy, y, bắt đầu",
+    "strokes": 6
+  },
+  "yên": {
+    "element": "Thổ",
+    "han": "安",
+    "meaning": "yên ổn, bình yên (như An)",
+    "strokes": 6,
+    "uncertain": true
+  },
+  "yến": {
+    "element": "Thổ",
+    "han": "燕",
+    "meaning": "chim yến, tiệc yến, an vui",
+    "strokes": 16
+  },
+  "ái": {
+    "element": "Hỏa",
+    "han": "愛",
+    "meaning": "yêu thương, nhân ái",
+    "strokes": 13
+  },
+  "ánh": {
+    "element": "Hỏa",
+    "han": "映",
+    "meaning": "ánh sáng phản chiếu, rạng rỡ",
+    "strokes": 9
+  },
+  "ân": {
+    "element": "Thổ",
+    "han": "恩",
+    "meaning": "ân nghĩa, ơn huệ, biết ơn",
+    "strokes": 10
+  },
+  "ôn": {
+    "element": "Thủy",
+    "han": "溫",
+    "meaning": "ấm áp, ôn hòa, ôn tập",
+    "strokes": 14
+  },
+  "ý": {
+    "element": "Thổ",
+    "han": "意",
+    "meaning": "ý, ý nghĩa, mong muốn",
+    "strokes": 13
+  },
+  "đan": {
+    "element": "Hỏa",
+    "han": "丹",
+    "meaning": "màu đỏ son, đan sa, thành tâm",
+    "strokes": 4
+  },
+  "đinh": {
+    "element": "Hỏa",
+    "han": "丁",
+    "meaning": "họ, người trưởng thành, vững chắc",
+    "strokes": 2
+  },
+  "điền": {
+    "element": "Thổ",
+    "han": "田",
+    "meaning": "ruộng, đất ruộng",
+    "strokes": 5
+  },
+  "điệp": {
+    "element": "Mộc",
+    "han": "蝶",
+    "meaning": "con bướm, nhẹ nhàng xinh đẹp",
+    "strokes": 15
+  },
+  "đoàn": {
+    "element": "Kim",
+    "han": "段",
+    "meaning": "họ, đoạn, phần, từng khúc",
+    "strokes": 9
+  },
+  "đào": {
+    "element": "Thổ",
+    "han": "陶",
+    "meaning": "họ, đồ gốm, nung đúc, vui vẻ",
+    "strokes": 11
+  },
+  "đình": {
+    "element": "Hỏa",
+    "han": "庭",
+    "meaning": "sân, gia đình, đình",
+    "strokes": 10,
+    "uncertain": true
+  },
+  "đô": {
+    "element": "Thổ",
+    "han": "都",
+    "meaning": "kinh đô, thành phố lớn, đều",
+    "strokes": 15,
+    "uncertain": true
+  },
+  "đôn": {
+    "element": "Thổ",
+    "han": "敦",
+    "meaning": "đôn hậu, chân thật, hậu hĩnh",
+    "strokes": 12
+  },
+  "đông": {
+    "element": "Mộc",
+    "han": "東",
+    "meaning": "phương đông, mùa đông",
+    "strokes": 8
+  },
+  "đăng": {
+    "element": "Hỏa",
+    "han": "登",
+    "meaning": "lên, đăng quang, ghi tên",
+    "strokes": 12
+  },
+  "đường": {
+    "element": "Hỏa",
+    "han": "唐",
+    "meaning": "họ, nhà Đường, rộng lớn",
+    "strokes": 10
+  },
+  "đại": {
+    "element": "Mộc",
+    "han": "大",
+    "meaning": "lớn, to lớn, vĩ đại",
+    "strokes": 3,
+    "uncertain": true
+  },
+  "đạt": {
+    "element": "Thổ",
+    "han": "達",
+    "meaning": "thông đạt, đạt được, hanh thông",
+    "strokes": 16
+  },
+  "đắc": {
+    "element": "Kim",
+    "han": "得",
+    "meaning": "được, đắc được, thành tựu",
+    "strokes": 11,
+    "uncertain": true
+  },
+  "đặng": {
+    "element": "Thổ",
+    "han": "鄧",
+    "meaning": "họ, tên nước cổ thời Xuân Thu",
+    "strokes": 19,
+    "uncertain": true
+  },
+  "đệ": {
+    "element": "Hỏa",
+    "han": "弟",
+    "meaning": "em trai, thứ tự",
+    "strokes": 7
+  },
+  "định": {
+    "element": "Hỏa",
+    "han": "定",
+    "meaning": "ổn định, nhất định, yên định",
+    "strokes": 8
+  },
+  "đồng": {
+    "element": "Hỏa",
+    "han": "同",
+    "meaning": "cùng, giống, đồng lòng",
+    "strokes": 6
+  },
+  "đỗ": {
+    "element": "Mộc",
+    "han": "杜",
+    "meaning": "họ, cây đỗ lê, ngăn chặn",
+    "strokes": 7
+  },
+  "đức": {
+    "element": "Hỏa",
+    "han": "德",
+    "meaning": "đạo đức, phẩm hạnh, ân đức",
+    "strokes": 15
+  },
+  "ưu": {
+    "element": "Thổ",
+    "han": "優",
+    "meaning": "ưu tú, xuất sắc, nhiều",
+    "strokes": 17,
+    "uncertain": true
+  }
+}
