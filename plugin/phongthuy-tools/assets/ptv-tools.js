@@ -2365,3 +2365,103 @@ window.PTV_TOOLS_DATA = {"saoHan": {"han": {"Diêm Vương": {"desc": "Hạn Di�
   }
   window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-huong-giuong-ngu': giuongNguV2 });
 })();
+/* Wave 7: nang cap tung tool con lai (ban tho, bep nau, ...) */
+(function () {
+  'use strict';
+  var L = window.PTVLib, esc = L.esc, V = window.PTVDayToolsV2;
+  var GOOD_W = { 'Sinh Khí': 4, 'Thiên Y': 3, 'Diên Niên': 2, 'Phục Vị': 1 };
+  var BAD_W = { 'Tuyệt Mệnh': 4, 'Ngũ Quỷ': 3, 'Lục Sát': 2, 'Họa Hại': 1 };
+  function yg(p, defY) {
+    return '<div class="ptv-row">' + L.field('Năm sinh của gia chủ', L.select(p + 'y', L.yearOptions(1940, 2010, defY || 1990))) + L.field('Giới tính', L.genderSelect(p + 'g')) + '</div>';
+  }
+  function goodsSorted(cung, order) {
+    var g = L.goodDirs(cung, order || ['Sinh Khí', 'Thiên Y', 'Diên Niên', 'Phục Vị']);
+    return g.sort(function (a, b) { return GOOD_W[b.star] - GOOD_W[a.star]; });
+  }
+  function badsSorted(cung) {
+    var b = L.starsFor(cung).filter(function (s) { return s.info.t === 'xấu'; });
+    return b.sort(function (a, b) { return BAD_W[b.star] - BAD_W[a.star]; });
+  }
+  function dirSelect(id, label) {
+    return L.field(label, L.select(id, L.DIRS.map(function (d) { return '<option>' + d + '</option>'; }).join('')));
+  }
+
+  /* --- Xem huong ban tho v2 --- */
+  function banThoV2(c) {
+    c.innerHTML = V.tabsHTML([['bt-dir', 'Hướng bàn thờ theo tuổi gia chủ'], ['bt-check', 'Kiểm tra hướng bàn thờ hiện tại']]) +
+      '<div id="bt-dir">' + V.formWrap2(yg('a'), 'Xem hướng bàn thờ') + '</div>' +
+      '<div id="bt-check" hidden>' + V.formWrap2(yg('a') + '<div class="ptv-row">' + dirSelect('dir', 'Hướng mặt bàn thờ đang quay về (từ trong nhìn ra)') + '</div>', 'Kiểm tra hướng này') + '</div>';
+    V.wireTabs(c, ['bt-dir', 'bt-check']);
+    c.querySelector('#bt-dir form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#bt-dir'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value;
+      var cp = L.cungPhi(y, g), goods = goodsSorted(cp.cung);
+      var html = '<h3>Hướng đặt bàn thờ cho gia chủ sinh năm ' + y + ', mệnh ' + cp.cung + ' (' + cp.group + ')</h3>' +
+        '<p>Bàn thờ nên quay mặt về hướng <strong>' + goods[0].dir + ' (sao ' + goods[0].star + ')</strong>. Sao Sinh Khí được ưu tiên số một cho bàn thờ vì chủ về phúc đức, tài lộc và con cháu hưng thịnh; lưng bàn thờ khi đó tựa về phía đối diện, thỏa nguyên tắc tọa cát hướng cát khi hướng mặt đã là hướng tốt.</p>' +
+        '<p><strong>Thứ tự các hướng tốt còn lại:</strong> ' + goods.slice(1).map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '.</p>' +
+        '<h3>Quy tắc đặt bàn thờ quan trọng không kém hướng</h3><ul>' +
+        '<li>Lưng bàn thờ tựa vào tường vững chắc, không tựa vào cửa sổ, tường nhà vệ sinh hoặc tường bếp.</li>' +
+        '<li>Bàn thờ không đối diện thẳng cửa chính, cửa nhà vệ sinh, cửa phòng ngủ và không đặt dưới xà ngang, gầm cầu thang.</li>' +
+        '<li>Độ cao bàn thờ nên từ ngực người trở lên, khi thắp hương không phải với quá cao cũng không cúi quá thấp.</li>' +
+        '<li>Không đặt bàn thờ chung tường với bếp nấu ở phía sau trong thế lửa sát lưng bàn thờ.</li>' +
+        '<li>Phía trước bàn thờ cần thoáng và sáng, tránh để đồ đạc chắn lối thắp hương.</li></ul>' +
+        L.dirTable(cp.cung) +
+        '<p class="ptv-note">Nếu nhà chung cư hoặc nhà thuê không xoay được bàn thờ về hướng tốt nhất, hãy chọn một trong các hướng tốt còn lại, giữ lưng bàn thờ tựa tường và tránh các vị trí kiêng phía trên, như vậy đã đạt phần lớn yêu cầu thực tế.</p>';
+      L.resultBox(box, html);
+    });
+    c.querySelector('#bt-check form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#bt-check'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value, dir = box.querySelector('#dir').value;
+      var cp = L.cungPhi(y, g), s = L.starsFor(cp.cung)[L.DIRS.indexOf(dir)], good = s.info.t === 'tốt';
+      var html = '<h3>Bàn thờ hướng ' + dir + ' với gia chủ mệnh ' + cp.cung + ': sao ' + s.star + '</h3>' +
+        '<p class="' + (good ? 'ptv-good' : 'ptv-bad') + '">' + (good ? 'Đây là hướng tốt cho bàn thờ của gia chủ.' : 'Đây là hướng xấu cho bàn thờ của gia chủ, nên cân nhắc xoay lại nếu điều kiện cho phép.') + '</p><p>' + esc(s.info.d || '') + '</p>' +
+        (good ? '<p>Bạn giữ nguyên hướng này, chỉ cần kiểm tra thêm các quy tắc vị trí ở tab bên cạnh: lưng tựa tường, không đối diện cửa vệ sinh, không dưới xà ngang.</p>' : '<p>Các hướng tốt để xoay về: ' + goodsSorted(cp.cung).map(function (x) { return x.dir + ' (' + x.star + ')'; }).join(', ') + '. Nếu không xoay được vì kết cấu nhà, ưu tiên xử lý vị trí trước: dời bàn thờ khỏi thế đối diện nhà vệ sinh hoặc dưới xà ngang còn quan trọng hơn cố xoay hướng.</p>') +
+        L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+  }
+
+  /* --- Xem huong bep nau v2 --- */
+  function bepV2(c) {
+    c.innerHTML = V.tabsHTML([['bp-dir', 'Hướng bếp theo tuổi gia chủ'], ['bp-check', 'Kiểm tra bếp hiện tại']]) +
+      '<div id="bp-dir">' + V.formWrap2(yg('a'), 'Xem hướng đặt bếp') + '</div>' +
+      '<div id="bp-check" hidden>' + V.formWrap2(yg('a') + '<div class="ptv-row">' + dirSelect('toa', 'Bếp đang đặt tại phía nào của nhà (tọa)') + dirSelect('cua', 'Cửa bếp, hướng người nấu quay mặt tới') + '</div>', 'Kiểm tra bếp này') + '</div>';
+    V.wireTabs(c, ['bp-dir', 'bp-check']);
+    c.querySelector('#bp-dir form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#bp-dir'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value;
+      var cp = L.cungPhi(y, g), goods = goodsSorted(cp.cung), bads = badsSorted(cp.cung);
+      var html = '<h3>Hướng bếp cho gia chủ sinh năm ' + y + ', mệnh ' + cp.cung + ' (' + cp.group + '): tọa hung hướng cát</h3>' +
+        '<p>Nguyên tắc đặt bếp là <strong>đặt bếp tại hướng xấu để đốt cháy, trấn áp khí xấu</strong>, còn cửa bếp, tức hướng người nấu đứng quay mặt tới khi nấu, <strong>quay về hướng tốt</strong> để đón khí lành vào bữa ăn.</p>' +
+        '<p><strong>Vị trí đặt bếp nên chọn, theo thứ tự trấn áp mạnh dần:</strong> ' + bads.map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '. Trong đó đặt tại ' + bads[0].dir + ' (' + bads[0].star + ') là thế tọa hung được coi là mạnh nhất.</p>' +
+        '<p><strong>Cửa bếp nên quay về:</strong> ' + goods.map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + ', tốt nhất là ' + goods[0].dir + ' (' + goods[0].star + ').</p>' +
+        '<h3>Các cặp đặt bếp gợi ý</h3><div class="ptv-table-wrap"><table class="ptv-table"><tr><th>Đặt bếp tại (tọa)</th><th>Cửa bếp quay về (hướng)</th><th>Đánh giá</th></tr>' +
+        '<tr><td>' + bads[0].dir + ' (' + bads[0].star + ')</td><td>' + goods[0].dir + ' (' + goods[0].star + ')</td><td><strong>Cặp tốt nhất</strong>: tọa hung mạnh nhất, hướng cát mạnh nhất</td></tr>' +
+        '<tr><td>' + bads[1].dir + ' (' + bads[1].star + ')</td><td>' + goods[0].dir + ' (' + goods[0].star + ')</td><td>Rất tốt</td></tr>' +
+        '<tr><td>' + bads[0].dir + ' (' + bads[0].star + ')</td><td>' + goods[1].dir + ' (' + goods[1].star + ')</td><td>Tốt</td></tr></table></div>' +
+        '<h3>Quy tắc bếp quan trọng không kém hướng</h3><ul>' +
+        '<li>Bếp nấu và bồn rửa, tủ lạnh thuộc hành Thủy không đặt đối diện hoặc sát nhau trong thế thủy hỏa xung khắc, nên có khoảng đệm ít nhất một gang tay.</li>' +
+        '<li>Không đặt bếp đối diện cửa nhà vệ sinh, cửa phòng ngủ, và không đặt bếp dưới phòng ngủ hoặc dưới nhà vệ sinh tầng trên.</li>' +
+        '<li>Bếp không đặt giữa nhà (trung cung) và không để góc nhọn của tủ, cột chĩa thẳng vào bếp.</li>' +
+        '<li>Lưng bếp nên tựa tường vững, tránh đặt bếp trước cửa sổ lớn vì gió lùa làm lửa chập chờn, vừa mất an toàn vừa phạm lệ hỏa không yên.</li></ul>' +
+        L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+    c.querySelector('#bp-check form').addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      var box = c.querySelector('#bp-check'), y = parseInt(box.querySelector('#ay').value, 10), g = box.querySelector('#ag').value;
+      var toa = box.querySelector('#toa').value, cua = box.querySelector('#cua').value;
+      var cp = L.cungPhi(y, g);
+      var sToa = L.starsFor(cp.cung)[L.DIRS.indexOf(toa)], sCua = L.starsFor(cp.cung)[L.DIRS.indexOf(cua)];
+      var toaOK = sToa.info.t === 'xấu', cuaOK = sCua.info.t === 'tốt';
+      var html = '<h3>Kiểm tra bếp cho gia chủ mệnh ' + cp.cung + '</h3>' +
+        '<p><strong>Vị trí đặt bếp tại ' + toa + ' (sao ' + sToa.star + '):</strong> ' + (toaOK ? '<span class="ptv-good">Đúng nguyên tắc tọa hung</span>, bếp đặt tại hướng xấu để trấn áp khí xấu.' : '<span class="ptv-bad">Chưa đúng nguyên tắc tọa hung</span>, vì ' + toa + ' là hướng tốt (' + sToa.star + ') với gia chủ, đặt bếp ở hướng tốt được cho là đốt đi khí lành.') + '</p>' +
+        '<p><strong>Cửa bếp quay về ' + cua + ' (sao ' + sCua.star + '):</strong> ' + (cuaOK ? '<span class="ptv-good">Đúng nguyên tắc hướng cát</span>, cửa bếp đón khí tốt cho bữa ăn gia đình.' : '<span class="ptv-bad">Chưa đúng nguyên tắc hướng cát</span>, vì ' + cua + ' là hướng xấu (' + sCua.star + ') với gia chủ.') + '</p>' +
+        '<p><strong>Kết luận:</strong> ' + (toaOK && cuaOK ? 'Bếp của bạn đạt cả hai nguyên tắc tọa hung hướng cát, giữ nguyên và chỉ cần lưu ý các quy tắc vị trí như tránh thủy hỏa đối đầu.' : 'Bếp chưa đạt trọn vẹn. Các vị trí đặt bếp nên chọn: ' + badsSorted(cp.cung).map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '. Các hướng cửa bếp nên quay về: ' + goodsSorted(cp.cung).map(function (s) { return s.dir + ' (' + s.star + ')'; }).join(', ') + '. Nếu không sửa được cả hai, hãy ưu tiên sửa hướng cửa bếp trước vì đây là phần dễ thay đổi khi cải tạo nhỏ.') + '</p>' +
+        L.dirTable(cp.cung);
+      L.resultBox(box, html);
+    });
+  }
+
+  window.PTVTools = Object.assign({}, window.PTVTools || {}, { 'xem-huong-ban-tho': banThoV2, 'xem-huong-bep-nau': bepV2 });
+})();
