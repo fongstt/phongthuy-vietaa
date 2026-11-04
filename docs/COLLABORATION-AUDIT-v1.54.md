@@ -1,24 +1,26 @@
-# v1.54 – collaboration checklist for ChatGPT and Muse AI
+# ChatGPT × Muse AI — review notes / CI-only PR
 
-## Safety contract
-- Activating the WordPress plugin must only create missing tool pages; existing titles, content, and SEO metadata belong to the editor.
-- The existing front page is never rewritten. Add `[ptv_trang_chu_tools]` manually to the chosen homepage.
-- Menu creation is disabled by default. An administrator can temporarily opt into creating the dedicated menu via `add_filter('ptv_provision_menu_on_activation', '__return_true');`; existing menus are never deleted, and already occupied theme menu locations are never replaced.
-- Back up and test the database restore path before using any plugin update on production.
-- The change removes automatic re-sync of hand-edited pages; design an admin preview/diff and explicit update flow separately.
+## PR scope (agreed with Muse review, 2026-11-04)
+- Add automated Node smoke/regression tests for the existing calendar calculation engine.
+- Add GitHub Actions CI for PHP syntax, JS syntax and parity between both PHP entrypoint copies.
+- **Do not modify WordPress activation behavior in this PR.** Current production relies on reactivation to synchronize Page content; removing that without a replacement blocks ordinary releases.
+- This PR intentionally does not choose or reserve a plugin release number.
 
-## Calculation audit
-- Calendar regression tests cover a Julian day anchor and selected Vietnamese lunar new-year fixtures; not an exhaustive precision proof.
-- In `src/ptv-engine.js`, `yearPillar()` uses an approximate February 4 Lập Xuân threshold and `monthChiIndex()` uses fixed dates. Births close to solar-term boundaries may be misclassified.
-- Muse AI: introduce a reliable timezone-aware ephemeris/solar-term algorithm and independently sourced before/after boundary tests before making claims of precise Bát Tự.
-- Add independently verified leap-month, day-pillar, hour-pillar, DST/timezone, invalid-date, and supported-year-range tests.
-- The project's README states the Tử Vi chart does not yet have a full 14-main-star placement.
-- Bói toán, numerology and dream interpretations are cultural/traditional interpretations, not verified predictive science.
+## Separate safety PR required before changing activation
+- Back up WordPress database and test restore on staging.
+- Add explicit administrative content sync with preview/diff, list of changed Pages, confirmation and logging. Clearly display sync failures.
+- Preserve owner edits via conflict detection or opt-in replacement, rather than silently overwriting them.
+- Validate permissions and nonces on any admin write; maintain trusted manifest/file-path allowlisting.
+- Preserve existing navigation/menu and homepage customization, or provide explicit opt-in with preview.
+- Test first activation, repeat activation, content update, manual edits and rollback before merge.
 
-## Muse AI handoff
-1. Review this branch and draft PR; never force-push main.
-2. Run CI and test activation twice on WordPress staging with customized pages, front page and menu.
-3. Audit XSS and dynamically generated HTML, input validation and output escaping.
-4. Build JS bundles reproducibly from src; diff generated assets against deployed assets.
-5. Add precise calendar/tứ trụ tests and fixes in separate PRs with expected/actual fixtures and citations.
-6. Only deploy after backup, staging signoff and a tested rollback procedure.
+## Calculation audit and accuracy boundaries
+- Fixtures test the Julian-day reference, four known Vietnam lunar New Year dates, basic range bounds and two year pillars far from season boundaries. Passing tests do **not** certify overall calendar correctness.
+- Current year/month pillars use approximate fixed-day solar-term cutoffs. Future independent PR: calculate true solar-term instants with documented source, UTC+7 behavior and before/after timestamp fixtures; also test leap lunar months and day/hour pillars.
+- **Correction to earlier audit:** source code from commit v1.44 implements placements for 14 main Tử Vi stars and Tứ Hóa. README is stale; remaining work includes secondary stars and independent validation of algorithms. Feature presence does not prove correctness.
+- Divination, numerology and similar traditional interpretations should not be described as empirically validated prediction.
+
+## Handoff protocol
+- Muse AI reviews and runs tests; ChatGPT independently audits changes and test coverage through GitHub PR comments.
+- Keep the CI-only PR separate from the WordPress content-sync safety PR and later solar-term calculation PR.
+- Merge and production deployment only after site owner's approval. Never force-push main.
