@@ -1,0 +1,16 @@
+name: CI checks
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check src/ptv-engine.js
+      - run: node --check plugin/phongthuy-tools/assets/ptv-tools.js
+      - run: node --test tests/engine.test.cjs
+      - run: php -l src/phongthuy-tools.php
+      - run: php -l plugin/phongthuy-tools/phongthuy-tools.php
+      - run: cmp src/phongthuy-tools.php plugin/phongthuy-tools/phongthuy-tools.php
