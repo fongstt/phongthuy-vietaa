@@ -88,15 +88,24 @@ function ptv_ss_page_status($p) {
     $status = ptv_ss_status($plugin_hash, $db_hash, $b ? $b['db'] : null, $page ? true : false);
     return array('page' => $page, 'status' => $status, 'plugin_hash' => $plugin_hash, 'db_hash' => $db_hash, 'baseline' => $b);
 }
-/* Trang $slug co dang xung dot (lech moc) hay khong, dung cho duong kich hoat. */
+/* Trang $slug co nen bi bo qua khi kich hoat hay khong:
+ * - DB lech moc da ghi (nghi sua tay), hoac
+ * - Page da ton tai nhung CHUA co moc va noi dung khac plugin (truong hop nang
+ *   cap tu ban cu chua co baseline: khong phan biet duoc sua tay hay khong,
+ *   nen bao toan du lieu va de admin quyet dinh o man hinh dong bo). */
 function ptv_ss_would_conflict($slug, $file) {
-    $baseline = ptv_ss_get_baseline();
-    if (!isset($baseline[$slug])) return false;
     $page = get_page_by_path($slug);
     if (!$page) return false;
     $db = ptv_ss_hash($page->post_content);
     if ($db === ptv_ss_hash(ptv_ss_plugin_content($file))) return false;
+    $baseline = ptv_ss_get_baseline();
+    if (!isset($baseline[$slug])) return true;
     return $db !== $baseline[$slug]['db'];
+}
+/* Kiem chung sau ghi: noi dung DB thuc te da khop ban plugin chua. */
+function ptv_ss_verify_written($slug, $file) {
+    $page = get_page_by_path($slug);
+    return $page && ptv_ss_hash($page->post_content) === ptv_ss_hash(ptv_ss_plugin_content($file));
 }
 /* Diff tung dong (LCS), tra ve so dong them/xoa va HTML xem truoc.
  * Gioi han 500 dong moi ben de tranh phinh RAM; vuot thi chi bao tong quat. */
@@ -199,10 +208,12 @@ function ptv_ss_render() {
                         if ($page) {
                             $r = wp_update_post(array('ID' => $page->ID, 'post_content' => $content), true);
                             if (is_wp_error($r)) { $errors[] = $p['slug'] . ': ' . $r->get_error_message(); ptv_ss_log('sync_error', $p['slug'], $r->get_error_message()); }
+                            elseif (!ptv_ss_verify_written($p['slug'], $p['file'])) { $errors[] = $p['slug'] . ': nội dung sau ghi không khớp bản plugin'; ptv_ss_log('sync_error', $p['slug'], 'Kiểm chứng sau ghi thất bại, không cập nhật mốc'); }
                             else { $done[] = $p['slug']; ptv_ss_log('sync_update', $p['slug'], 'Cập nhật nội dung từ plugin (chỉ post_content, giữ nguyên tiêu đề và SEO meta)'); }
                         } else {
                             $r = wp_insert_post(array('post_title' => $p['title'], 'post_name' => $p['slug'], 'post_content' => $content, 'post_status' => 'publish', 'post_type' => 'page'), true);
                             if (is_wp_error($r)) { $errors[] = $p['slug'] . ': ' . $r->get_error_message(); ptv_ss_log('sync_error', $p['slug'], $r->get_error_message()); }
+                            elseif (!ptv_ss_verify_written($p['slug'], $p['file'])) { $errors[] = $p['slug'] . ': nội dung sau khi tạo không khớp bản plugin'; ptv_ss_log('sync_error', $p['slug'], 'Kiểm chứng sau khi tạo thất bại, không cập nhật mốc'); }
                             else { $done[] = $p['slug']; ptv_ss_log('sync_create', $p['slug'], 'Tạo Page mới từ plugin'); }
                         }
                     }
@@ -227,9 +238,12 @@ function ptv_ss_render() {
                 if ($page) {
                     $baseline = ptv_ss_get_baseline();
                     $baseline[$slug] = array('id' => (int) $page->ID, 'db' => ptv_ss_hash($page->post_content), 'plugin' => ptv_ss_hash(ptv_ss_plugin_content($target['file'])), 'time' => time(), 'source' => 'admin-seed-one');
-                    update_option('ptv_ss_baseline', $baseline, false);
-                    ptv_ss_log('seed_one', $slug, 'Admin chốt mốc theo nội dung DB hiện tại của riêng trang này');
-                    $notice = 'Đã chốt mốc cho trang ' . $slug . '. Lưu ý: từ nay nếu plugin có bản mới, trang này sẽ được coi là cập nhật an toàn.';
+                    $saved = update_option('ptv_ss_baseline', $baseline, false);
+                    if (!$saved) { ptv_ss_log('seed_error', $slug, 'Không lưu được mốc khi chốt mốc thủ công'); $notice_err = 'Không lưu được mốc cho trang ' . $slug . ', hãy thử lại.'; }
+                    else {
+                        ptv_ss_log('seed_one', $slug, 'Admin chốt mốc theo nội dung DB hiện tại của riêng trang này');
+                        $notice = 'Đã chốt mốc cho trang ' . $slug . '. Lưu ý: từ nay nếu plugin có bản mới, trang này sẽ được coi là cập nhật an toàn.';
+                    }
                 } else $notice_err = 'Trang ' . $slug . ' chưa tồn tại nên không chốt mốc được.';
             } else {
                 $bk = ptv_ss_backup(array($slug), 'force_one');
@@ -240,6 +254,7 @@ function ptv_ss_render() {
                     if ($page) {
                         $r = wp_update_post(array('ID' => $page->ID, 'post_content' => ptv_ss_plugin_content($target['file'])), true);
                         if (is_wp_error($r)) { ptv_ss_log('sync_error', $slug, $r->get_error_message()); $notice_err = 'Lỗi khi ghi đè ' . $slug . ': ' . $r->get_error_message(); }
+                        elseif (!ptv_ss_verify_written($slug, $target['file'])) { ptv_ss_log('sync_error', $slug, 'Kiểm chứng sau ghi đè thất bại, không cập nhật mốc'); $notice_err = 'Nội dung sau ghi đè của ' . $slug . ' không khớp bản plugin, mốc được giữ nguyên.'; }
                         else { ptv_ss_record_baseline('admin-force', array($slug)); ptv_ss_log('sync_force', $slug, 'Admin xác nhận ghi đè nội dung plugin lên Page lệch mốc'); $notice = 'Đã ghi đè nội dung plugin cho trang ' . $slug . '.'; }
                     } else $notice_err = 'Không tìm thấy Page ' . $slug . '.';
                 }
@@ -257,7 +272,7 @@ function ptv_ss_render() {
                 $restored = array(); $errors = array();
                 foreach ($found['pages'] as $slug => $saved) {
                     $page = get_post((int) $saved['id']);
-                    if (!$page || $page->post_name !== $slug) {
+                    if (!$page || $page->post_name !== $slug || $page->post_type !== 'page') {
                         $errors[] = $slug . ': Page hiện tại không khớp ID/slug đã lưu';
                         ptv_ss_log('rollback_error', $slug, 'Bỏ qua vì Page ID ' . (int) $saved['id'] . ' không còn khớp slug');
                         continue;

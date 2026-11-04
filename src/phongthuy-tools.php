@@ -245,26 +245,39 @@ function ptv_on_activate() {
     // Lop an toan Issue #2: backup truoc khi ghi; trang lech moc (sua tay) bi bo qua.
     $all_slugs = array();
     foreach (ptv_ss_pages() as $pp) $all_slugs[] = $pp['slug'];
-    ptv_ss_backup($all_slugs, 'pre-activation');
+    $bk = ptv_ss_backup($all_slugs, 'pre-activation');
+    if ($bk === false) {
+        // Khong backup duoc thi khong ghi bat cu thu gi (P0 vong 2).
+        ptv_ss_log('activation_abort', '', 'Hủy toàn bộ đồng bộ khi kích hoạt vì không lưu được backup trước khi ghi');
+        return;
+    }
     $written = array();
-    if (ptv_ss_would_conflict('dat-ten-con', 'page-dat-ten-con.html')) {
-        ptv_ss_log('activation_skip', 'dat-ten-con', 'Bỏ qua khi kích hoạt vì nội dung DB lệch mốc (nghi sửa tay)');
-    } else { ptv_sync_page(
+    $sync_one = function ($slug, $title, $file, $seo_title, $seo_desc) use (&$written) {
+        if (ptv_ss_would_conflict($slug, $file)) {
+            ptv_ss_log('activation_skip', $slug, 'Bỏ qua khi kích hoạt: nội dung DB lệch mốc hoặc chưa có mốc (bảo toàn dữ liệu hiện hữu)');
+            return;
+        }
+        ptv_sync_page($slug, $title, $file, $seo_title, $seo_desc);
+        if (ptv_ss_verify_written($slug, $file)) {
+            $written[] = $slug;
+        } else {
+            ptv_ss_log('activation_write_error', $slug, 'Nội dung sau khi ghi không khớp bản plugin, không cập nhật mốc cho trang này');
+        }
+    };
+    $sync_one(
         'dat-ten-con',
         'Đặt Tên Con Theo Phong Thủy',
         'page-dat-ten-con.html',
         'Đặt tên con, tìm và xem tên cho con hợp tuổi, hợp mệnh theo đúng phong thủy',
         'Công cụ đặt tên con theo phong thủy: nhập họ tên và ngày giờ sinh của bé để xem bản mệnh, tứ trụ, ngũ cách, chấm điểm tên theo số nét chữ Hán, ngũ hành và quẻ Dịch, có đối chiếu mệnh bố mẹ và gợi ý tên hay.'
-    ); $written[] = 'dat-ten-con'; }
-    if (ptv_ss_would_conflict('boi-kieu', 'page-boi-kieu.html')) {
-        ptv_ss_log('activation_skip', 'boi-kieu', 'Bỏ qua khi kích hoạt vì nội dung DB lệch mốc (nghi sửa tay)');
-    } else { ptv_sync_page(
+    );
+    $sync_one(
         'boi-kieu',
         'Bói Kiều',
         'page-boi-kieu.html',
         'Bói Kiều - Tiến hành rút quẻ truyện Kiều để giải đoán điềm tương lai',
         'Bói Kiều online miễn phí: tiến hành rút quẻ Truyện Kiều để giải đoán điềm tương lai về tình duyên, công danh, tài lộc, gia đạo và sức khỏe, kèm giải nghĩa và luận giải chi tiết từng cặp câu Kiều.'
-    ); $written[] = 'boi-kieu'; }
+    );
 
     // Dong bo cac trang cong cu theo manifest
     $mf = plugin_dir_path(__FILE__) . 'data/tools-manifest.json';
@@ -272,12 +285,7 @@ function ptv_on_activate() {
         $mlist = json_decode(file_get_contents($mf), true);
         if (is_array($mlist)) foreach ($mlist as $t) {
             if (empty($t['slug']) || empty($t['file'])) continue;
-            if (ptv_ss_would_conflict($t['slug'], $t['file'])) {
-                ptv_ss_log('activation_skip', $t['slug'], 'Bỏ qua khi kích hoạt vì nội dung DB lệch mốc (nghi sửa tay)');
-                continue;
-            }
-            ptv_sync_page($t['slug'], $t['title'], $t['file'], isset($t['seoTitle']) ? $t['seoTitle'] : '', isset($t['seoDesc']) ? $t['seoDesc'] : '');
-            $written[] = $t['slug'];
+            $sync_one($t['slug'], $t['title'], $t['file'], isset($t['seoTitle']) ? $t['seoTitle'] : '', isset($t['seoDesc']) ? $t['seoDesc'] : '');
         }
     }
     // Trang chu: dong bo noi dung cua trang dang duoc dat lam front page
@@ -289,7 +297,7 @@ function ptv_on_activate() {
     if ($front_id) {
         $front_post = get_post($front_id);
         $front_content = $front_post ? (string) $front_post->post_content : '';
-        if ($front_content === '' || strpos($front_content, '[ptv_trang_chu_tools]') !== false) {
+        if ($front_content === '' || trim($front_content) === '[ptv_trang_chu_tools]') {
             wp_update_post(array('ID' => $front_id, 'post_content' => '[ptv_trang_chu_tools]'));
             update_post_meta($front_id, '_yoast_wpseo_title', 'Phong Thủy VietAA, toàn bộ 59 ứng dụng phong thủy miễn phí');
             update_post_meta($front_id, '_yoast_wpseo_metadesc', 'Phong Thủy VietAA chia sẻ miễn phí 59 ứng dụng phong thủy trực tuyến: đặt tên con, bói Kiều, sim phong thủy, xem hướng nhà, chọn ngày tốt, giải đoán mệnh lý và nhân tướng.');
@@ -390,15 +398,24 @@ function ptv_ss_page_status($p) {
     $status = ptv_ss_status($plugin_hash, $db_hash, $b ? $b['db'] : null, $page ? true : false);
     return array('page' => $page, 'status' => $status, 'plugin_hash' => $plugin_hash, 'db_hash' => $db_hash, 'baseline' => $b);
 }
-/* Trang $slug co dang xung dot (lech moc) hay khong, dung cho duong kich hoat. */
+/* Trang $slug co nen bi bo qua khi kich hoat hay khong:
+ * - DB lech moc da ghi (nghi sua tay), hoac
+ * - Page da ton tai nhung CHUA co moc va noi dung khac plugin (truong hop nang
+ *   cap tu ban cu chua co baseline: khong phan biet duoc sua tay hay khong,
+ *   nen bao toan du lieu va de admin quyet dinh o man hinh dong bo). */
 function ptv_ss_would_conflict($slug, $file) {
-    $baseline = ptv_ss_get_baseline();
-    if (!isset($baseline[$slug])) return false;
     $page = get_page_by_path($slug);
     if (!$page) return false;
     $db = ptv_ss_hash($page->post_content);
     if ($db === ptv_ss_hash(ptv_ss_plugin_content($file))) return false;
+    $baseline = ptv_ss_get_baseline();
+    if (!isset($baseline[$slug])) return true;
     return $db !== $baseline[$slug]['db'];
+}
+/* Kiem chung sau ghi: noi dung DB thuc te da khop ban plugin chua. */
+function ptv_ss_verify_written($slug, $file) {
+    $page = get_page_by_path($slug);
+    return $page && ptv_ss_hash($page->post_content) === ptv_ss_hash(ptv_ss_plugin_content($file));
 }
 /* Diff tung dong (LCS), tra ve so dong them/xoa va HTML xem truoc.
  * Gioi han 500 dong moi ben de tranh phinh RAM; vuot thi chi bao tong quat. */
@@ -501,10 +518,12 @@ function ptv_ss_render() {
                         if ($page) {
                             $r = wp_update_post(array('ID' => $page->ID, 'post_content' => $content), true);
                             if (is_wp_error($r)) { $errors[] = $p['slug'] . ': ' . $r->get_error_message(); ptv_ss_log('sync_error', $p['slug'], $r->get_error_message()); }
+                            elseif (!ptv_ss_verify_written($p['slug'], $p['file'])) { $errors[] = $p['slug'] . ': nội dung sau ghi không khớp bản plugin'; ptv_ss_log('sync_error', $p['slug'], 'Kiểm chứng sau ghi thất bại, không cập nhật mốc'); }
                             else { $done[] = $p['slug']; ptv_ss_log('sync_update', $p['slug'], 'Cập nhật nội dung từ plugin (chỉ post_content, giữ nguyên tiêu đề và SEO meta)'); }
                         } else {
                             $r = wp_insert_post(array('post_title' => $p['title'], 'post_name' => $p['slug'], 'post_content' => $content, 'post_status' => 'publish', 'post_type' => 'page'), true);
                             if (is_wp_error($r)) { $errors[] = $p['slug'] . ': ' . $r->get_error_message(); ptv_ss_log('sync_error', $p['slug'], $r->get_error_message()); }
+                            elseif (!ptv_ss_verify_written($p['slug'], $p['file'])) { $errors[] = $p['slug'] . ': nội dung sau khi tạo không khớp bản plugin'; ptv_ss_log('sync_error', $p['slug'], 'Kiểm chứng sau khi tạo thất bại, không cập nhật mốc'); }
                             else { $done[] = $p['slug']; ptv_ss_log('sync_create', $p['slug'], 'Tạo Page mới từ plugin'); }
                         }
                     }
@@ -529,9 +548,12 @@ function ptv_ss_render() {
                 if ($page) {
                     $baseline = ptv_ss_get_baseline();
                     $baseline[$slug] = array('id' => (int) $page->ID, 'db' => ptv_ss_hash($page->post_content), 'plugin' => ptv_ss_hash(ptv_ss_plugin_content($target['file'])), 'time' => time(), 'source' => 'admin-seed-one');
-                    update_option('ptv_ss_baseline', $baseline, false);
-                    ptv_ss_log('seed_one', $slug, 'Admin chốt mốc theo nội dung DB hiện tại của riêng trang này');
-                    $notice = 'Đã chốt mốc cho trang ' . $slug . '. Lưu ý: từ nay nếu plugin có bản mới, trang này sẽ được coi là cập nhật an toàn.';
+                    $saved = update_option('ptv_ss_baseline', $baseline, false);
+                    if (!$saved) { ptv_ss_log('seed_error', $slug, 'Không lưu được mốc khi chốt mốc thủ công'); $notice_err = 'Không lưu được mốc cho trang ' . $slug . ', hãy thử lại.'; }
+                    else {
+                        ptv_ss_log('seed_one', $slug, 'Admin chốt mốc theo nội dung DB hiện tại của riêng trang này');
+                        $notice = 'Đã chốt mốc cho trang ' . $slug . '. Lưu ý: từ nay nếu plugin có bản mới, trang này sẽ được coi là cập nhật an toàn.';
+                    }
                 } else $notice_err = 'Trang ' . $slug . ' chưa tồn tại nên không chốt mốc được.';
             } else {
                 $bk = ptv_ss_backup(array($slug), 'force_one');
@@ -542,6 +564,7 @@ function ptv_ss_render() {
                     if ($page) {
                         $r = wp_update_post(array('ID' => $page->ID, 'post_content' => ptv_ss_plugin_content($target['file'])), true);
                         if (is_wp_error($r)) { ptv_ss_log('sync_error', $slug, $r->get_error_message()); $notice_err = 'Lỗi khi ghi đè ' . $slug . ': ' . $r->get_error_message(); }
+                        elseif (!ptv_ss_verify_written($slug, $target['file'])) { ptv_ss_log('sync_error', $slug, 'Kiểm chứng sau ghi đè thất bại, không cập nhật mốc'); $notice_err = 'Nội dung sau ghi đè của ' . $slug . ' không khớp bản plugin, mốc được giữ nguyên.'; }
                         else { ptv_ss_record_baseline('admin-force', array($slug)); ptv_ss_log('sync_force', $slug, 'Admin xác nhận ghi đè nội dung plugin lên Page lệch mốc'); $notice = 'Đã ghi đè nội dung plugin cho trang ' . $slug . '.'; }
                     } else $notice_err = 'Không tìm thấy Page ' . $slug . '.';
                 }
@@ -559,7 +582,7 @@ function ptv_ss_render() {
                 $restored = array(); $errors = array();
                 foreach ($found['pages'] as $slug => $saved) {
                     $page = get_post((int) $saved['id']);
-                    if (!$page || $page->post_name !== $slug) {
+                    if (!$page || $page->post_name !== $slug || $page->post_type !== 'page') {
                         $errors[] = $slug . ': Page hiện tại không khớp ID/slug đã lưu';
                         ptv_ss_log('rollback_error', $slug, 'Bỏ qua vì Page ID ' . (int) $saved['id'] . ' không còn khớp slug');
                         continue;
@@ -653,6 +676,15 @@ function ptv_ensure_menu() {
     if (!$menu_id || is_wp_error($menu_id)) return;
     // Bao ve menu sua tay (Issue #2): neu chu ky menu hien tai lech moc da luu thi khong dung lai.
     $saved_sig = get_option('ptv_ss_menu_sig', '');
+    if (!$saved_sig && $menu) {
+        $existing_items = wp_get_nav_menu_items($menu_id);
+        if ($existing_items && count($existing_items) > 0) {
+            $seed_sig = ptv_ss_menu_signature();
+            if ($seed_sig !== null) update_option('ptv_ss_menu_sig', $seed_sig, false);
+            ptv_ss_log('menu_seed', '', 'Menu đã có sẵn nhưng chưa có chữ ký mốc: chốt mốc theo menu hiện tại, không dựng lại khi kích hoạt');
+            return;
+        }
+    }
     if ($saved_sig) {
         $cur_sig = ptv_ss_menu_signature();
         if ($cur_sig !== null && $cur_sig !== $saved_sig) {

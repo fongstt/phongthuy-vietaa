@@ -24,7 +24,10 @@ function register_activation_hook() {}
 function plugin_dir_path($file) { return __DIR__ . '/../plugin/phongthuy-tools/'; }
 function plugins_url() { return 'https://example.test/wp-content/plugins/phongthuy-tools/'; }
 function get_option($k, $default = false) { return array_key_exists($k, $GLOBALS['wp_options']) ? $GLOBALS['wp_options'][$k] : $default; }
-function update_option($k, $v, $autoload = null) { $GLOBALS['wp_options'][$k] = $v; return true; }
+function update_option($k, $v, $autoload = null) {
+    if (isset($GLOBALS['fail_option_keys']) && in_array($k, $GLOBALS['fail_option_keys'], true)) return false;
+    $GLOBALS['wp_options'][$k] = $v; return true;
+}
 function get_page_by_path($slug) {
     foreach ($GLOBALS['pages'] as $p) if ($p->post_name === $slug && $p->post_type === 'page') return $p;
     return null;
@@ -67,6 +70,42 @@ function wp_unslash($v) { return $v; }
 function checked() { return ''; }
 function home_url($p = '') { return 'https://example.test' . $p; }
 function get_permalink($p) { return 'https://example.test/' . $p->post_name . '/'; }
+$GLOBALS['menus'] = array();
+$GLOBALS['next_menu_id'] = 500;
+function wp_get_nav_menu_object($name) {
+    if (!isset($GLOBALS['menus'][$name])) return null;
+    $o = new stdClass(); $o->term_id = $GLOBALS['menus'][$name]['term_id']; return $o;
+}
+function wp_create_nav_menu($name) {
+    $id = $GLOBALS['next_menu_id']++;
+    $GLOBALS['menus'][$name] = array('term_id' => $id, 'items' => array());
+    return $id;
+}
+function test_menu_name_by_id($id) {
+    foreach ($GLOBALS['menus'] as $n => $m) if ($m['term_id'] === (int) $id) return $n;
+    return null;
+}
+function wp_get_nav_menu_items($id) {
+    $n = test_menu_name_by_id($id);
+    return $n ? $GLOBALS['menus'][$n]['items'] : false;
+}
+function wp_update_nav_menu_item($menu_id, $item_id, $args) {
+    $n = test_menu_name_by_id($menu_id);
+    if (!$n) return new WP_Error('x', 'no menu');
+    $it = new stdClass();
+    $it->ID = $GLOBALS['next_id']++;
+    $it->title = $args['menu-item-title'];
+    $it->url = $args['menu-item-url'];
+    $it->menu_item_parent = (int) $args['menu-item-parent-id'];
+    $GLOBALS['menus'][$n]['items'][] = $it;
+    return $it->ID;
+}
+function wp_delete_post($id, $force = false) {
+    foreach ($GLOBALS['menus'] as $n => $m) {
+        $GLOBALS['menus'][$n]['items'] = array_values(array_filter($m['items'], function ($it) use ($id) { return $it->ID !== (int) $id; }));
+    }
+    return true;
+}
 
 require __DIR__ . '/../plugin/phongthuy-tools/phongthuy-tools.php';
 
@@ -80,6 +119,8 @@ function reset_state() {
     $GLOBALS['wp_options'] = array();
     $GLOBALS['pages'] = array();
     $GLOBALS['fail_slugs'] = array();
+    $GLOBALS['fail_option_keys'] = array();
+    $GLOBALS['menus'] = array();
     $_POST = array();
 }
 function make_page($slug, $content, $title = 'T') {
@@ -137,7 +178,10 @@ render_action(array('ptv_ss_action' => 'sync_safe'));
 ok(get_page_by_path('dat-ten-con')->post_content === 'BAN CU', 'partial failure: failed page content unchanged');
 ok(ptv_ss_get_baseline()['dat-ten-con']['db'] === $base_before, 'partial failure: failed page baseline unchanged');
 $log = get_option('ptv_ss_log', array());
-ok(!empty($log) && $log[0]['action'] === 'sync_error', 'partial failure: error written to audit log');
+$found_sync_error = false;
+if (is_array($log)) foreach ($log as $e) if ($e['action'] === 'sync_error' && $e['slug'] === 'dat-ten-con') $found_sync_error = true;
+if (!$found_sync_error) echo 'LOG DUMP: ' . json_encode($log) . "\n";
+ok($found_sync_error, 'partial failure: error written to audit log');
 
 /* ---------- 4. seed_one needs per-page confirmation (P0-3) ---------- */
 reset_state();
@@ -184,6 +228,47 @@ ok(get_post($front->ID)->post_content === 'TRANG CHU TU VIET', 'activation: cust
 ok(get_page_by_path('dat-ten-con') !== null && get_page_by_path('dat-ten-con')->post_content === $plugin_dat, 'activation: untouched pages still sync as before (deploy path intact)');
 $backs = get_option('ptv_ss_backups', array());
 ok(!empty($backs) && $backs[0]['reason'] === 'pre-activation', 'activation: pre-activation backup snapshot taken');
+
+/* ---------- 8. Activation aborts when pre-activation backup fails (P0-A) ---------- */
+reset_state();
+$pg = make_page('boi-kieu', 'BAN CU DANG CHAY');
+set_baseline('boi-kieu', 'BAN CU DANG CHAY');
+$GLOBALS['fail_option_keys'] = array('ptv_ss_backups');
+ptv_on_activate();
+ok(get_page_by_path('boi-kieu')->post_content === 'BAN CU DANG CHAY', 'backup failure: activation writes nothing');
+ok(get_page_by_path('dat-ten-con') === null, 'backup failure: activation creates no new pages');
+$log = get_option('ptv_ss_log', array());
+$found_abort = false;
+if (is_array($log)) foreach ($log as $e) if ($e['action'] === 'activation_abort') $found_abort = true;
+ok($found_abort, 'backup failure: activation_abort written to log');
+
+/* ---------- 9. Upgrade from v1.53: existing page without baseline is protected (P0-B) ---------- */
+reset_state();
+$pg = make_page('boi-kieu', 'TRANG TUY CHINH TU THOI V1.53');
+$pg2 = make_page('dat-ten-con', $plugin_dat);
+ptv_on_activate();
+ok(get_page_by_path('boi-kieu')->post_content === 'TRANG TUY CHINH TU THOI V1.53', 'upgrade: custom page without baseline is NOT overwritten');
+ok(!isset(ptv_ss_get_baseline()['boi-kieu']), 'upgrade: skipped page does not get a baseline');
+ok(isset(ptv_ss_get_baseline()['dat-ten-con']), 'upgrade: page already matching plugin content gets baselined');
+
+/* ---------- 10. Front page with embedded shortcode is preserved (P0-C) ---------- */
+reset_state();
+$front = make_page('trang-chu', 'Noi dung builder [ptv_trang_chu_tools] chen o giua');
+update_option('page_on_front', $front->ID, false);
+ptv_on_activate();
+ok(get_post($front->ID)->post_content === 'Noi dung builder [ptv_trang_chu_tools] chen o giua', 'front page: builder content with embedded shortcode preserved');
+
+/* ---------- 11. Existing menu without saved signature is seeded, not rebuilt (P0-C) ---------- */
+reset_state();
+$mid = wp_create_nav_menu('Menu Phong Thủy VietAA');
+wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Menu Tu Lam', 'menu-item-url' => 'https://example.test/tu-lam/', 'menu-item-parent-id' => 0));
+ptv_ensure_menu();
+$items = wp_get_nav_menu_items($mid);
+ok(count($items) === 1 && $items[0]->title === 'Menu Tu Lam', 'menu: existing unsigned menu kept as-is on first run');
+ok(get_option('ptv_ss_menu_sig', '') !== '', 'menu: signature seeded from existing menu');
+ptv_ensure_menu();
+$items2 = wp_get_nav_menu_items($mid);
+ok(count($items2) > 1 && $items2[0]->title === 'Trang chủ', 'menu: once signature matches, normal rebuild resumes');
 
 echo "\nRESULT: $pass passed, $fail failed\n";
 exit($fail > 0 ? 1 : 0);
