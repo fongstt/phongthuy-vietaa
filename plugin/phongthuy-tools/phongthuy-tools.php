@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PhongThuy VietAA Tools
  * Description: Bộ công cụ phong thủy cho phongthuy.vietaa.com: Đặt tên con, Bói Kiều và danh mục ứng dụng ở trang chủ. Khi kích hoạt, plugin tự tạo hoặc đồng bộ các Page ứng dụng và trang chủ.
- * Version: 1.53.0
+ * Version: 1.54.0
  * Author: PhongThuy VietAA
  */
 
@@ -224,8 +224,8 @@ function ptv_sync_page($slug, $title, $content_file, $seo_title, $seo_desc) {
     $content = file_exists($path) ? file_get_contents($path) : '';
     $existing = get_page_by_path($slug);
     if ($existing) {
-        wp_update_post(array('ID' => $existing->ID, 'post_content' => $content, 'post_title' => $title));
-        $page_id = $existing->ID;
+        // Preserve editor-owned content, title and Yoast metadata on activation.
+        return (int) $existing->ID;
     } else {
         $page_id = wp_insert_post(array(
             'post_title'   => $title,
@@ -271,12 +271,11 @@ function ptv_on_activate() {
         $home = get_page_by_path('trang-chu');
         if ($home) $front_id = $home->ID;
     }
-    if ($front_id) {
-        wp_update_post(array('ID' => $front_id, 'post_content' => '[ptv_trang_chu_tools]'));
-        update_post_meta($front_id, '_yoast_wpseo_title', 'Phong Thủy VietAA, toàn bộ 59 ứng dụng phong thủy miễn phí');
-        update_post_meta($front_id, '_yoast_wpseo_metadesc', 'Phong Thủy VietAA chia sẻ miễn phí 59 ứng dụng phong thủy trực tuyến: đặt tên con, bói Kiều, sim phong thủy, xem hướng nhà, chọn ngày tốt, giải đoán mệnh lý và nhân tướng.');
-      }
-    ptv_ensure_menu();
+    // Do not overwrite the front page or any existing navigation menu on activation.
+    // Site owner can place [ptv_trang_chu_tools] in the homepage manually.
+    if (apply_filters('ptv_provision_menu_on_activation', false)) {
+        ptv_ensure_menu();
+    }
 }
 /* ---------------- Menu chinh gom nhom theo danh muc ---------------- */
 function ptv_ensure_menu() {
@@ -285,10 +284,10 @@ function ptv_ensure_menu() {
     if (!$data || empty($data['groups'])) return;
     $menu_name = 'Menu Phong Thủy VietAA';
     $menu = wp_get_nav_menu_object($menu_name);
-    $menu_id = $menu ? (int) $menu->term_id : wp_create_nav_menu($menu_name);
+    // A menu that already exists may have been manually edited: leave it untouched.
+    if ($menu) return;
+    $menu_id = wp_create_nav_menu($menu_name);
     if (!$menu_id || is_wp_error($menu_id)) return;
-    $old = wp_get_nav_menu_items($menu_id);
-    if ($old) foreach ($old as $it) wp_delete_post($it->ID, true);
     $pos = 0;
     $add = function ($title, $url, $parent) use ($menu_id, &$pos) {
         $pos++;
@@ -314,8 +313,8 @@ function ptv_ensure_menu() {
     }
     $locs = get_theme_mod('nav_menu_locations', array());
     if (!is_array($locs)) $locs = array();
-    $locs['primary'] = $menu_id;
-    $locs['primary_mobile'] = $menu_id;
+    if (empty($locs['primary'])) $locs['primary'] = $menu_id;
+    if (empty($locs['primary_mobile'])) $locs['primary_mobile'] = $menu_id;
     set_theme_mod('nav_menu_locations', $locs);
 }
 register_activation_hook(__FILE__, 'ptv_on_activate');
