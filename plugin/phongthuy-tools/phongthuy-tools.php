@@ -481,17 +481,8 @@ function ptv_ss_backup($slugs, $reason, $include_extras = false) {
                 'seo_desc' => get_post_meta($front_id, '_yoast_wpseo_metadesc', true),
             );
         }
-        if (function_exists('wp_get_nav_menu_object') && function_exists('wp_get_nav_menu_items')) {
-            $menu = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
-            if ($menu) {
-                $items = wp_get_nav_menu_items((int) $menu->term_id);
-                if ($items) {
-                    $saved_items = array();
-                    foreach ($items as $it) $saved_items[] = array('id' => (int) $it->ID, 'title' => $it->title, 'url' => $it->url, 'parent' => (int) $it->menu_item_parent);
-                    $pages['__menu'] = $saved_items;
-                }
-            }
-        }
+        $menu_snapshot = ptv_ss_menu_snapshot();
+        if ($menu_snapshot) $pages['__menu'] = $menu_snapshot;
     }
     if (!$pages) return true;
     $backups = get_option('ptv_ss_backups', array());
@@ -517,9 +508,54 @@ function ptv_ss_menu_signature() {
     foreach ($items as $it) $parts[] = $it->title . '|' . $it->url . '|' . (int) $it->menu_item_parent;
     return ptv_ss_hash(implode("\n", $parts));
 }
-/* Khoi phuc cac muc menu tu mot snapshot '__menu' (cha luon dung truoc con). */
-function ptv_ss_restore_menu($saved_items) {
-    if (!function_exists('wp_get_nav_menu_object') || !function_exists('wp_get_nav_menu_items') || !function_exists('wp_update_nav_menu_item')) return false;
+/* Chup day du cac muc menu hien tai theo dinh dang snapshot '__menu',
+ * gom ca thuoc tinh WordPress: type, object, object_id, classes, target... */
+function ptv_ss_menu_snapshot() {
+    if (!function_exists('wp_get_nav_menu_object') || !function_exists('wp_get_nav_menu_items')) return null;
+    $menu = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
+    if (!$menu) return null;
+    $items = wp_get_nav_menu_items((int) $menu->term_id);
+    if (!$items) return array();
+    $saved = array();
+    foreach ($items as $it) {
+        $saved[] = array(
+            'id' => (int) $it->ID,
+            'title' => $it->title,
+            'url' => isset($it->url) ? $it->url : '',
+            'parent' => (int) $it->menu_item_parent,
+            'type' => isset($it->type) ? $it->type : 'custom',
+            'object' => isset($it->object) ? $it->object : '',
+            'object_id' => isset($it->object_id) ? (int) $it->object_id : 0,
+            'classes' => isset($it->classes) ? implode(' ', (array) $it->classes) : '',
+            'attr_title' => isset($it->attr_title) ? $it->attr_title : '',
+            'target' => isset($it->target) ? $it->target : '',
+            'description' => isset($it->description) ? $it->description : '',
+            'xfn' => isset($it->xfn) ? $it->xfn : '',
+            'position' => isset($it->menu_order) ? (int) $it->menu_order : 0,
+        );
+    }
+    return $saved;
+}
+/* Chuan hoa danh sach muc menu (object WP hoac mang snapshot) thanh chuoi
+ * title|url|chi-so-cha de so sanh toan ven sau khi dung lai. */
+function ptv_ss_menu_norm($items) {
+    $index = array();
+    foreach ($items as $i => $it) {
+        $id = is_array($it) ? $it['id'] : (int) $it->ID;
+        $index[$id] = $i;
+    }
+    $out = array();
+    foreach ($items as $it) {
+        if (is_array($it)) { $title = $it['title']; $url = $it['url']; $parent = $it['parent']; }
+        else { $title = $it->title; $url = isset($it->url) ? $it->url : ''; $parent = (int) $it->menu_item_parent; }
+        $pidx = isset($index[$parent]) ? $index[$parent] : -1;
+        $out[] = $title . '|' . $url . '|' . $pidx;
+    }
+    return $out;
+}
+/* Xoa va dung lai menu theo mot snapshot. Tra ve false ngay khi mot muc loi.
+ * Ham nay tu no KHONG an toan neu goi truc tiep: dung ptv_ss_restore_menu(). */
+function ptv_ss_menu_rebuild($saved_items) {
     $menu = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
     if (!$menu) return false;
     $menu_id = (int) $menu->term_id;
@@ -530,16 +566,51 @@ function ptv_ss_restore_menu($saved_items) {
     foreach ($saved_items as $it) {
         $pos++;
         $parent_new = isset($id_map[$it['parent']]) ? $id_map[$it['parent']] : 0;
-        $r = wp_update_nav_menu_item($menu_id, 0, array(
+        $args = array(
             'menu-item-title' => $it['title'],
-            'menu-item-url' => $it['url'],
             'menu-item-status' => 'publish',
-            'menu-item-type' => 'custom',
+            'menu-item-type' => isset($it['type']) ? $it['type'] : 'custom',
+            'menu-item-object' => isset($it['object']) ? $it['object'] : '',
+            'menu-item-object-id' => isset($it['object_id']) ? (int) $it['object_id'] : 0,
+            'menu-item-classes' => isset($it['classes']) ? $it['classes'] : '',
+            'menu-item-attr-title' => isset($it['attr_title']) ? $it['attr_title'] : '',
+            'menu-item-target' => isset($it['target']) ? $it['target'] : '',
+            'menu-item-description' => isset($it['description']) ? $it['description'] : '',
+            'menu-item-xfn' => isset($it['xfn']) ? $it['xfn'] : '',
             'menu-item-parent-id' => $parent_new,
-            'menu-item-position' => $pos,
-        ));
-        if (is_wp_error($r)) return false;
+            'menu-item-position' => !empty($it['position']) ? (int) $it['position'] : $pos,
+        );
+        if ($args['menu-item-type'] === 'custom') $args['menu-item-url'] = $it['url'];
+        $r = wp_update_nav_menu_item($menu_id, 0, $args);
+        if (is_wp_error($r) || !$r) return false;
         $id_map[$it['id']] = (int) $r;
+    }
+    return true;
+}
+/* Khoi phuc menu theo kieu giao dich: chup menu hien tai truoc, dung ban dich,
+ * kiem chung toan ven; bat ky loi nao cung hoan lai menu truoc do. */
+function ptv_ss_restore_menu($saved_items) {
+    if (!function_exists('wp_get_nav_menu_object') || !function_exists('wp_get_nav_menu_items') || !function_exists('wp_update_nav_menu_item')) return false;
+    $menu = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
+    if (!$menu) return false;
+    foreach ($saved_items as $it) {
+        if (!isset($it['title']) || !isset($it['id'])) {
+            ptv_ss_log('rollback_error', 'menu', 'Snapshot menu thiếu trường bắt buộc, hủy khôi phục trước khi động vào menu hiện tại');
+            return false;
+        }
+    }
+    $current = ptv_ss_menu_snapshot();
+    if ($current === null) $current = array();
+    $ok = ptv_ss_menu_rebuild($saved_items);
+    if ($ok) {
+        $now = wp_get_nav_menu_items((int) $menu->term_id);
+        $ok = $now && ptv_ss_menu_norm($now) === ptv_ss_menu_norm($saved_items);
+        if (!$ok) ptv_ss_log('rollback_error', 'menu', 'Menu sau khôi phục không khớp snapshot ở bước kiểm chứng toàn vẹn');
+    }
+    if (!$ok) {
+        $undo = ptv_ss_menu_rebuild($current);
+        ptv_ss_log('rollback_error', 'menu', $undo ? 'Khôi phục menu thất bại, đã hoàn lại nguyên trạng menu trước đó' : 'Khôi phục menu thất bại và hoàn lại cũng lỗi, cần kiểm tra thủ công ngay');
+        return false;
     }
     $sig = ptv_ss_menu_signature();
     if ($sig !== null) update_option('ptv_ss_menu_sig', $sig, false);
@@ -647,18 +718,50 @@ function ptv_ss_render() {
             } elseif (empty($_POST['ptv_ss_confirm_rb'])) {
                 $notice_err = 'Chưa khôi phục: cần tích ô xác nhận.';
             } else {
+                // Backup trang thai hien tai truoc khi khoi phuc; loi thi huy, khong ghi gi ca.
+                $pre_slugs = array();
+                foreach (array_keys($found['pages']) as $k) if ($k !== '__front' && $k !== '__menu') $pre_slugs[] = $k;
+                $pre_bk = ptv_ss_backup($pre_slugs, 'pre-rollback', true);
+                if ($pre_bk === false) {
+                    $notice_err = 'Đã hủy khôi phục vì không lưu được backup của trạng thái hiện tại.';
+                    ptv_ss_log('rollback_abort', '', 'Hủy rollback về bản ' . $found['id'] . ' vì pre-rollback backup thất bại');
+                } else {
+                    $backs_now = get_option('ptv_ss_backups', array());
+                    $ids_now = array();
+                    if (is_array($backs_now)) foreach ($backs_now as $b2) if (isset($b2['id'])) $ids_now[] = $b2['id'];
+                    if (!in_array($found['id'], $ids_now, true)) {
+                        $keep = array();
+                        if (is_array($backs_now)) foreach ($backs_now as $b2) { $keep[] = $b2; if (count($keep) >= 2) break; }
+                        $keep[] = $found;
+                        update_option('ptv_ss_backups', $keep, false);
+                        ptv_ss_log('rollback_pin', '', 'Đã ghim lại bản backup ' . $found['id'] . ' để không bị đẩy khỏi danh sách 3 bản gần nhất');
+                    }
+                }
+                if ($pre_bk !== false) {
                 $restored = array(); $errors = array(); $to_baseline = array();
                 $file_by_slug = array();
                 foreach ($pages as $pp) $file_by_slug[$pp['slug']] = $pp['file'];
                 foreach ($found['pages'] as $slug => $saved) {
                     if ($slug === '__front') {
-                        $r = wp_update_post(array('ID' => $saved['id'], 'post_content' => $saved['content'], 'post_title' => $saved['title']), true);
-                        if (is_wp_error($r)) { $errors[] = 'trang chủ: ' . $r->get_error_message(); ptv_ss_log('rollback_error', 'trang-chu', $r->get_error_message()); }
-                        else {
-                            update_post_meta($saved['id'], '_yoast_wpseo_title', isset($saved['seo_title']) ? $saved['seo_title'] : '');
-                            update_post_meta($saved['id'], '_yoast_wpseo_metadesc', isset($saved['seo_desc']) ? $saved['seo_desc'] : '');
-                            $restored[] = 'trang-chu';
-                            ptv_ss_log('rollback', 'trang-chu', 'Khôi phục trang chủ và SEO meta từ backup ' . $found['id']);
+                        $expect_front = (int) get_option('page_on_front');
+                        if (!$expect_front) { $h = get_page_by_path('trang-chu'); if ($h) $expect_front = (int) $h->ID; }
+                        $fp = get_post((int) $saved['id']);
+                        if (!$fp || $fp->post_type !== 'page' || (int) $saved['id'] !== $expect_front) {
+                            $errors[] = 'trang chủ: Page trong backup không còn là trang chủ hiện tại nên đã bỏ qua';
+                            ptv_ss_log('rollback_error', 'trang-chu', 'Bỏ qua khôi phục trang chủ vì ID ' . (int) $saved['id'] . ' không khớp trang chủ hiện tại ' . $expect_front);
+                        } else {
+                            $r = wp_update_post(array('ID' => $saved['id'], 'post_content' => $saved['content'], 'post_title' => $saved['title']), true);
+                            if (is_wp_error($r)) { $errors[] = 'trang chủ: ' . $r->get_error_message(); ptv_ss_log('rollback_error', 'trang-chu', $r->get_error_message()); }
+                            else {
+                                update_post_meta($saved['id'], '_yoast_wpseo_title', isset($saved['seo_title']) ? $saved['seo_title'] : '');
+                                update_post_meta($saved['id'], '_yoast_wpseo_metadesc', isset($saved['seo_desc']) ? $saved['seo_desc'] : '');
+                                $fp2 = get_post((int) $saved['id']);
+                                $body_ok = $fp2 && ptv_ss_hash($fp2->post_content) === ptv_ss_hash($saved['content']);
+                                $meta_ok = (string) get_post_meta($saved['id'], '_yoast_wpseo_title', true) === (string) (isset($saved['seo_title']) ? $saved['seo_title'] : '')
+                                    && (string) get_post_meta($saved['id'], '_yoast_wpseo_metadesc', true) === (string) (isset($saved['seo_desc']) ? $saved['seo_desc'] : '');
+                                if ($body_ok && $meta_ok) { $restored[] = 'trang-chu'; ptv_ss_log('rollback', 'trang-chu', 'Khôi phục trang chủ và SEO meta từ backup ' . $found['id']); }
+                                else { $errors[] = 'trang chủ: kiểm chứng sau khôi phục thất bại'; ptv_ss_log('rollback_error', 'trang-chu', 'Kiểm chứng nội dung/meta trang chủ sau khôi phục không khớp bản backup'); }
+                            }
                         }
                         continue;
                     }
@@ -690,8 +793,9 @@ function ptv_ss_render() {
                     }
                 }
                 ptv_ss_record_baseline('rollback', $to_baseline);
-                $notice = 'Đã khôi phục ' . count($restored) . ' trang từ backup ' . $found['id'] . ': ' . implode(', ', $restored) . '.';
-                if ($errors) $notice_err = 'Một số trang không khôi phục được: ' . implode('; ', $errors);
+                $notice = 'Đã khôi phục ' . count($restored) . ' mục từ backup ' . $found['id'] . ': ' . implode(', ', $restored) . '.';
+                if ($errors) $notice_err = 'Một số mục không khôi phục được: ' . implode('; ', $errors);
+                }
             }
         }
     }
