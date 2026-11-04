@@ -144,12 +144,42 @@ function ptv_ss_line_diff($old, $new) {
 }
 /* Backup noi dung DB hien tai cua cac slug sap ghi, giu 3 ban gan nhat.
  * Moi ban co ID co dinh de rollback khong phu thuoc vi tri trong danh sach.
+ * Khi $include_extras = true (duong kich hoat), snapshot con gom trang chu
+ * kem SEO meta (khoa '__front') va cac muc menu hien tai (khoa '__menu').
  * Tra ve ID backup, hoac false neu luu that bai (nguoi goi PHAI dung ghi). */
-function ptv_ss_backup($slugs, $reason) {
+function ptv_ss_backup($slugs, $reason, $include_extras = false) {
     $pages = array();
     foreach ($slugs as $slug) {
         $page = get_page_by_path($slug);
         if ($page) $pages[$slug] = array('id' => (int) $page->ID, 'content' => $page->post_content, 'title' => $page->post_title);
+    }
+    if ($include_extras) {
+        $front_id = (int) get_option('page_on_front');
+        if (!$front_id) {
+            $home = get_page_by_path('trang-chu');
+            if ($home) $front_id = (int) $home->ID;
+        }
+        if ($front_id && function_exists('get_post_meta')) {
+            $fp = get_post($front_id);
+            if ($fp) $pages['__front'] = array(
+                'id' => $front_id,
+                'content' => $fp->post_content,
+                'title' => $fp->post_title,
+                'seo_title' => get_post_meta($front_id, '_yoast_wpseo_title', true),
+                'seo_desc' => get_post_meta($front_id, '_yoast_wpseo_metadesc', true),
+            );
+        }
+        if (function_exists('wp_get_nav_menu_object') && function_exists('wp_get_nav_menu_items')) {
+            $menu = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
+            if ($menu) {
+                $items = wp_get_nav_menu_items((int) $menu->term_id);
+                if ($items) {
+                    $saved_items = array();
+                    foreach ($items as $it) $saved_items[] = array('id' => (int) $it->ID, 'title' => $it->title, 'url' => $it->url, 'parent' => (int) $it->menu_item_parent);
+                    $pages['__menu'] = $saved_items;
+                }
+            }
+        }
     }
     if (!$pages) return true;
     $backups = get_option('ptv_ss_backups', array());
@@ -175,6 +205,34 @@ function ptv_ss_menu_signature() {
     foreach ($items as $it) $parts[] = $it->title . '|' . $it->url . '|' . (int) $it->menu_item_parent;
     return ptv_ss_hash(implode("\n", $parts));
 }
+/* Khoi phuc cac muc menu tu mot snapshot '__menu' (cha luon dung truoc con). */
+function ptv_ss_restore_menu($saved_items) {
+    if (!function_exists('wp_get_nav_menu_object') || !function_exists('wp_get_nav_menu_items') || !function_exists('wp_update_nav_menu_item')) return false;
+    $menu = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
+    if (!$menu) return false;
+    $menu_id = (int) $menu->term_id;
+    $old = wp_get_nav_menu_items($menu_id);
+    if ($old) foreach ($old as $it) wp_delete_post($it->ID, true);
+    $id_map = array();
+    $pos = 0;
+    foreach ($saved_items as $it) {
+        $pos++;
+        $parent_new = isset($id_map[$it['parent']]) ? $id_map[$it['parent']] : 0;
+        $r = wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' => $it['title'],
+            'menu-item-url' => $it['url'],
+            'menu-item-status' => 'publish',
+            'menu-item-type' => 'custom',
+            'menu-item-parent-id' => $parent_new,
+            'menu-item-position' => $pos,
+        ));
+        if (is_wp_error($r)) return false;
+        $id_map[$it['id']] = (int) $r;
+    }
+    $sig = ptv_ss_menu_signature();
+    if ($sig !== null) update_option('ptv_ss_menu_sig', $sig, false);
+    return true;
+}
 function ptv_ss_admin_menu() {
     add_submenu_page('tools.php', 'Đồng bộ nội dung công cụ', 'Đồng bộ PhongThuy', 'manage_options', 'ptv-safe-sync', 'ptv_ss_render');
 }
@@ -188,7 +246,15 @@ function ptv_ss_render() {
     if (!empty($_POST['ptv_ss_action'])) {
         check_admin_referer('ptv_ss_action');
         $act = sanitize_key($_POST['ptv_ss_action']);
-        if ($act === 'sync_safe') {
+        if ($act === 'menu_to_managed') {
+            if (!empty($_POST['ptv_ss_confirm_menu'])) {
+                update_option('ptv_ss_menu_mode', 'managed', false);
+                ptv_ss_log('menu_mode', 'menu', 'Admin chủ động chuyển menu sang chế độ plugin quản lý; lần kích hoạt sau menu sẽ được dựng lại theo plugin');
+                $notice = 'Đã chuyển menu sang chế độ plugin quản lý. Menu sẽ được dựng lại theo plugin ở lần kích hoạt kế tiếp.';
+            } else {
+                $notice_err = 'Chưa chuyển chế độ menu: cần tích ô xác nhận.';
+            }
+        } elseif ($act === 'sync_safe') {
             $targets = array();
             foreach ($pages as $p) {
                 $st = ptv_ss_page_status($p);
@@ -269,8 +335,26 @@ function ptv_ss_render() {
             } elseif (empty($_POST['ptv_ss_confirm_rb'])) {
                 $notice_err = 'Chưa khôi phục: cần tích ô xác nhận.';
             } else {
-                $restored = array(); $errors = array();
+                $restored = array(); $errors = array(); $to_baseline = array();
+                $file_by_slug = array();
+                foreach ($pages as $pp) $file_by_slug[$pp['slug']] = $pp['file'];
                 foreach ($found['pages'] as $slug => $saved) {
+                    if ($slug === '__front') {
+                        $r = wp_update_post(array('ID' => $saved['id'], 'post_content' => $saved['content'], 'post_title' => $saved['title']), true);
+                        if (is_wp_error($r)) { $errors[] = 'trang chủ: ' . $r->get_error_message(); ptv_ss_log('rollback_error', 'trang-chu', $r->get_error_message()); }
+                        else {
+                            update_post_meta($saved['id'], '_yoast_wpseo_title', isset($saved['seo_title']) ? $saved['seo_title'] : '');
+                            update_post_meta($saved['id'], '_yoast_wpseo_metadesc', isset($saved['seo_desc']) ? $saved['seo_desc'] : '');
+                            $restored[] = 'trang-chu';
+                            ptv_ss_log('rollback', 'trang-chu', 'Khôi phục trang chủ và SEO meta từ backup ' . $found['id']);
+                        }
+                        continue;
+                    }
+                    if ($slug === '__menu') {
+                        if (ptv_ss_restore_menu($saved)) { $restored[] = 'menu'; ptv_ss_log('rollback', 'menu', 'Khôi phục các mục menu từ backup ' . $found['id']); }
+                        else { $errors[] = 'menu: không khôi phục được'; ptv_ss_log('rollback_error', 'menu', 'Khôi phục menu thất bại'); }
+                        continue;
+                    }
                     $page = get_post((int) $saved['id']);
                     if (!$page || $page->post_name !== $slug || $page->post_type !== 'page') {
                         $errors[] = $slug . ': Page hiện tại không khớp ID/slug đã lưu';
@@ -279,9 +363,21 @@ function ptv_ss_render() {
                     }
                     $r = wp_update_post(array('ID' => $saved['id'], 'post_content' => $saved['content'], 'post_title' => $saved['title']), true);
                     if (is_wp_error($r)) { $errors[] = $slug . ': ' . $r->get_error_message(); ptv_ss_log('rollback_error', $slug, $r->get_error_message()); }
-                    else { $restored[] = $slug; ptv_ss_log('rollback', $slug, 'Khôi phục từ backup ' . $found['id']); }
+                    else {
+                        $restored[] = $slug;
+                        ptv_ss_log('rollback', $slug, 'Khôi phục từ backup ' . $found['id']);
+                        if (isset($file_by_slug[$slug]) && ptv_ss_hash($saved['content']) === ptv_ss_hash(ptv_ss_plugin_content($file_by_slug[$slug]))) {
+                            $to_baseline[] = $slug;
+                        } else {
+                            // Noi dung khoi phuc khac ban plugin: khoa moc de khong bi
+                            // dong bo lan sau de len, cho admin quyet dinh rieng.
+                            $baseline = ptv_ss_get_baseline();
+                            if (isset($baseline[$slug])) { unset($baseline[$slug]); update_option('ptv_ss_baseline', $baseline, false); }
+                            ptv_ss_log('rollback_lock', $slug, 'Đã xóa mốc sau khôi phục vì nội dung khôi phục khác bản plugin; trang được khóa cho tới khi admin chốt mốc hoặc ghi đè');
+                        }
+                    }
                 }
-                ptv_ss_record_baseline('rollback', $restored);
+                ptv_ss_record_baseline('rollback', $to_baseline);
                 $notice = 'Đã khôi phục ' . count($restored) . ' trang từ backup ' . $found['id'] . ': ' . implode(', ', $restored) . '.';
                 if ($errors) $notice_err = 'Một số trang không khôi phục được: ' . implode('; ', $errors);
             }
@@ -330,6 +426,19 @@ function ptv_ss_render() {
     echo '</tbody></table>';
     $front_id = (int) get_option('page_on_front');
     echo '<h2>Trang chủ</h2><p>Trang chủ hiện tại (ID ' . $front_id . ') không tham gia đồng bộ tại trang này. Khi kích hoạt, nội dung trang chủ chỉ bị thay nếu đang trống hoặc đang là shortcode của plugin; nội dung tự viết sẽ được giữ lại và ghi nhật ký.</p>';
+    $menu_mode = get_option('ptv_ss_menu_mode', '');
+    echo '<h2>Menu chính</h2>';
+    if ($menu_mode === 'manual') {
+        echo '<p>Menu hiện đang ở chế độ <strong>thủ công</strong>: plugin tôn trọng menu bạn đang dùng và không bao giờ tự dựng lại khi kích hoạt.</p>';
+        echo '<form method="post" style="margin:6px 0">';
+        wp_nonce_field('ptv_ss_action');
+        echo '<label><input type="checkbox" name="ptv_ss_confirm_menu" value="1"> Tôi muốn chuyển menu sang chế độ plugin quản lý (lần kích hoạt sau menu sẽ được dựng lại theo plugin)</label> ';
+        echo '<button class="button" name="ptv_ss_action" value="menu_to_managed">Chuyển sang plugin quản lý</button></form>';
+    } elseif ($menu_mode === 'managed') {
+        echo '<p>Menu đang ở chế độ <strong>plugin quản lý</strong>: plugin dựng lại menu khi kích hoạt, nhưng nếu phát hiện menu đã bị sửa tay so với bản plugin dựng thì sẽ tự chuyển sang chế độ thủ công và giữ nguyên.</p>';
+    } else {
+        echo '<p>Menu chưa được phân loại. Ở lần kích hoạt sau, nếu menu đã có sẵn nội dung thì plugin sẽ tự xếp vào chế độ thủ công và giữ nguyên.</p>';
+    }
     $backups = get_option('ptv_ss_backups', array());
     echo '<h2>Backup và khôi phục</h2>';
     if (is_array($backups) && $backups) {

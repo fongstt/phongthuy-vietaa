@@ -52,9 +52,17 @@ function wp_insert_post($args, $wp_error = false) {
     $GLOBALS['pages'][$id] = $p;
     return $id;
 }
-function update_post_meta() { return true; }
-function get_theme_mod($k, $d = false) { return $d; }
-function set_theme_mod() { return true; }
+function update_post_meta($id, $key, $value) {
+    $GLOBALS['post_meta'][(int) $id][$key] = $value;
+    return true;
+}
+function get_post_meta($id, $key, $single = false) {
+    return isset($GLOBALS['post_meta'][(int) $id][$key]) ? $GLOBALS['post_meta'][(int) $id][$key] : '';
+}
+function get_theme_mod($k, $d = false) {
+    return isset($GLOBALS['theme_mods'][$k]) ? $GLOBALS['theme_mods'][$k] : $d;
+}
+function set_theme_mod($k, $v) { $GLOBALS['theme_mods'][$k] = $v; return true; }
 function wp_get_current_user() { $u = new stdClass(); $u->user_login = 'tester'; return $u; }
 function current_user_can() { return true; }
 function check_admin_referer() { return true; }
@@ -121,6 +129,8 @@ function reset_state() {
     $GLOBALS['fail_slugs'] = array();
     $GLOBALS['fail_option_keys'] = array();
     $GLOBALS['menus'] = array();
+    $GLOBALS['post_meta'] = array();
+    $GLOBALS['theme_mods'] = array();
     $_POST = array();
 }
 function make_page($slug, $content, $title = 'T') {
@@ -258,17 +268,70 @@ update_option('page_on_front', $front->ID, false);
 ptv_on_activate();
 ok(get_post($front->ID)->post_content === 'Noi dung builder [ptv_trang_chu_tools] chen o giua', 'front page: builder content with embedded shortcode preserved');
 
-/* ---------- 11. Existing menu without saved signature is seeded, not rebuilt (P0-C) ---------- */
+/* ---------- 11. Adopted manual menu is NEVER rebuilt automatically (round-3 P0) ---------- */
 reset_state();
 $mid = wp_create_nav_menu('Menu Phong Thủy VietAA');
 wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Menu Tu Lam', 'menu-item-url' => 'https://example.test/tu-lam/', 'menu-item-parent-id' => 0));
 ptv_ensure_menu();
 $items = wp_get_nav_menu_items($mid);
 ok(count($items) === 1 && $items[0]->title === 'Menu Tu Lam', 'menu: existing unsigned menu kept as-is on first run');
-ok(get_option('ptv_ss_menu_sig', '') !== '', 'menu: signature seeded from existing menu');
+ok(get_option('ptv_ss_menu_mode', '') === 'manual', 'menu: adopted menu classified as manual mode');
 ptv_ensure_menu();
 $items2 = wp_get_nav_menu_items($mid);
-ok(count($items2) > 1 && $items2[0]->title === 'Trang chủ', 'menu: once signature matches, normal rebuild resumes');
+ok(count($items2) === 1 && $items2[0]->title === 'Menu Tu Lam', 'menu: second activation STILL keeps the manual menu (round-3 P0 regression)');
+wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc Them Sau Nay', 'menu-item-url' => 'https://example.test/them/', 'menu-item-parent-id' => 0));
+set_theme_mod('nav_menu_locations', array('primary' => 999));
+ptv_ensure_menu();
+$items3 = wp_get_nav_menu_items($mid);
+ok(count($items3) === 2, 'menu: third activation keeps hand edits made after adoption');
+$locs = get_theme_mod('nav_menu_locations', array());
+ok((int) $locs['primary'] === 999, 'menu: manual mode never steals configured theme locations');
+
+/* ---------- 11b. Plugin-managed menu rebuilds, but a hand edit adopts it to manual ---------- */
+reset_state();
+ptv_ensure_menu();
+ok(get_option('ptv_ss_menu_mode', '') === 'managed', 'menu: freshly built menu is plugin-managed');
+$menu_obj = wp_get_nav_menu_object('Menu Phong Thủy VietAA');
+$built = wp_get_nav_menu_items((int) $menu_obj->term_id);
+ok(count($built) > 1 && $built[0]->title === 'Trang chủ', 'menu: managed menu built from directory');
+$GLOBALS['menus']['Menu Phong Thủy VietAA']['items'][0]->title = 'Tieu De Bi Sua Tay';
+ptv_ensure_menu();
+$after = wp_get_nav_menu_items((int) $menu_obj->term_id);
+ok($after[0]->title === 'Tieu De Bi Sua Tay', 'menu: hand edit on managed menu is preserved');
+ok(get_option('ptv_ss_menu_mode', '') === 'manual', 'menu: hand-edited managed menu adopted to manual');
+
+/* ---------- 12. Rollback locks the page until the admin decides (round-3 P1) ---------- */
+reset_state();
+$p = make_page('boi-kieu', 'BAN CU CAN KHOI PHUC');
+$bkid = ptv_ss_backup(array('boi-kieu'), 'test-rollback-lock');
+wp_update_post(array('ID' => $p->ID, 'post_content' => $plugin_boi));
+set_baseline('boi-kieu', $plugin_boi);
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $bkid, 'ptv_ss_confirm_rb' => '1'));
+ok(get_page_by_path('boi-kieu')->post_content === 'BAN CU CAN KHOI PHUC', 'rollback lock: content restored');
+ok(!isset(ptv_ss_get_baseline()['boi-kieu']), 'rollback lock: baseline removed so the page is locked, not marked update');
+render_action(array('ptv_ss_action' => 'sync_safe'));
+ok(get_page_by_path('boi-kieu')->post_content === 'BAN CU CAN KHOI PHUC', 'rollback lock: following sync_safe does NOT overwrite restored content');
+ptv_on_activate();
+ok(get_page_by_path('boi-kieu')->post_content === 'BAN CU CAN KHOI PHUC', 'rollback lock: following activation does NOT overwrite restored content');
+
+/* ---------- 13. Front page backup extras + Yoast meta protection (round-3 P1) ---------- */
+reset_state();
+$front = make_page('trang-chu', '[ptv_trang_chu_tools]');
+update_option('page_on_front', $front->ID, false);
+update_post_meta($front->ID, '_yoast_wpseo_title', 'TIEU DE SEO TUY CHINH');
+ptv_on_activate();
+ok(get_post_meta($front->ID, '_yoast_wpseo_title', true) === 'TIEU DE SEO TUY CHINH', 'front: custom Yoast meta preserved when body already is the lone shortcode');
+reset_state();
+$front = make_page('trang-chu', 'TRANG CHU BAN CU');
+update_option('page_on_front', $front->ID, false);
+update_post_meta($front->ID, '_yoast_wpseo_title', 'META CU');
+$bkid = ptv_ss_backup(array(), 'test-front', true);
+ok(is_string($bkid), 'front: extras backup created even with no tool pages');
+wp_update_post(array('ID' => $front->ID, 'post_content' => 'TRANG CHU BAN MOI'));
+update_post_meta($front->ID, '_yoast_wpseo_title', 'META MOI');
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $bkid, 'ptv_ss_confirm_rb' => '1'));
+ok(get_post($front->ID)->post_content === 'TRANG CHU BAN CU', 'front: rollback restores front page content from extras snapshot');
+ok(get_post_meta($front->ID, '_yoast_wpseo_title', true) === 'META CU', 'front: rollback restores front page Yoast meta');
 
 echo "\nRESULT: $pass passed, $fail failed\n";
 exit($fail > 0 ? 1 : 0);
