@@ -13,4 +13,5 @@ jobs:
       - run: node --test tests/engine.test.cjs
       - run: php -l src/phongthuy-tools.php
       - run: php -l plugin/phongthuy-tools/phongthuy-tools.php
+      - run: php tests/safe-sync.php
       - run: cmp src/phongthuy-tools.php plugin/phongthuy-tools/phongthuy-tools.php

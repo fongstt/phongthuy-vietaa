@@ -1,0 +1,12 @@
+const fs = require('fs');
+const PHP = __dirname + '/phongthuy-tools.php';
+let src = fs.readFileSync(PHP, 'utf8');
+const section = fs.readFileSync(__dirname + '/ptv-safe-sync-section.php', 'utf8');
+const startMark = '/* ---------------- Dong bo noi dung an toan (Issue #2, v1.54) ----------------';
+const endMark = '/* ---------------- Menu chinh gom nhom theo danh muc ---------------- */';
+const i = src.indexOf(startMark);
+const j = src.indexOf(endMark);
+if (i < 0 || j < 0 || j < i) throw new Error('markers not found: ' + i + ' ' + j);
+src = src.slice(0, i) + section + '\n' + src.slice(j);
+fs.writeFileSync(PHP, src);
+console.log('section swapped, ptv_ss functions:', (src.match(/function ptv_ss_/g) || []).length);
