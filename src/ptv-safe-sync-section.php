@@ -147,7 +147,7 @@ function ptv_ss_line_diff($old, $new) {
  * Khi $include_extras = true (duong kich hoat), snapshot con gom trang chu
  * kem SEO meta (khoa '__front') va cac muc menu hien tai (khoa '__menu').
  * Tra ve ID backup, hoac false neu luu that bai (nguoi goi PHAI dung ghi). */
-function ptv_ss_backup($slugs, $reason, $include_extras = false) {
+function ptv_ss_backup($slugs, $reason, $include_extras = false, $keep_snapshot = null) {
     $pages = array();
     foreach ($slugs as $slug) {
         $page = get_page_by_path($slug);
@@ -178,7 +178,18 @@ function ptv_ss_backup($slugs, $reason, $include_extras = false) {
     $u = function_exists('wp_get_current_user') ? wp_get_current_user() : null;
     $id = 'bk' . time() . '-' . substr(md5(uniqid('', true)), 0, 6);
     array_unshift($backups, array('id' => $id, 'time' => time(), 'user' => ($u && isset($u->user_login)) ? $u->user_login : 'system', 'reason' => $reason, 'pages' => $pages));
-    $ok = update_option('ptv_ss_backups', array_slice($backups, 0, 3), false);
+    $backups = array_slice($backups, 0, 3);
+    // Giu mot snapshot chi dinh trong cung MOT lan ghi (nguyen tu o muc option):
+    // dung khi rollback can vua tao pre-rollback backup vua bao toan ban dang chon.
+    if ($keep_snapshot && isset($keep_snapshot['id'])) {
+        $ids = array();
+        foreach ($backups as $b2) if (isset($b2['id'])) $ids[] = $b2['id'];
+        if (!in_array($keep_snapshot['id'], $ids, true)) {
+            if (count($backups) < 3) $backups[] = $keep_snapshot;
+            else $backups[count($backups) - 1] = $keep_snapshot;
+        }
+    }
+    $ok = update_option('ptv_ss_backups', $backups, false);
     if (!$ok) {
         ptv_ss_log('backup_error', '', 'Không lưu được backup ' . $id . ' (' . $reason . ')');
         return false;
@@ -334,27 +345,12 @@ function ptv_ss_render() {
                 // Backup trang thai hien tai truoc khi khoi phuc; loi thi huy, khong ghi gi ca.
                 $pre_slugs = array();
                 foreach (array_keys($found['pages']) as $k) if ($k !== '__front' && $k !== '__menu') $pre_slugs[] = $k;
-                $pre_bk = ptv_ss_backup($pre_slugs, 'pre-rollback', true);
+                // Mot lan ghi duy nhat: vua tao pre-rollback backup vua giu ban dang chon,
+                // nen khong ton tai cua so nao ma ban dang chon bi day khoi danh sach.
+                $pre_bk = ptv_ss_backup($pre_slugs, 'pre-rollback', true, $found);
                 if ($pre_bk === false) {
                     $notice_err = 'Đã hủy khôi phục vì không lưu được backup của trạng thái hiện tại.';
-                    ptv_ss_log('rollback_abort', '', 'Hủy rollback về bản ' . $found['id'] . ' vì pre-rollback backup thất bại');
-                } else {
-                    $backs_now = get_option('ptv_ss_backups', array());
-                    $ids_now = array();
-                    if (is_array($backs_now)) foreach ($backs_now as $b2) if (isset($b2['id'])) $ids_now[] = $b2['id'];
-                    if (!in_array($found['id'], $ids_now, true)) {
-                        $keep = array();
-                        if (is_array($backs_now)) foreach ($backs_now as $b2) { $keep[] = $b2; if (count($keep) >= 2) break; }
-                        $keep[] = $found;
-                        $pin_ok = update_option('ptv_ss_backups', $keep, false);
-                        if (!$pin_ok) {
-                            $pre_bk = false;
-                            $notice_err = 'Đã hủy khôi phục vì không ghim lại được bản backup đang chọn vào danh sách.';
-                            ptv_ss_log('rollback_abort', '', 'Hủy rollback về bản ' . $found['id'] . ' vì ghim lại snapshot thất bại');
-                        } else {
-                            ptv_ss_log('rollback_pin', '', 'Đã ghim lại bản backup ' . $found['id'] . ' để không bị đẩy khỏi danh sách 3 bản gần nhất');
-                        }
-                    }
+                    ptv_ss_log('rollback_abort', '', 'Hủy rollback về bản ' . $found['id'] . ' vì pre-rollback backup thất bại, bản đang chọn vẫn nguyên trong danh sách');
                 }
                 if ($pre_bk !== false) {
                     // Preflight: xac minh toan bo doi tuong dich truoc khi ghi bat cu thu gi.

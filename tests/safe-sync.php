@@ -26,6 +26,8 @@ function plugins_url() { return 'https://example.test/wp-content/plugins/phongth
 function get_option($k, $default = false) { return array_key_exists($k, $GLOBALS['wp_options']) ? $GLOBALS['wp_options'][$k] : $default; }
 function update_option($k, $v, $autoload = null) {
     if (isset($GLOBALS['fail_option_keys']) && in_array($k, $GLOBALS['fail_option_keys'], true)) return false;
+    $GLOBALS['option_write_counts'][$k] = isset($GLOBALS['option_write_counts'][$k]) ? $GLOBALS['option_write_counts'][$k] + 1 : 1;
+    if (isset($GLOBALS['fail_option_at'][$k]) && $GLOBALS['option_write_counts'][$k] === (int) $GLOBALS['fail_option_at'][$k]) return false;
     $GLOBALS['wp_options'][$k] = $v; return true;
 }
 function get_page_by_path($slug) {
@@ -149,6 +151,8 @@ function reset_state() {
     $GLOBALS['theme_mods'] = array();
     $GLOBALS['menu_item_calls'] = 0;
     $GLOBALS['fail_menu_on_call'] = 0;
+    $GLOBALS['option_write_counts'] = array();
+    $GLOBALS['fail_option_at'] = array();
     $_POST = array();
 }
 function make_page($slug, $content, $title = 'T') {
@@ -433,6 +437,37 @@ $log = get_option('ptv_ss_log', array());
 $found_abort = false;
 if (is_array($log)) foreach ($log as $e) if ($e['action'] === 'rollback_abort') $found_abort = true;
 ok($found_abort, 'preflight: abort is written to audit log');
+
+/* ---------- 19. Atomic keep: selected snapshot survives in the SAME write as the pre-rollback backup (round-6 P1) ---------- */
+reset_state();
+$p = make_page('boi-kieu', 'V1');
+$b1 = ptv_ss_backup(array('boi-kieu'), 'one');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'V2'));
+$b2 = ptv_ss_backup(array('boi-kieu'), 'two');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'V3'));
+$b3 = ptv_ss_backup(array('boi-kieu'), 'three');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'V4'));
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $b1, 'ptv_ss_confirm_rb' => '1'));
+$backs = get_option('ptv_ss_backups', array());
+$ids = array(); $has_pre = false;
+foreach ($backs as $bb) { $ids[] = $bb['id']; if ($bb['reason'] === 'pre-rollback') $has_pre = true; }
+ok($has_pre && in_array($b1, $ids, true) && count($backs) === 3, 'atomic keep: pre-rollback snapshot created and selected oldest snapshot kept in one write');
+reset_state();
+$p = make_page('boi-kieu', 'V1');
+$b1 = ptv_ss_backup(array('boi-kieu'), 'one');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'V2'));
+$b2 = ptv_ss_backup(array('boi-kieu'), 'two');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'V3'));
+$b3 = ptv_ss_backup(array('boi-kieu'), 'three');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'V4'));
+$GLOBALS['option_write_counts'] = array();
+$GLOBALS['fail_option_at'] = array('ptv_ss_backups' => 1);
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $b1, 'ptv_ss_confirm_rb' => '1'));
+ok(get_page_by_path('boi-kieu')->post_content === 'V4', 'atomic keep: failing the single backup write aborts rollback, page untouched');
+$backs = get_option('ptv_ss_backups', array());
+$ids = array();
+foreach ($backs as $bb) $ids[] = $bb['id'];
+ok(in_array($b1, $ids, true) && in_array($b2, $ids, true) && in_array($b3, $ids, true), 'atomic keep: selected snapshot and full history still present after the aborted rollback');
 
 echo "\nRESULT: $pass passed, $fail failed\n";
 exit($fail > 0 ? 1 : 0);
