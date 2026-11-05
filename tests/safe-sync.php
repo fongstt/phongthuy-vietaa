@@ -351,27 +351,25 @@ render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $bkid, 
 ok(get_post($front->ID)->post_content === 'TRANG CHU BAN CU', 'front: rollback restores front page content from extras snapshot');
 ok(get_post_meta($front->ID, '_yoast_wpseo_title', true) === 'META CU', 'front: rollback restores front page Yoast meta');
 
-/* ---------- 14. Menu restore is transactional: mid-failure restores the original menu (round-4 P0) ---------- */
+/* ---------- 14. Menu restore is LOCKED: rollback never touches the live menu (round-5 decision) ---------- */
 reset_state();
 $mid = wp_create_nav_menu('Menu Phong Thủy VietAA');
-$a_id = wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc A', 'menu-item-url' => 'https://example.test/a/', 'menu-item-parent-id' => 0));
-wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc B', 'menu-item-url' => 'https://example.test/b/', 'menu-item-parent-id' => 0));
-wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc A1', 'menu-item-url' => 'https://example.test/a1/', 'menu-item-parent-id' => $a_id));
-$snap = ptv_ss_menu_snapshot();
-ok(is_array($snap) && count($snap) === 3, 'menu tx: snapshot captured 3 items');
-foreach (array_slice(wp_get_nav_menu_items($mid), 0) as $it) wp_delete_post($it->ID, true);
-wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc X Hien Tai', 'menu-item-url' => 'https://example.test/x/', 'menu-item-parent-id' => 0));
-$before_norm = ptv_ss_menu_norm(wp_get_nav_menu_items($mid));
-$GLOBALS['menu_item_calls'] = 0;
-$GLOBALS['fail_menu_on_call'] = 2;
-$r = ptv_ss_restore_menu($snap);
-ok($r === false, 'menu tx: mid-restore failure is reported as failure');
-ok(ptv_ss_menu_norm(wp_get_nav_menu_items($mid)) === $before_norm, 'menu tx: current menu fully intact after failed restore (undo worked)');
-$GLOBALS['fail_menu_on_call'] = 0;
-$r2 = ptv_ss_restore_menu($snap);
-ok($r2 === true && ptv_ss_menu_norm(wp_get_nav_menu_items($mid)) === ptv_ss_menu_norm($snap), 'menu tx: clean restore succeeds and matches snapshot structure');
+wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc A', 'menu-item-url' => 'https://example.test/a/', 'menu-item-parent-id' => 0));
+$p = make_page('boi-kieu', 'BAN TRUOC');
+$bkid = ptv_ss_backup(array('boi-kieu'), 't14', true);
+wp_update_nav_menu_item($mid, 0, array('menu-item-title' => 'Muc Moi Sau Backup', 'menu-item-url' => 'https://example.test/moi/', 'menu-item-parent-id' => 0));
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'BAN SAU'));
+$menu_before = ptv_ss_menu_snapshot();
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $bkid, 'ptv_ss_confirm_rb' => '1'));
+ok(get_page_by_path('boi-kieu')->post_content === 'BAN TRUOC', 'menu locked: page part of rollback still restores normally');
+ok(ptv_ss_menu_snapshot() === $menu_before, 'menu locked: live menu completely untouched by rollback');
+$log = get_option('ptv_ss_log', array());
+$found_lock = false;
+if (is_array($log)) foreach ($log as $e) if ($e['action'] === 'rollback_menu_locked') $found_lock = true;
+ok($found_lock, 'menu locked: skip is written to audit log');
+ok(!function_exists('ptv_ss_restore_menu') && !function_exists('ptv_ss_menu_rebuild'), 'menu locked: destructive menu rebuild functions no longer exist in the plugin');
 
-/* ---------- 14b. Menu snapshot keeps full WordPress attributes (round-4 P1) ---------- */
+/* ---------- 14b. Menu snapshot keeps full WordPress attributes (round-4 P1, capture side) ---------- */
 reset_state();
 $mid = wp_create_nav_menu('Menu Phong Thủy VietAA');
 wp_update_nav_menu_item($mid, 0, array(
@@ -382,10 +380,6 @@ wp_update_nav_menu_item($mid, 0, array(
 ));
 $snap = ptv_ss_menu_snapshot();
 ok($snap[0]['type'] === 'post_type' && $snap[0]['object_id'] === 939 && $snap[0]['classes'] === 'class-a class-b' && $snap[0]['target'] === '_blank' && $snap[0]['attr_title'] === 'Mo ta muc', 'menu attrs: snapshot captures type/object/classes/target/attr_title');
-foreach (wp_get_nav_menu_items($mid) as $it) wp_delete_post($it->ID, true);
-ok(ptv_ss_restore_menu($snap) === true, 'menu attrs: restore succeeds');
-$items = wp_get_nav_menu_items($mid);
-ok($items[0]->type === 'post_type' && (int) $items[0]->object_id === 939 && implode(' ', $items[0]->classes) === 'class-a class-b' && $items[0]->target === '_blank' && $items[0]->description === 'Mo ta dai', 'menu attrs: restored item keeps full attributes');
 
 /* ---------- 15. Front rollback verifies identity against the CURRENT front page (round-4 P1) ---------- */
 reset_state();
@@ -415,6 +409,30 @@ $ids = array(); $has_pre = false;
 foreach ($backs as $bb) { $ids[] = $bb['id']; if ($bb['reason'] === 'pre-rollback') $has_pre = true; }
 ok($has_pre, 'pre-rollback: a pre-rollback backup of the pre-restore state exists');
 ok(in_array($b1, $ids, true), 'pre-rollback: selected snapshot pinned, not evicted by the ring buffer');
+
+/* ---------- 17. Rollback fails closed when backup storage writes fail (round-5 P1) ---------- */
+reset_state();
+$p = make_page('boi-kieu', 'BAN TRONG BACKUP');
+$bkid = ptv_ss_backup(array('boi-kieu'), 't17');
+wp_update_post(array('ID' => $p->ID, 'post_content' => 'BAN HIEN TAI'));
+$GLOBALS['fail_option_keys'] = array('ptv_ss_backups');
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $bkid, 'ptv_ss_confirm_rb' => '1'));
+ok(get_page_by_path('boi-kieu')->post_content === 'BAN HIEN TAI', 'fail closed: rollback aborted when pre-rollback backup cannot be saved');
+
+/* ---------- 18. Preflight aborts the whole rollback when any target is gone (round-5 P1) ---------- */
+reset_state();
+$p1 = make_page('boi-kieu', 'TRANG MOT GOC');
+$p2 = make_page('dat-ten-con', 'TRANG HAI GOC');
+$bkid = ptv_ss_backup(array('boi-kieu', 'dat-ten-con'), 't18');
+wp_update_post(array('ID' => $p1->ID, 'post_content' => 'TRANG MOT MOI'));
+wp_update_post(array('ID' => $p2->ID, 'post_content' => 'TRANG HAI MOI'));
+unset($GLOBALS['pages'][$p2->ID]);
+render_action(array('ptv_ss_action' => 'rollback', 'ptv_ss_backup_id' => $bkid, 'ptv_ss_confirm_rb' => '1'));
+ok(get_page_by_path('boi-kieu')->post_content === 'TRANG MOT MOI', 'preflight: nothing is written when one target no longer resolves');
+$log = get_option('ptv_ss_log', array());
+$found_abort = false;
+if (is_array($log)) foreach ($log as $e) if ($e['action'] === 'rollback_abort') $found_abort = true;
+ok($found_abort, 'preflight: abort is written to audit log');
 
 echo "\nRESULT: $pass passed, $fail failed\n";
 exit($fail > 0 ? 1 : 0);
